@@ -187,7 +187,7 @@
                                     <constraint firstAttribute="width" constant="180" id="Ywu-dW-sMV"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="THs-lX-fQh" style="IBUITableViewCellStyleDefault" id="Jnr-1Q-Bu5">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="cell" textLabel="THs-lX-fQh" style="IBUITableViewCellStyleDefault" id="Jnr-1Q-Bu5">
                                         <rect key="frame" x="0.0" y="0.0" width="180" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Jnr-1Q-Bu5" id="ahX-MS-H53">

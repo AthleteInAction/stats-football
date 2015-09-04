@@ -50,7 +50,12 @@ class BallBTN: UIButton {
         
         center.y = nex
         
-        field.tracker.updateSequence()
+        let s = field.tracker.log[field.tracker.index]
+        
+        s.startY = Int(round((nex / field.bounds.height) * 100))
+        
+        field.tracker.draw()
+        field.tracker.drawButtons()
         
     }
 

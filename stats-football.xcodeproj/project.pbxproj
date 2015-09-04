@@ -12,6 +12,8 @@
 		AD1F8DA61B94FD5B001A6C52 /* BallBTN.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */; };
 		AD1F8DA81B9514BD001A6C52 /* PointBTN.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA71B9514BD001A6C52 /* PointBTN.swift */; };
 		AD1F8DAA1B96632E001A6C52 /* SubBTN.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA91B96632E001A6C52 /* SubBTN.swift */; };
+		AD1F8DAD1B9902AE001A6C52 /* KickoffFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DAC1B9902AE001A6C52 /* KickoffFilter.swift */; };
+		AD1F8DAF1B991D7D001A6C52 /* FirstDownMKR.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DAE1B991D7D001A6C52 /* FirstDownMKR.swift */; };
 		AD879ACB1B8C2979002C96CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879ACA1B8C2979002C96CA /* AppDelegate.swift */; };
 		AD879ACE1B8C2979002C96CA /* stats_football.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AD879ACC1B8C2979002C96CA /* stats_football.xcdatamodeld */; };
 		AD879AD01B8C2979002C96CA /* TrackerCTRL.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879ACF1B8C2979002C96CA /* TrackerCTRL.swift */; };
@@ -22,7 +24,7 @@
 		AD879AFF1B8D5AF1002C96CA /* NumberSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879AFE1B8D5AF1002C96CA /* NumberSelector.swift */; };
 		AD879B011B8D614C002C96CA /* NumberSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B001B8D614C002C96CA /* NumberSelectorCell.swift */; };
 		AD879B041B8E9E04002C96CA /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B031B8E9E04002C96CA /* Field.swift */; };
-		AD879B061B8EBF32002C96CA /* DownMKR.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B051B8EBF32002C96CA /* DownMKR.swift */; };
+		AD879B061B8EBF32002C96CA /* LosMKR.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B051B8EBF32002C96CA /* LosMKR.swift */; };
 		AD879B091B8EE778002C96CA /* Playlog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B081B8EE778002C96CA /* Playlog.swift */; };
 		AD879B0E1B8F1930002C96CA /* PlaykeyTBL.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B0D1B8F1930002C96CA /* PlaykeyTBL.swift */; };
 		ADA927AB1B8F3A1900DA4B8E /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA927AA1B8F3A1900DA4B8E /* Sequence.swift */; };
@@ -47,6 +49,8 @@
 		AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BallBTN.swift; sourceTree = "<group>"; };
 		AD1F8DA71B9514BD001A6C52 /* PointBTN.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointBTN.swift; sourceTree = "<group>"; };
 		AD1F8DA91B96632E001A6C52 /* SubBTN.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubBTN.swift; sourceTree = "<group>"; };
+		AD1F8DAC1B9902AE001A6C52 /* KickoffFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KickoffFilter.swift; sourceTree = "<group>"; };
+		AD1F8DAE1B991D7D001A6C52 /* FirstDownMKR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstDownMKR.swift; sourceTree = "<group>"; };
 		AD879AC51B8C2979002C96CA /* stats-football.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "stats-football.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD879AC91B8C2979002C96CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AD879ACA1B8C2979002C96CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -61,7 +65,7 @@
 		AD879AFE1B8D5AF1002C96CA /* NumberSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberSelector.swift; sourceTree = "<group>"; };
 		AD879B001B8D614C002C96CA /* NumberSelectorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberSelectorCell.swift; sourceTree = "<group>"; };
 		AD879B031B8E9E04002C96CA /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
-		AD879B051B8EBF32002C96CA /* DownMKR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownMKR.swift; sourceTree = "<group>"; };
+		AD879B051B8EBF32002C96CA /* LosMKR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LosMKR.swift; sourceTree = "<group>"; };
 		AD879B081B8EE778002C96CA /* Playlog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlog.swift; sourceTree = "<group>"; };
 		AD879B0D1B8F1930002C96CA /* PlaykeyTBL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaykeyTBL.swift; sourceTree = "<group>"; };
 		ADA927AA1B8F3A1900DA4B8E /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
@@ -87,6 +91,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AD1F8DAB1B990272001A6C52 /* PlayFilters */ = {
+			isa = PBXGroup;
+			children = (
+				AD1F8DAC1B9902AE001A6C52 /* KickoffFilter.swift */,
+			);
+			name = PlayFilters;
+			sourceTree = "<group>";
+		};
 		AD879ABC1B8C2979002C96CA = {
 			isa = PBXGroup;
 			children = (
@@ -110,6 +122,7 @@
 		AD879AC71B8C2979002C96CA /* stats-football */ = {
 			isa = PBXGroup;
 			children = (
+				AD1F8DAB1B990272001A6C52 /* PlayFilters */,
 				ADA927A91B8F3A0400DA4B8E /* Sequence */,
 				AD879B0C1B8F191E002C96CA /* Playkey */,
 				AD879B071B8EE76C002C96CA /* Playlog */,
@@ -172,7 +185,8 @@
 			isa = PBXGroup;
 			children = (
 				AD879B031B8E9E04002C96CA /* Field.swift */,
-				AD879B051B8EBF32002C96CA /* DownMKR.swift */,
+				AD879B051B8EBF32002C96CA /* LosMKR.swift */,
+				AD1F8DAE1B991D7D001A6C52 /* FirstDownMKR.swift */,
 				AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */,
 				AD1F8DA71B9514BD001A6C52 /* PointBTN.swift */,
 				AD1F8DA91B96632E001A6C52 /* SubBTN.swift */,
@@ -375,6 +389,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD879B091B8EE778002C96CA /* Playlog.swift in Sources */,
+				AD1F8DAF1B991D7D001A6C52 /* FirstDownMKR.swift in Sources */,
+				AD1F8DAD1B9902AE001A6C52 /* KickoffFilter.swift in Sources */,
 				AD1F8DA61B94FD5B001A6C52 /* BallBTN.swift in Sources */,
 				AD1F8DA41B8F7145001A6C52 /* PlayTBL.swift in Sources */,
 				AD879B011B8D614C002C96CA /* NumberSelectorCell.swift in Sources */,
@@ -386,7 +402,7 @@
 				AD1F8DA81B9514BD001A6C52 /* PointBTN.swift in Sources */,
 				AD879B041B8E9E04002C96CA /* Field.swift in Sources */,
 				AD879AFF1B8D5AF1002C96CA /* NumberSelector.swift in Sources */,
-				AD879B061B8EBF32002C96CA /* DownMKR.swift in Sources */,
+				AD879B061B8EBF32002C96CA /* LosMKR.swift in Sources */,
 				AD879ACE1B8C2979002C96CA /* stats_football.xcdatamodeld in Sources */,
 				AD879ACB1B8C2979002C96CA /* AppDelegate.swift in Sources */,
 			);

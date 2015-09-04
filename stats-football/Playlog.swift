@@ -22,7 +22,6 @@ class Playlog {
     var playkey: String!
     var player_a: Int!
     var player_b: Int!
-    var graphic: Graphic!
     
     init(){
         

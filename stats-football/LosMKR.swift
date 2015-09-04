@@ -9,7 +9,7 @@
 
 import UIKit
 
-class DownMKR: UIView {
+class LosMKR: UIView {
     
     var field: Field!
     
@@ -50,10 +50,24 @@ class DownMKR: UIView {
         if nex > max { nex = max }
         if nex < min { nex = min }
         
-        center.x = nex
+        let s = field.tracker.log[field.tracker.index]
         
-        field.ball.center.x = nex
-        field.tracker.updateSequence()
+        if s.pos_right == true {
+            
+            if nex > field.fd.center.x { center.x = nex }
+            
+        } else {
+            
+            if nex < field.fd.center.x { center.x = nex }
+            
+        }
+        
+        field.ball.center.x = center.x
+        
+        s.startX = field.toY(nex).fullToYard(s.pos_right)
+        
+        field.tracker.sequenceTBL.reloadData()
+        field.tracker.sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: field.tracker.index, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Top)
         
     }
     
@@ -61,39 +75,9 @@ class DownMKR: UIView {
         
         var y: CGFloat = 0
         
-        if pos_right {
-            
-            if yardline > -50 && yardline < 0 {
-                
-                y = 100 - (CGFloat(yardline) * -1)
-                
-            }
-            
-            if yardline > 0 && yardline < 50 {
-                
-                y = CGFloat(yardline)
-                
-            }
-            
-        } else {
-            
-            if yardline > -50 && yardline < 0 {
-                
-                y = (CGFloat(yardline) * -1)
-                
-            }
-            
-            if yardline > 0 && yardline < 50 {
-                
-                y = 100 - CGFloat(yardline)
-                
-            }
-            
-        }
+        let full = yardline.yardToFull(pos_right)
         
-        y += 10
-        
-        center.x = y * field.ratio
+        center.x = field.toX(full)
         
     }
     

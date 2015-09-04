@@ -38,16 +38,57 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         cell.backgroundColor = UIColor.clearColor()
         
-        let p = tracker.log[indexPath.row]
+        let s = tracker.log[indexPath.row]
         
-        switch p.key {
+        switch s.key {
         case "kickoff","freekick","pat":
             
-            cell.textLabel?.text = "\(p.pos_id) \(p.key) from \(p.startX)"
+            cell.textLabel?.text = "\(s.pos_id) \(s.key) from \(s.startX)"
+            
+        case "down":
+            
+            var fd: String!
+            
+            if let f = s.fd {
+                fd = "\(f)"
+            } else {
+                fd = "nil"
+            }
+            
+            var d: String!
+            
+            if let dd = s.down {
+                d = "\(dd)"
+            } else {
+                d = "nil"
+            }
+            
+            let a = s.startX.yardToFull(s.pos_right)
+            let b = s.fd!.yardToFull(s.pos_right)
+            
+            var togo: String!
+            
+            if s.pos_right == true {
+                
+                togo = "\(a - b)"
+                
+            } else {
+                
+                togo = "\(b - a)"
+                
+            }
+            
+            if let fd = s.fd {
+                
+                if fd == 100 { togo = "G" }
+                
+            }
+            
+            cell.textLabel?.text = "\(s.pos_id) \(d)n\(togo) from \(s.startX)"
             
         default:
             
-            cell.textLabel?.text = "\(p.key) : \(p.qtr) : \(p.pos_right) : \(p.startX)"
+            cell.textLabel?.text = "\(s.key) : \(s.qtr) : \(s.pos_right) : \(s.startX)"
             
         }
         
@@ -73,13 +114,23 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
-        
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            
+            if tracker.log.count > 1 {
+                
+                tracker.log.removeAtIndex(indexPath.row)
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+                tracker.selectSequence(0)
+                
+            }
+            
+        }
         
     }
     
     func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath) {
         
-        
+        tracker.selectSequence(tracker.index)
         
     }
     

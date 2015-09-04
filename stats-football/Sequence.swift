@@ -9,6 +9,8 @@ import UIKit
 
 class Sequence {
     
+    var home: String!
+    var away: String!
     var pos_id: String!
     var pos_right: Bool!
     var qtr: Int!
@@ -16,7 +18,7 @@ class Sequence {
     var down: Int?
     var fd: Int?
     var startX: Int!
-    var startY: Int!
+    var startY: Int = 50
     var replay: Bool = false
     var plays: [Play] = []
     

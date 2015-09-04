@@ -106,8 +106,6 @@ class TrackerCTRL: UIViewController {
             
         }
         
-        updateSequence()
-        
     }
     
     func fieldTOuchesMoved(touches: Set<NSObject>) -> Bool {
@@ -119,8 +117,21 @@ class TrackerCTRL: UIViewController {
         
         field.showCrosses()
         
-        field.crossH.center.y = l.y
-        field.crossV.center.x = round(l.x / field.ratio) * field.ratio
+        let min: CGFloat = field.ratio
+        let max: CGFloat = 119 * field.ratio
+        let vmin: CGFloat = 10
+        let vmax: CGFloat = field.bounds.height - 10
+        
+        var x = round(l.x / field.ratio) * field.ratio
+        var y = l.y
+        
+        if x < min { x = min }
+        if x > max { x = max }
+        if y < vmin { y = vmin }
+        if y > vmax { y = vmax }
+        
+        field.crossH.center.y = y
+        field.crossV.center.x = x
         
         return true
         
@@ -140,7 +151,7 @@ class TrackerCTRL: UIViewController {
     
     func markerMoved(){
         
-//        updateSequence()
+        
         
     }
     
@@ -148,23 +159,17 @@ class TrackerCTRL: UIViewController {
         
         qtrTXT.text = "\(Int(qtrSelector.value))"
         
-        updateSequence()
-        
     }
     
     @IBAction func downChanged(sender: AnyObject) {
         
         downTXT.text = "\(Int(downSelector.value))"
         
-        updateSequence()
-        
     }
     
     @IBAction func posChanged(sender: AnyObject) {
         
         rightPos = !rightPos
-        
-        updateSequence()
         
     }
     
@@ -180,10 +185,6 @@ class TrackerCTRL: UIViewController {
         }
         
         let a = field.los.getY()
-        
-//        field.los.moveTo(100 - a)
-        
-        updateSequence()
         
     }
     
@@ -213,37 +214,9 @@ class TrackerCTRL: UIViewController {
             
             let s = log[index]
             
-            let x = field.toY(field.crossV.center.x)
+            let x = field.toY(field.crossV.center.x).fullToYard(s.pos_right)
             
             n.endX = x
-            
-            if s.pos_right == true {
-                
-                // RIGHT SIDE
-                if x > 50 && x < 100 {
-                    
-                    n.endX = x - 100
-                    
-                }
-                
-            } else {
-                
-                // RIGHT SIDE
-                if x > 50 && x < 100 {
-                    
-                    n.endX = 100 - x
-                    
-                }
-                
-                // LEFT SIDE
-                if x < 50 && x > 0 {
-                    
-                    n.endX = x * -1
-                    
-                }
-                
-            }
-            
             n.endY = Int(round((field.crossH.center.y / field.bounds.height) * 100))
             
             s.plays.insert(n,atIndex: 0)
@@ -345,8 +318,6 @@ class TrackerCTRL: UIViewController {
     }
     
     func removeSubButtons(){
-        
-        println("REMOVE SUB BUTTONS")
         
         let s = log[index]
         
@@ -482,15 +453,25 @@ class TrackerCTRL: UIViewController {
         
         if sender.state == UIGestureRecognizerState.Changed {
             
-            let x = round((t.x + bLast.x) / field.ratio) * field.ratio
-            let y = t.y + bLast.y
+            let min = field.ratio
+            let max = 119 * field.ratio
+            let vmin = b.bounds.height / 2
+            let vmax = field.bounds.height - (b.bounds.height / 2)
+            
+            var x = round((t.x + bLast.x) / field.ratio) * field.ratio
+            var y = t.y + bLast.y
+            
+            if x < min { x = min }
+            if x > max { x = max }
+            if y < vmin { y = vmin }
+            if y > vmax { y = vmax }
             
             sender.view?.center.x = x
             sender.view?.center.y = y
             
             let s = log[index]
             
-            s.plays[b.tag].endX = field.toY(x).yardToFull(s.pos_right)
+            s.plays[b.tag].endX = field.toY(x).fullToYard(s.pos_right)
             s.plays[b.tag].endY = Int(round((y / field.bounds.height) * 100))
             
             field.showCrosses()
@@ -687,8 +668,6 @@ class TrackerCTRL: UIViewController {
         
         let s = log[index]
         
-        println("BOARD: \(s.qtr)")
-        
         if s.pos_right == true {
             posSelector.selectedSegmentIndex = 1
         } else {
@@ -704,6 +683,8 @@ class TrackerCTRL: UIViewController {
             downSelector.value = Double(d)
         }
         
+        field.fd.hidden = true
+        
         switch s.key {
         case "kickoff":
             playTypeSelector.selectedSegmentIndex = 0
@@ -716,6 +697,15 @@ class TrackerCTRL: UIViewController {
         }
         
         field.los.moveTo(s.startX,pos_right: s.pos_right)
+        
+        if let fd = s.fd {
+            
+            field.fd.hidden = false
+            println("FD: \(fd)")
+            field.fd.moveTo(fd, pos_right: s.pos_right)
+            
+        }
+        
         field.ball.center.x = field.los.center.x
         field.ball.center.y = (CGFloat(s.startY) / 100) * field.bounds.height
         
@@ -723,64 +713,27 @@ class TrackerCTRL: UIViewController {
     
     func createSequence() -> Sequence {
         
-        let s = Sequence()
+        var s = Sequence()
         
         if let prev = log.first {
             
-            var last_spot: Int?
-            
-            for play in prev.plays {
-                
-                if let e = play.endX {
-                    
-                    last_spot = e
-                    
-                    break
-                    
-                }
-                
+            switch prev.key {
+            case "kickoff":
+                s = KickoffFilter.run(prev)
+            case "freekick":
+                s.key = "down"
+            case "down":
+                s.key = "down"
+            case "pat":
+                s.key = "kickoff"
+            default:
+                println("NOTHING")
             }
-            
-            if last_spot == nil {
-                
-                last_spot = prev.startX
-                
-            }
-            
-            if prev.replay == true {
-                
-                s.key = prev.key
-                
-            } else {
-                
-                switch prev.key {
-                case "kickoff":
-                    s.key = "down"
-                    s.pos_right = !prev.pos_right
-                    last_spot = last_spot!.flipSpot()
-                    if prev.pos_id == homeTeam {
-                        s.pos_id = awayTeam
-                    } else {
-                        s.pos_id = homeTeam
-                    }
-                case "freekick":
-                    s.key = "down"
-                case "down":
-                    s.key = "down"
-                case "pat":
-                    s.key = "kickoff"
-                default:
-                    println("NOTHING")
-                }
-                
-            }
-            
-            s.qtr = prev.qtr
-            s.startX = last_spot
-            s.startY = 50
             
         } else {
             
+            s.away = awayTeam
+            s.home = homeTeam
             s.pos_id = homeTeam
             s.pos_right = true
             s.qtr = 1
@@ -831,8 +784,6 @@ class TrackerCTRL: UIViewController {
             
             if let t = tn {
                 
-                println(t)
-                
                 log[index].plays[t].tackles.append(n)
                 
                 disableCancelBTN()
@@ -844,8 +795,6 @@ class TrackerCTRL: UIViewController {
                 draw()
                 
             } else if let s = sn {
-                
-                println(s)
                 
                 log[index].plays[s].sacks.append(n)
                 
@@ -958,11 +907,7 @@ class TrackerCTRL: UIViewController {
             
             var i = 0
             
-            println("=======")
             for play in s.plays {
-                
-                println(play.key)
-                println(play.endX)
                 
                 if let p = play.endX {
                     
@@ -975,7 +920,6 @@ class TrackerCTRL: UIViewController {
                 i++
                 
             }
-            println("=======")
             
             if let p = prev {
                 
@@ -996,80 +940,28 @@ class TrackerCTRL: UIViewController {
     
     func updateSequence(){
         
-        let s = log[index]
         
-        if rightHome && rightPos {
-            s.pos_id = homeTeam
-        } else if rightHome && !rightPos {
-            s.pos_id = awayTeam
-        } else if !rightHome && rightPos {
-            s.pos_id = awayTeam
-        } else {
-            s.pos_id = homeTeam
-        }
-        
-        s.qtr = Int(qtrSelector.value)
-        s.pos_right = rightPos
-        s.key = playTypes[playTypeSelector.selectedSegmentIndex]
-        s.startY = Int(round((field.ball.center.y / field.bounds.height) * 100))
-        s.down = Int(downSelector.value)
-        s.fd = Int(field.toY(field.fd.center.x))
-        
-        let f = field.los.getY()
-        
-        if rightPos {
-            
-            s.startX = f
-            
-            if f > 50 && f < 100 {
-                
-                s.startX = f - 100
-                
-            }
-            
-        } else {
-            
-            s.startX = f
-            
-            if f > 50 && f < 100 {
-                
-                s.startX = 100 - f
-                
-            }
-            
-            if f > 0 && f < 50 {
-                
-                s.startX = f * -1
-                
-            }
-            
-        }
-        
-        sequenceTBL.reloadData()
-        
-        sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: index, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Top)
-        
-        draw()
-        drawButtons()
         
     }
     
     func selectSequence(i: Int){
         
         index = i
-        sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0), animated: true, scrollPosition: UITableViewScrollPosition.Top)
+        sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Top)
         sequenceSelected()
         
     }
     
     func sequenceSelected(){
         
+        let s = log[index]
+        
         playTBL.reloadData()
+        
+        updateBoard()
         
         draw()
         drawButtons()
-        
-        updateBoard()
         
     }
     

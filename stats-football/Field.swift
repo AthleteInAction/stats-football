@@ -20,8 +20,8 @@ class Field: UIView {
     var crossH: UIView!
     var crossV: UIView!
     
-    var los: DownMKR!
-    var fd: DownMKR!
+    var los: LosMKR!
+    var fd: FirstDownMKR!
     var cr: CGFloat?
     
     var buttons: [PointBTN] = []
@@ -106,12 +106,12 @@ class Field: UIView {
         ratio = CGFloat(bounds.width) / 120
         vratio = CGFloat(bounds.height) / 53.33
         
-        los = DownMKR(frame: CGRect(x: 20/*yarline*/ * ratio-(ratio/2), y: 0, width: ratio, height: bounds.height))
+        los = LosMKR(frame: CGRect(x: 20/*yarline*/ * ratio-(ratio/2), y: 0, width: ratio, height: bounds.height))
         los.field = self
         los.backgroundColor = UIColor.blueColor()
         addSubview(los)
         
-        fd = DownMKR(frame: CGRect(x: 30/*yarline*/ * ratio-(ratio/2), y: 0, width: ratio, height: bounds.height))
+        fd = FirstDownMKR(frame: CGRect(x: 30/*yarline*/ * ratio-(ratio/2), y: 0, width: ratio, height: bounds.height))
         fd.field = self
         fd.backgroundColor = UIColor.yellowColor()
         addSubview(fd)
@@ -241,6 +241,20 @@ extension Int {
                 
             }
             
+            // LEFT ENDZONE
+            if self > 99 {
+                
+                nex = (self - 100) * -1
+                
+            }
+            
+            // RIGHT ENDZONE
+            if self < -99 {
+                
+                nex = self * -1
+                
+            }
+            
         } else {
         // LEFT TO RIGHT
             
@@ -258,11 +272,83 @@ extension Int {
                 
             }
             
+            // LEFT ENDZONE
+            if self < -99 {
+                
+                nex = self + 100
+                
+            }
+            
         }
         
         return nex
         
-    } // CONVERT -40/40 to 40/60
+    } // CONVERT 40/60 to -40/40
+    
+    func fullToYard(pos_right: Bool) -> Int {
+        
+        var nex = self
+        
+        if pos_right {
+            // RIGHT TO LEFT
+            
+            // RIGHT SIDE OF FIELD
+            if self > 50 && self < 100 {
+                
+                nex = self - 100
+                
+            }
+            
+            // RIGHT ENDZONE
+            if self > 99 {
+                
+                nex = self * -1
+                
+            }
+            
+            // LEFT ENDZONE
+            if self < 1 {
+                
+                nex = 100 + abs(self)
+                
+            }
+            
+        } else {
+            // LEFT TO RIGHT
+            
+            // RIGHT SIDE OF FIELD
+            if self > 50 && self < 100 {
+                
+                nex = 100 - self
+                
+            }
+            
+            // LEFT SIDE OF FIELD
+            if self < 50 && self > 0 {
+                
+                nex = self * -1
+                
+            }
+            
+            // LEFT ENDZONE
+            if self < 1 {
+                
+                nex = -100 + self
+                
+            }
+            
+            // RIGHT ENDZONE
+            if self > 99 {
+                
+                nex = self
+                
+            }
+            
+        }
+        
+        return nex
+        
+    } // CONVERT 40/60 to -40/40
     
     // FLIP SPOT
     func flipSpot() -> Int {
