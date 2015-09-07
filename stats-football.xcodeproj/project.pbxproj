@@ -28,6 +28,9 @@
 		AD879B091B8EE778002C96CA /* Playlog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B081B8EE778002C96CA /* Playlog.swift */; };
 		AD879B0E1B8F1930002C96CA /* PlaykeyTBL.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B0D1B8F1930002C96CA /* PlaykeyTBL.swift */; };
 		ADA927AB1B8F3A1900DA4B8E /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA927AA1B8F3A1900DA4B8E /* Sequence.swift */; };
+		ADB8F9211B9D440D0049BDF0 /* PenaltyMKR.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9201B9D440D0049BDF0 /* PenaltyMKR.swift */; };
+		ADB8F9241B9D5DB90049BDF0 /* PenaltyPOP.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADB8F9231B9D5DB90049BDF0 /* PenaltyPOP.xib */; };
+		ADB8F9281B9D5F1F0049BDF0 /* PenaltyPOP.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9271B9D5F1F0049BDF0 /* PenaltyPOP.swift */; };
 		B54E3B3AF3B63AEF9BE2BCF5 /* Pods_stats_football.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139C0BD1F20EF3EAB56E4E21 /* Pods_stats_football.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -69,6 +72,9 @@
 		AD879B081B8EE778002C96CA /* Playlog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlog.swift; sourceTree = "<group>"; };
 		AD879B0D1B8F1930002C96CA /* PlaykeyTBL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaykeyTBL.swift; sourceTree = "<group>"; };
 		ADA927AA1B8F3A1900DA4B8E /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
+		ADB8F9201B9D440D0049BDF0 /* PenaltyMKR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenaltyMKR.swift; sourceTree = "<group>"; };
+		ADB8F9231B9D5DB90049BDF0 /* PenaltyPOP.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PenaltyPOP.xib; sourceTree = "<group>"; };
+		ADB8F9271B9D5F1F0049BDF0 /* PenaltyPOP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenaltyPOP.swift; sourceTree = "<group>"; };
 		CC07A1E0985B5649009E1AAC /* Pods-stats-football.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stats-football.release.xcconfig"; path = "Pods/Target Support Files/Pods-stats-football/Pods-stats-football.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -126,6 +132,7 @@
 				ADA927A91B8F3A0400DA4B8E /* Sequence */,
 				AD879B0C1B8F191E002C96CA /* Playkey */,
 				AD879B071B8EE76C002C96CA /* Playlog */,
+				ADB8F9221B9D5D9D0049BDF0 /* Popovers */,
 				AD879B021B8E9DED002C96CA /* Field */,
 				AD879AFB1B8D5A63002C96CA /* NumberSelector */,
 				AD879AED1B8D4AE7002C96CA /* Tracker */,
@@ -190,6 +197,7 @@
 				AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */,
 				AD1F8DA71B9514BD001A6C52 /* PointBTN.swift */,
 				AD1F8DA91B96632E001A6C52 /* SubBTN.swift */,
+				ADB8F9201B9D440D0049BDF0 /* PenaltyMKR.swift */,
 			);
 			name = Field;
 			sourceTree = "<group>";
@@ -218,6 +226,15 @@
 				AD1F8DA31B8F7145001A6C52 /* PlayTBL.swift */,
 			);
 			name = Sequence;
+			sourceTree = "<group>";
+		};
+		ADB8F9221B9D5D9D0049BDF0 /* Popovers */ = {
+			isa = PBXGroup;
+			children = (
+				ADB8F9231B9D5DB90049BDF0 /* PenaltyPOP.xib */,
+				ADB8F9271B9D5F1F0049BDF0 /* PenaltyPOP.swift */,
+			);
+			name = Popovers;
 			sourceTree = "<group>";
 		};
 		EADBDD7131EBF9B8ED736B23 /* Pods */ = {
@@ -323,6 +340,7 @@
 				AD879AD31B8C2979002C96CA /* Main.storyboard in Resources */,
 				AD879AD81B8C2979002C96CA /* LaunchScreen.xib in Resources */,
 				AD879AD51B8C2979002C96CA /* Images.xcassets in Resources */,
+				ADB8F9241B9D5DB90049BDF0 /* PenaltyPOP.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,6 +408,7 @@
 			files = (
 				AD879B091B8EE778002C96CA /* Playlog.swift in Sources */,
 				AD1F8DAF1B991D7D001A6C52 /* FirstDownMKR.swift in Sources */,
+				ADB8F9211B9D440D0049BDF0 /* PenaltyMKR.swift in Sources */,
 				AD1F8DAD1B9902AE001A6C52 /* KickoffFilter.swift in Sources */,
 				AD1F8DA61B94FD5B001A6C52 /* BallBTN.swift in Sources */,
 				AD1F8DA41B8F7145001A6C52 /* PlayTBL.swift in Sources */,
@@ -398,6 +417,7 @@
 				AD1F8DAA1B96632E001A6C52 /* SubBTN.swift in Sources */,
 				AD1F8DA21B8F6B31001A6C52 /* SequenceTBL.swift in Sources */,
 				AD879AD01B8C2979002C96CA /* TrackerCTRL.swift in Sources */,
+				ADB8F9281B9D5F1F0049BDF0 /* PenaltyPOP.swift in Sources */,
 				AD879B0E1B8F1930002C96CA /* PlaykeyTBL.swift in Sources */,
 				AD1F8DA81B9514BD001A6C52 /* PointBTN.swift in Sources */,
 				AD879B041B8E9E04002C96CA /* Field.swift in Sources */,

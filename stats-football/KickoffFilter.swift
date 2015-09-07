@@ -8,22 +8,25 @@
 
 class KickoffFilter {
     
-    static func run(original: Sequence) -> Sequence {
+    static func run(tracker: TrackerCTRL,original: Sequence) -> Sequence {
         
         var s = Sequence()
         
-        s.home = original.home
-        s.away = original.away
+        var pos_right: Bool = (original.pos_id == tracker.homeTeam && tracker.rightHome) || (original.pos_id == tracker.awayTeam && !tracker.rightHome)
+        
+        let pos_right_original: Bool = (original.pos_id == tracker.homeTeam && tracker.rightHome) || (original.pos_id == tracker.awayTeam && !tracker.rightHome)
+        
         s.pos_id = original.pos_id
-        s.pos_right = original.pos_right
-        s.qtr = original.qtr
         s.startX = original.startX
-        s.key = original.key
+        s.startY = 50
+        s.qtr = original.qtr
         
         // REPLAY DOWN
         // =======================================================
         // =======================================================
-        if original.replay {
+        if original.replay || original.plays.count == 0 {
+            
+            s.startX = original.startX
             
             for play in original.plays {
                 
@@ -40,7 +43,6 @@ class KickoffFilter {
             s.key = original.key
             s.down = original.down
             s.fd = original.fd
-            s.startX = original.startX
             s.startY = original.startY
             
             return s
@@ -49,48 +51,64 @@ class KickoffFilter {
         // =======================================================
         // =======================================================
         
-        s.pos_right = !s.pos_right
+        
+        // IF KICK WITH NO RETURN
+        // =======================================================
+        // =======================================================
+        if original.plays.count == 1 && original.plays.first?.key == "kick" {
+            
+            if let p = original.plays.first {
+                
+                if (p.endX > 0 && p.endX <= 50) || (p.endX < 0 && p.endX > -50) {
+                    
+                    if tracker.homeTeam == original.pos_id {
+                        s.pos_id = tracker.awayTeam
+                    } else {
+                        s.pos_id = tracker.homeTeam
+                    }
+                    s.key = "down"
+                    s.down = 1
+                    s.startX = p.endX!.flipSpot()
+                    s.fd = s.startX.plus(10)
+                    
+                    return s
+                    
+                }
+                
+            }
+            
+        }
+        // =======================================================
+        // =======================================================
         
         
         // LOOP THROUGH PLAYS
         // =======================================================
         // =======================================================
-        var prevPlay: Play?
-        var lastPlayWithSpot: Play?
-        var lastPlayWithoutPenalty: Play?
+        // #######################################################
+        var lastPossessionOutsideEndzone: Bool?
+        var lastSpot: Play?
+        // #######################################################
         for (i,play) in enumerate(original.plays) {
-            
-            // GET LAST SPOT
-            // ++++++++++++++++++++++++++++++++
-            if let x = play.endX {
-                
-                if lastPlayWithSpot == nil {
-                    
-                    s.startX = x
-                    lastPlayWithSpot = play
-                    
-                }
-                
-                if lastPlayWithoutPenalty == nil {
-                    
-                    if play.key != "penalty" { lastPlayWithoutPenalty = play }
-                    
-                }
-                
-            }
-            // ++++++++++++++++++++++++++++++++
             
             // CHECK FOR CHANGE IN POSSESSION
             // ++++++++++++++++++++++++++++++++
             switch play.key {
+            case "kick":
+                
+                pos_right = !pos_right
+                
             case "fumble":
                 
-                if play.player_b != nil && play.pos_id == original.pos_id { s.pos_right = !s.pos_right }
-                
+                if let player = play.player_b {
+                    
+                    pos_right = (tracker.rightHome && play.pos_id == tracker.homeTeam) || (!tracker.rightHome && play.pos_id == tracker.awayTeam)
+                    
+                }
                 
             case "interception","recovery":
                 
-                s.pos_right = !s.pos_right
+                pos_right = !pos_right
                 
             default:
                 
@@ -99,72 +117,236 @@ class KickoffFilter {
             }
             // ++++++++++++++++++++++++++++++++
             
-            prevPlay = play
-            
-        }
-        // =======================================================
-        // =======================================================
-        
-        if s.pos_right != original.pos_right {
-            
-            s.startX = s.startX.flipSpot()
-            
-            if original.pos_id == original.home {
+            // LAST POSSESSION OUTSIDE ENDZONE
+            // ++++++++++++++++++++++++++++++++
+            if (play.endX >= 1 && play.endX <= 50) || (play.endX >= -49 && play.endX <= -1) {
                 
-                s.pos_id = original.away
-                
-            } else {
-                
-                s.pos_id = original.away
+                lastPossessionOutsideEndzone = pos_right
                 
             }
+            // ++++++++++++++++++++++++++++++++
+            
+            if let x = play.endX { lastSpot = play }
             
         }
+        // =======================================================
+        // =======================================================
         
         s.key = "down"
         s.down = 1
-        
-        let y = s.startX.yardToFull(s.pos_right)
-        
-        if s.pos_right == true {
-            
-            var n = (y - 10)
-            
-            if n <= 0 { n = 0 }
-            
-            s.fd = n.fullToYard(true)
-            
+        if pos_right_original == pos_right {
+            if tracker.homeTeam == original.pos_id {
+                s.pos_id = tracker.homeTeam
+            } else {
+                s.pos_id = tracker.awayTeam
+            }
+            s.startX = lastSpot!.endX
         } else {
-            
-            var n = (y + 10)
-            
-            if n >= 100 { n = 100 }
-            
-            s.fd = n.fullToYard(false)
-            
+            if tracker.homeTeam == original.pos_id {
+                s.pos_id = tracker.awayTeam
+            } else {
+                s.pos_id = tracker.homeTeam
+            }
+            s.startX = lastSpot!.endX?.flipSpot()
         }
+        s.fd = s.startX.plus(10)
         
-        // SCORE
+        
+        // CHECK IF BALL ENDED IN ENDZONE
         // =======================================================
         // =======================================================
-        if s.pos_right != original.pos_right {
+        if let play = lastSpot {
             
-            if let l = lastPlayWithoutPenalty {
+            // RETURN TEAM ENDZONE
+            // ++++++++++++++++++++++++++++++++
+            if play.endX! >= 100 {
                 
-                // TOUCHDOWN FOR RETURN TEAM
-                if l.endX <= -100 {
+                // IF KICKING TEAM HAS BALL
+                // ------------------------------------
+                if pos_right_original == pos_right {
                     
+                    println("TOUCHDOWN")
+                    s.pos_id = original.pos_id
+                    s.key = "pat"
+                    s.startX = 3
                     
+                } else {
+                    
+                    // CHECK IF SAFETY OR TOUCHBACK
+                    // ====================================
+                    if let l = lastPossessionOutsideEndzone {
+                        
+                        if l == pos_right {
+                            
+                            println("SAFETY")
+                            if tracker.homeTeam == original.pos_id {
+                                s.pos_id = tracker.awayTeam
+                            } else {
+                                s.pos_id = tracker.homeTeam
+                            }
+                            s.key = "freekick"
+                            s.startX = 3
+                            
+                        } else {
+                            
+                            println("TOUCHBACK A")
+                            if tracker.homeTeam == original.pos_id {
+                                s.pos_id = tracker.awayTeam
+                            } else {
+                                s.pos_id = tracker.homeTeam
+                            }
+                            s.key = "down"
+                            s.startX = -20
+                            s.fd = -30
+                            
+                        }
+                        
+                    } else {
+                        
+                        println("TOUCHBACK B")
+                        if tracker.homeTeam == original.pos_id {
+                            s.pos_id = tracker.awayTeam
+                        } else {
+                            s.pos_id = tracker.homeTeam
+                        }
+                        s.key = "down"
+                        s.startX = -20
+                        s.fd = -30
+                        
+                    }
+                    // ====================================
                     
                 }
+                // ------------------------------------
                 
             }
+            // ++++++++++++++++++++++++++++++++
+            
+            
+            // RETURN TEAM ENDZONE
+            // ++++++++++++++++++++++++++++++++
+            if play.endX! <= -100 {
+                
+                // IF KICKING TEAM HAS BALL
+                // ------------------------------------
+                if pos_right_original != pos_right {
+                    
+                    println("TOUCHDOWN")
+                    s.pos_id = original.pos_id
+                    s.key = "pat"
+                    s.startX = 3
+                    
+                } else {
+                    
+                    // CHECK IF SAFETY OR TOUCHBACK
+                    // ====================================
+                    if let l = lastPossessionOutsideEndzone {
+                        
+                        if l == pos_right {
+                            
+                            println("SAFETY")
+                            if tracker.homeTeam == original.pos_id {
+                                s.pos_id = tracker.awayTeam
+                            } else {
+                                s.pos_id = tracker.homeTeam
+                            }
+                            s.key = "freekick"
+                            s.startX = 3
+                            
+                        } else {
+                            
+                            println("TOUCHBACK A")
+                            if tracker.homeTeam == original.pos_id {
+                                s.pos_id = tracker.awayTeam
+                            } else {
+                                s.pos_id = tracker.homeTeam
+                            }
+                            s.key = "down"
+                            s.startX = -20
+                            s.fd = -30
+                            
+                        }
+                        
+                    } else {
+                        
+                        println("TOUCHBACK B")
+                        if tracker.homeTeam == original.pos_id {
+                            s.pos_id = tracker.awayTeam
+                        } else {
+                            s.pos_id = tracker.homeTeam
+                        }
+                        s.key = "down"
+                        s.startX = -20
+                        s.fd = -30
+                        
+                    }
+                    // ====================================
+                    
+                }
+                // ------------------------------------
+                
+            }
+            // ++++++++++++++++++++++++++++++++
             
         }
         // =======================================================
         // =======================================================
         
         return s
+        
+    }
+    
+}
+
+extension Int {
+    
+    func plus(inc: Int) -> Int {
+        
+        var full = self
+        
+        if self >= 1 && self <= 50 {
+            
+            full = 100 - self
+            
+        }
+        
+        if self <= -1 && self >= -49 {
+            
+            full = self * -1
+            
+        }
+        
+        full += inc
+        
+        if full >= 100 {
+            
+            full = 100
+            
+        }
+        
+        switch full {
+        case 51...99:
+            
+            full = 100 - full
+            break
+            
+        case 1...49:
+            
+            full = full * -1
+            break
+            
+        case 0:
+            
+            full = 100
+            break
+            
+        default:
+            
+            break
+            
+        }
+        
+        return full
         
     }
     

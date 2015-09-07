@@ -10,8 +10,8 @@ import UIKit
 
 class SubBTN: UIButton {
 
-    var d: Field!
-    
+    var field: Field!
+    var index: Int!
     var play: Play!
     
     var log: [Sequence]!

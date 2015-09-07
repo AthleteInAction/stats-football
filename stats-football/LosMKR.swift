@@ -52,7 +52,9 @@ class LosMKR: UIView {
         
         let s = field.tracker.log[field.tracker.index]
         
-        if s.pos_right == true {
+        let pos_right: Bool = (s.pos_id == field.tracker.homeTeam && field.tracker.rightHome) || (s.pos_id == field.tracker.awayTeam && !field.tracker.rightHome)
+        
+        if pos_right {
             
             if nex > field.fd.center.x { center.x = nex }
             
@@ -64,7 +66,7 @@ class LosMKR: UIView {
         
         field.ball.center.x = center.x
         
-        s.startX = field.toY(nex).fullToYard(s.pos_right)
+        s.startX = field.toY(nex).fullToYard(pos_right)
         
         field.tracker.sequenceTBL.reloadData()
         field.tracker.sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: field.tracker.index, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Top)

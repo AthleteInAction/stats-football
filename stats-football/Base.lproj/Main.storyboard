@@ -216,6 +216,21 @@
                                 <color key="textColor" red="0.65490196078431373" green="0.65490196078431373" blue="0.65490196078431373" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fJG-fg-FRu">
+                                <rect key="frame" x="572" y="315" width="84" height="30"/>
+                                <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="MoG-Od-P6A"/>
+                                    <constraint firstAttribute="width" constant="84" id="koK-2I-Sag"/>
+                                </constraints>
+                                <state key="normal" title="Penalty">
+                                    <color key="titleColor" red="0.31372549020000001" green="0.31372549020000001" blue="0.31372549020000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="penaltyTPD:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Brk-7j-e19"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.20062154696132595" green="0.20062154696132595" blue="0.20062154696132595" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -230,6 +245,7 @@
                             <constraint firstAttribute="trailing" secondItem="yiD-MP-Dzw" secondAttribute="trailing" id="C4C-QH-giR"/>
                             <constraint firstItem="1Ye-t8-RNl" firstAttribute="top" secondItem="mwm-K5-KTB" secondAttribute="bottom" constant="8" id="FCf-tu-gG4"/>
                             <constraint firstItem="HVI-7f-T66" firstAttribute="leading" secondItem="Rfd-e8-SZK" secondAttribute="trailing" constant="8" id="I5g-hY-FxF"/>
+                            <constraint firstItem="yiD-MP-Dzw" firstAttribute="top" secondItem="fJG-fg-FRu" secondAttribute="bottom" constant="8" id="JRR-7d-ovS"/>
                             <constraint firstItem="yiD-MP-Dzw" firstAttribute="top" secondItem="RXZ-e0-gsY" secondAttribute="bottom" id="JlX-Yt-mml"/>
                             <constraint firstItem="yiD-MP-Dzw" firstAttribute="top" secondItem="Rfd-e8-SZK" secondAttribute="bottom" id="MJ7-BW-tDC"/>
                             <constraint firstItem="Q0S-tT-GYH" firstAttribute="centerY" secondItem="7kM-oV-ade" secondAttribute="centerY" id="NcD-AM-Aj0"/>
@@ -248,6 +264,7 @@
                             <constraint firstItem="4pK-LX-1U6" firstAttribute="width" secondItem="yiD-MP-Dzw" secondAttribute="width" id="irX-HZ-2gi"/>
                             <constraint firstItem="7kM-oV-ade" firstAttribute="top" secondItem="1Ye-t8-RNl" secondAttribute="bottom" constant="8" id="iuF-pV-9os"/>
                             <constraint firstItem="Q0S-tT-GYH" firstAttribute="leading" secondItem="pbx-ws-5GO" secondAttribute="leading" id="jkb-Wf-bts"/>
+                            <constraint firstItem="RXZ-e0-gsY" firstAttribute="leading" secondItem="fJG-fg-FRu" secondAttribute="trailing" constant="8" id="mQt-v6-dnP"/>
                             <constraint firstItem="Rfd-e8-SZK" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="mY9-qX-UB3"/>
                             <constraint firstItem="yiD-MP-Dzw" firstAttribute="top" secondItem="eCm-n4-NO2" secondAttribute="bottom" constant="8" id="n8H-7y-Pe2"/>
                             <constraint firstAttribute="trailing" secondItem="9UF-Ve-a5e" secondAttribute="trailing" id="nq8-lE-oOS"/>
@@ -275,6 +292,7 @@
                         <outlet property="field" destination="yiD-MP-Dzw" id="u1U-hW-IYC"/>
                         <outlet property="fimg" destination="4pK-LX-1U6" id="a0P-xn-OKz"/>
                         <outlet property="leftNumbers" destination="6g9-h4-DvS" id="18H-WZ-Wtw"/>
+                        <outlet property="penaltyBTN" destination="fJG-fg-FRu" id="DNa-NG-PNs"/>
                         <outlet property="playKeySelector" destination="Rfd-e8-SZK" id="HAh-Le-A27"/>
                         <outlet property="playTBL" destination="9UF-Ve-a5e" id="bEQ-TT-U5M"/>
                         <outlet property="playTypeSelector" destination="IcT-lD-XNu" id="aex-eC-wHQ"/>

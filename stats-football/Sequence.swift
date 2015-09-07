@@ -9,10 +9,7 @@ import UIKit
 
 class Sequence {
     
-    var home: String!
-    var away: String!
     var pos_id: String!
-    var pos_right: Bool!
     var qtr: Int!
     var key: String!
     var down: Int?
@@ -40,34 +37,15 @@ class Play {
     var player_b: Int?
     var penaltyKey: String?
     var penaltyDistance: Int?
-    var pos_id: String!
-    var graphic: UIView!
+    var pos_id: String?
+    var score: Int?
+    var touchback: Bool = false
     var tackles: [Int] = []
     var sacks: [Int] = []
-    var button: PointBTN?
-    var buttons: [SubBTN] = []
     
     init(){
         
         
-        
-    }
-    
-    func removeButton(){
-        
-        if let b = button { b.removeFromSuperview() }
-        
-    }
-    
-    func removeButtons(){
-        
-        for button in buttons {
-            
-            button.removeFromSuperview()
-            
-        }
-        
-        buttons.removeAll(keepCapacity: true)
         
     }
     

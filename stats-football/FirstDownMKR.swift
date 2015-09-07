@@ -62,7 +62,9 @@ class FirstDownMKR: UIView {
         
         let s = field.tracker.log[field.tracker.index]
         
-        if s.pos_right == true {
+        let pos_right: Bool = (s.pos_id == field.tracker.homeTeam && field.tracker.rightHome) || (s.pos_id == field.tracker.awayTeam && !field.tracker.rightHome)
+        
+        if pos_right {
             
             if nex < field.los.center.x { center.x = nex }
             
@@ -72,10 +74,10 @@ class FirstDownMKR: UIView {
             
         }
         
-        s.fd = field.toY(center.x).fullToYard(s.pos_right)
+        s.fd = field.toY(center.x).fullToYard(pos_right)
         println("FD: \(s.fd)")
         println(field.toY(center.x))
-        println(field.toY(center.x).fullToYard(s.pos_right))
+        println(field.toY(center.x).fullToYard(pos_right))
         
         field.tracker.sequenceTBL.reload()
         

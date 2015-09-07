@@ -15,8 +15,8 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        self.delegate = self
-        self.dataSource = self
+        delegate = self
+        dataSource = self
         
     }
     
@@ -39,6 +39,8 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         cell.backgroundColor = UIColor.clearColor()
         
         let s = tracker.log[indexPath.row]
+        
+        let pos_right: Bool = (s.pos_id == tracker.homeTeam && tracker.rightHome) || (s.pos_id == tracker.awayTeam && !tracker.rightHome)
         
         switch s.key {
         case "kickoff","freekick","pat":
@@ -63,12 +65,12 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
                 d = "nil"
             }
             
-            let a = s.startX.yardToFull(s.pos_right)
-            let b = s.fd!.yardToFull(s.pos_right)
+            let a = s.startX.yardToFull(pos_right)
+            let b = s.fd!.yardToFull(pos_right)
             
             var togo: String!
             
-            if s.pos_right == true {
+            if pos_right {
                 
                 togo = "\(a - b)"
                 
@@ -78,17 +80,32 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
                 
             }
             
+            var f = ""
             if let fd = s.fd {
                 
                 if fd == 100 { togo = "G" }
+                f = "(\(fd))"
                 
             }
             
-            cell.textLabel?.text = "\(s.pos_id) \(d)n\(togo) from \(s.startX)"
+            cell.textLabel?.text = "\(s.pos_id) \(d)n\(togo)\(f) from \(s.startX)"
             
         default:
             
-            cell.textLabel?.text = "\(s.key) : \(s.qtr) : \(s.pos_right) : \(s.startX)"
+            cell.textLabel?.text = "\(s.key) : \(s.qtr) : \(pos_right) : \(s.startX)"
+            
+        }
+        
+        println("CELL \(indexPath.row) : \(tracker.log.count)")
+        if tracker.log.count == 1 {
+            
+            cell.selected = true
+            cell.selectionStyle = UITableViewCellSelectionStyle.Default
+            cell.userInteractionEnabled = false
+            
+        } else {
+            
+            cell.userInteractionEnabled = true
             
         }
         
@@ -97,15 +114,6 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        let s = tracker.log[tracker.index]
-        
-        for play in s.plays {
-            
-            play.removeButton()
-            play.removeButtons()
-            
-        }
         
         tracker.index = indexPath.row
         tracker.sequenceSelected()
@@ -118,9 +126,21 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
             if tracker.log.count > 1 {
                 
+                tracker.index = 0
                 tracker.log.removeAtIndex(indexPath.row)
                 tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-                tracker.selectSequence(0)
+                
+                if tracker.log.count > (indexPath.row+1) {
+                    
+                    tracker.index = indexPath.row
+                    
+                } else if tracker.log.count >= (indexPath.row+1) && indexPath.row > 0 {
+                    
+                    tracker.index = indexPath.row - 1
+                    
+                }
+                
+                tracker.selectSequence(tracker.index)
                 
             }
             

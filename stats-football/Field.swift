@@ -30,13 +30,17 @@ class Field: UIView {
     
     override func drawRect(rect: CGRect) {
         
+        for v in subviews { if v.tag == -3 { v.removeFromSuperview() } }
+        
         if tracker.log.count > 0 {
             
             let s = tracker.log[tracker.index]
             
             let c = UIGraphicsGetCurrentContext()
             
-            var x = toX(s.startX.yardToFull(s.pos_right))
+            let pos_right: Bool = (s.pos_id == tracker.homeTeam && tracker.rightHome) || (s.pos_id == tracker.awayTeam && !tracker.rightHome)
+            
+            var x = toX(s.startX.yardToFull(pos_right))
             var y = toP(s.startY)
             
             CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
@@ -44,46 +48,62 @@ class Field: UIView {
             var prev: Play?
             
             var i = 0
-            for play in reverse(s.plays) {
+            for play in s.plays {
                 
-                x = toX(play.endX!.yardToFull(s.pos_right))
-                y = toP(play.endY!)
+                if play.key == "penalty" {
+                    
+                    var w = CGFloat(play.penaltyDistance!) * ratio
+                    
+                    if !pos_right { w *= -1 }
+                    
+                    var v = PenaltyMKR(frame: CGRect(x: toX(play.endX!.yardToFull(pos_right)) - w, y: 0, width: w, height: bounds.height))
+                    v.field = self
+                    v.tag = -3
+                    v.setArrow((tracker.rightHome && play.pos_id == tracker.homeTeam) || (!tracker.rightHome && play.pos_id == tracker.awayTeam))
+                    addSubview(v)
+                    
+                } else {
                 
-                CGContextSetLineWidth(c, 10.0)
-                CGContextSetLineDash(c, 10, [6,3], 2)
-                
-                var color = UIColor.blackColor().CGColor
-                
-                switch play.key {
-                case "run":
-                    color = UIColor(red: 57/255, green: 140/255, blue: 183/255, alpha: 0.7).CGColor
-                case "pass":
-                    color = UIColor(red: 53/255, green: 255/255, blue: 63/255, alpha: 0.7).CGColor
-                case "kick","punt":
-                    color = UIColor(red: 255/255, green: 120/255, blue: 0, alpha: 0.7).CGColor
-                case "penalty":
-                    color = UIColor(red: 255/255, green: 228/255, blue: 0, alpha: 0.7).CGColor
-                case "interception":
-                    color = UIColor(red: 255/255, green: 47/255, blue: 47/255, alpha: 0.7).CGColor
-                case "lateral":
-                    color = UIColor(red: 170/255, green: 170/255, blue: 170/255, alpha: 0.7).CGColor
-                default:
-                    color = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.7).CGColor
+                    x = toX(play.endX!.yardToFull(pos_right))
+                    y = toP(play.endY!)
+                    
+                    CGContextSetLineWidth(c, 10.0)
+                    CGContextSetLineDash(c, 10, [6,3], 2)
+                    
+                    var color = UIColor.blackColor().CGColor
+                    
+                    switch play.key {
+                    case "run":
+                        color = UIColor(red: 57/255, green: 140/255, blue: 183/255, alpha: 0.7).CGColor
+                    case "pass":
+                        color = UIColor(red: 53/255, green: 255/255, blue: 63/255, alpha: 0.7).CGColor
+                    case "kick","punt":
+                        color = UIColor(red: 255/255, green: 120/255, blue: 0, alpha: 0.7).CGColor
+                    case "penalty":
+                        color = UIColor(red: 255/255, green: 228/255, blue: 0, alpha: 0.7).CGColor
+                    case "interception":
+                        color = UIColor(red: 255/255, green: 47/255, blue: 47/255, alpha: 0.7).CGColor
+                    case "lateral":
+                        color = UIColor(red: 170/255, green: 170/255, blue: 170/255, alpha: 0.7).CGColor
+                    default:
+                        color = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.7).CGColor
+                    }
+                    
+                    CGContextSetStrokeColorWithColor(c,color)
+                    
+                    CGContextAddLineToPoint(c,CGFloat(x),CGFloat(y))
+                    
+                    CGContextStrokePath(c)
+                    
+                    CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
+                    
+                    prev = play
+                    
+                    tracker.drawSubButtons(i)
+                    
+                    i++
+                    
                 }
-                
-                CGContextSetStrokeColorWithColor(c,color)
-                
-                CGContextAddLineToPoint(c,CGFloat(x),CGFloat(y))
-                
-                CGContextStrokePath(c)
-                
-                CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
-                
-                prev = play
-                
-                tracker.drawSubButtons(i)
-                
-                i++
                 
             }
             

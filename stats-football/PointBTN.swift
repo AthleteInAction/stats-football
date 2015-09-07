@@ -10,9 +10,8 @@ import UIKit
 
 class PointBTN: UIButton {
     
-    var d: Field!
-    
-    var buttons: [UIButton] = []
+    var field: Field!
+    var index: Int!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
