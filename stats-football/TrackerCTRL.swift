@@ -247,6 +247,7 @@ class TrackerCTRL: UIViewController {
 //        presentViewController(alert, animated: true, completion: nil)
         
         var pop = PenaltyPOP(nibName: "PenaltyPOP",bundle: nil)
+        pop.tracker = self
         
         var pc = UIPopoverController(contentViewController: pop)
         

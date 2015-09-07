@@ -31,6 +31,8 @@
 		ADB8F9211B9D440D0049BDF0 /* PenaltyMKR.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9201B9D440D0049BDF0 /* PenaltyMKR.swift */; };
 		ADB8F9241B9D5DB90049BDF0 /* PenaltyPOP.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADB8F9231B9D5DB90049BDF0 /* PenaltyPOP.xib */; };
 		ADB8F9281B9D5F1F0049BDF0 /* PenaltyPOP.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9271B9D5F1F0049BDF0 /* PenaltyPOP.swift */; };
+		ADB8F92B1B9D63900049BDF0 /* PenaltyPOPCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9291B9D63900049BDF0 /* PenaltyPOPCell.swift */; };
+		ADB8F92C1B9D63900049BDF0 /* PenaltyPOPCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADB8F92A1B9D63900049BDF0 /* PenaltyPOPCell.xib */; };
 		B54E3B3AF3B63AEF9BE2BCF5 /* Pods_stats_football.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139C0BD1F20EF3EAB56E4E21 /* Pods_stats_football.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -75,6 +77,8 @@
 		ADB8F9201B9D440D0049BDF0 /* PenaltyMKR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenaltyMKR.swift; sourceTree = "<group>"; };
 		ADB8F9231B9D5DB90049BDF0 /* PenaltyPOP.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PenaltyPOP.xib; sourceTree = "<group>"; };
 		ADB8F9271B9D5F1F0049BDF0 /* PenaltyPOP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenaltyPOP.swift; sourceTree = "<group>"; };
+		ADB8F9291B9D63900049BDF0 /* PenaltyPOPCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenaltyPOPCell.swift; sourceTree = "<group>"; };
+		ADB8F92A1B9D63900049BDF0 /* PenaltyPOPCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PenaltyPOPCell.xib; sourceTree = "<group>"; };
 		CC07A1E0985B5649009E1AAC /* Pods-stats-football.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stats-football.release.xcconfig"; path = "Pods/Target Support Files/Pods-stats-football/Pods-stats-football.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -231,8 +235,10 @@
 		ADB8F9221B9D5D9D0049BDF0 /* Popovers */ = {
 			isa = PBXGroup;
 			children = (
-				ADB8F9231B9D5DB90049BDF0 /* PenaltyPOP.xib */,
 				ADB8F9271B9D5F1F0049BDF0 /* PenaltyPOP.swift */,
+				ADB8F9231B9D5DB90049BDF0 /* PenaltyPOP.xib */,
+				ADB8F9291B9D63900049BDF0 /* PenaltyPOPCell.swift */,
+				ADB8F92A1B9D63900049BDF0 /* PenaltyPOPCell.xib */,
 			);
 			name = Popovers;
 			sourceTree = "<group>";
@@ -341,6 +347,7 @@
 				AD879AD81B8C2979002C96CA /* LaunchScreen.xib in Resources */,
 				AD879AD51B8C2979002C96CA /* Images.xcassets in Resources */,
 				ADB8F9241B9D5DB90049BDF0 /* PenaltyPOP.xib in Resources */,
+				ADB8F92C1B9D63900049BDF0 /* PenaltyPOPCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,6 +428,7 @@
 				AD879B0E1B8F1930002C96CA /* PlaykeyTBL.swift in Sources */,
 				AD1F8DA81B9514BD001A6C52 /* PointBTN.swift in Sources */,
 				AD879B041B8E9E04002C96CA /* Field.swift in Sources */,
+				ADB8F92B1B9D63900049BDF0 /* PenaltyPOPCell.swift in Sources */,
 				AD879AFF1B8D5AF1002C96CA /* NumberSelector.swift in Sources */,
 				AD879B061B8EBF32002C96CA /* LosMKR.swift in Sources */,
 				AD879ACE1B8C2979002C96CA /* stats_football.xcdatamodeld in Sources */,
