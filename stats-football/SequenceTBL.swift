@@ -40,7 +40,7 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let s = tracker.log[indexPath.row]
         
-        let pos_right: Bool = (s.pos_id == tracker.homeTeam && tracker.rightHome) || (s.pos_id == tracker.awayTeam && !tracker.rightHome)
+        let pos_right: Bool = (s.pos_id == tracker.homeTeam.id && tracker.rightHome) || (s.pos_id == tracker.awayTeam.id && !tracker.rightHome)
         
         switch s.key {
         case "kickoff","freekick","pat":

@@ -62,7 +62,7 @@ class FirstDownMKR: UIView {
         
         let s = field.tracker.log[field.tracker.index]
         
-        let pos_right: Bool = (s.pos_id == field.tracker.homeTeam && field.tracker.rightHome) || (s.pos_id == field.tracker.awayTeam && !field.tracker.rightHome)
+        let pos_right: Bool = (s.pos_id == field.tracker.homeTeam.id && field.tracker.rightHome) || (s.pos_id == field.tracker.awayTeam.id && !field.tracker.rightHome)
         
         if pos_right {
             

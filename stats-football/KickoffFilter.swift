@@ -12,9 +12,9 @@ class KickoffFilter {
         
         var s = Sequence()
         
-        var pos_right: Bool = (original.pos_id == tracker.homeTeam && tracker.rightHome) || (original.pos_id == tracker.awayTeam && !tracker.rightHome)
+        var pos_right: Bool = (original.pos_id == tracker.homeTeam.id && tracker.rightHome) || (original.pos_id == tracker.awayTeam.id && !tracker.rightHome)
         
-        let pos_right_original: Bool = (original.pos_id == tracker.homeTeam && tracker.rightHome) || (original.pos_id == tracker.awayTeam && !tracker.rightHome)
+        let pos_right_original: Bool = (original.pos_id == tracker.homeTeam.id && tracker.rightHome) || (original.pos_id == tracker.awayTeam.id && !tracker.rightHome)
         
         s.pos_id = original.pos_id
         s.startX = original.startX
@@ -61,10 +61,10 @@ class KickoffFilter {
                 
                 if (p.endX > 0 && p.endX <= 50) || (p.endX < 0 && p.endX > -50) {
                     
-                    if tracker.homeTeam == original.pos_id {
-                        s.pos_id = tracker.awayTeam
+                    if tracker.homeTeam.id == original.pos_id {
+                        s.pos_id = tracker.awayTeam.id
                     } else {
-                        s.pos_id = tracker.homeTeam
+                        s.pos_id = tracker.homeTeam.id
                     }
                     s.key = "down"
                     s.down = 1
@@ -102,7 +102,7 @@ class KickoffFilter {
                 
                 if let player = play.player_b {
                     
-                    pos_right = (tracker.rightHome && play.pos_id == tracker.homeTeam) || (!tracker.rightHome && play.pos_id == tracker.awayTeam)
+                    pos_right = (tracker.rightHome && play.pos_id == tracker.homeTeam.id) || (!tracker.rightHome && play.pos_id == tracker.awayTeam.id)
                     
                 }
                 
@@ -135,17 +135,17 @@ class KickoffFilter {
         s.key = "down"
         s.down = 1
         if pos_right_original == pos_right {
-            if tracker.homeTeam == original.pos_id {
-                s.pos_id = tracker.homeTeam
+            if tracker.homeTeam.id == original.pos_id {
+                s.pos_id = tracker.homeTeam.id
             } else {
-                s.pos_id = tracker.awayTeam
+                s.pos_id = tracker.awayTeam.id
             }
             s.startX = lastSpot!.endX
         } else {
-            if tracker.homeTeam == original.pos_id {
-                s.pos_id = tracker.awayTeam
+            if tracker.homeTeam.id == original.pos_id {
+                s.pos_id = tracker.awayTeam.id
             } else {
-                s.pos_id = tracker.homeTeam
+                s.pos_id = tracker.homeTeam.id
             }
             s.startX = lastSpot!.endX?.flipSpot()
         }
@@ -179,10 +179,10 @@ class KickoffFilter {
                         if l == pos_right {
                             
                             println("SAFETY")
-                            if tracker.homeTeam == original.pos_id {
-                                s.pos_id = tracker.awayTeam
+                            if tracker.homeTeam.id == original.pos_id {
+                                s.pos_id = tracker.awayTeam.id
                             } else {
-                                s.pos_id = tracker.homeTeam
+                                s.pos_id = tracker.homeTeam.id
                             }
                             s.key = "freekick"
                             s.startX = 3
@@ -190,10 +190,10 @@ class KickoffFilter {
                         } else {
                             
                             println("TOUCHBACK A")
-                            if tracker.homeTeam == original.pos_id {
-                                s.pos_id = tracker.awayTeam
+                            if tracker.homeTeam.id == original.pos_id {
+                                s.pos_id = tracker.awayTeam.id
                             } else {
-                                s.pos_id = tracker.homeTeam
+                                s.pos_id = tracker.homeTeam.id
                             }
                             s.key = "down"
                             s.startX = -20
@@ -204,10 +204,10 @@ class KickoffFilter {
                     } else {
                         
                         println("TOUCHBACK B")
-                        if tracker.homeTeam == original.pos_id {
-                            s.pos_id = tracker.awayTeam
+                        if tracker.homeTeam.id == original.pos_id {
+                            s.pos_id = tracker.awayTeam.id
                         } else {
-                            s.pos_id = tracker.homeTeam
+                            s.pos_id = tracker.homeTeam.id
                         }
                         s.key = "down"
                         s.startX = -20
@@ -245,10 +245,10 @@ class KickoffFilter {
                         if l == pos_right {
                             
                             println("SAFETY")
-                            if tracker.homeTeam == original.pos_id {
-                                s.pos_id = tracker.awayTeam
+                            if tracker.homeTeam.id == original.pos_id {
+                                s.pos_id = tracker.awayTeam.id
                             } else {
-                                s.pos_id = tracker.homeTeam
+                                s.pos_id = tracker.homeTeam.id
                             }
                             s.key = "freekick"
                             s.startX = 3
@@ -256,10 +256,10 @@ class KickoffFilter {
                         } else {
                             
                             println("TOUCHBACK A")
-                            if tracker.homeTeam == original.pos_id {
-                                s.pos_id = tracker.awayTeam
+                            if tracker.homeTeam.id == original.pos_id {
+                                s.pos_id = tracker.awayTeam.id
                             } else {
-                                s.pos_id = tracker.homeTeam
+                                s.pos_id = tracker.homeTeam.id
                             }
                             s.key = "down"
                             s.startX = -20
@@ -270,10 +270,10 @@ class KickoffFilter {
                     } else {
                         
                         println("TOUCHBACK B")
-                        if tracker.homeTeam == original.pos_id {
-                            s.pos_id = tracker.awayTeam
+                        if tracker.homeTeam.id == original.pos_id {
+                            s.pos_id = tracker.awayTeam.id
                         } else {
-                            s.pos_id = tracker.homeTeam
+                            s.pos_id = tracker.homeTeam.id
                         }
                         s.key = "down"
                         s.startX = -20

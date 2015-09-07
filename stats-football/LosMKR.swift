@@ -52,15 +52,23 @@ class LosMKR: UIView {
         
         let s = field.tracker.log[field.tracker.index]
         
-        let pos_right: Bool = (s.pos_id == field.tracker.homeTeam && field.tracker.rightHome) || (s.pos_id == field.tracker.awayTeam && !field.tracker.rightHome)
+        let pos_right: Bool = (s.pos_id == field.tracker.homeTeam.id && field.tracker.rightHome) || (s.pos_id == field.tracker.awayTeam.id && !field.tracker.rightHome)
         
-        if pos_right {
+        if let fd = s.fd {
             
-            if nex > field.fd.center.x { center.x = nex }
+            if pos_right {
+                
+                if nex > field.fd.center.x { center.x = nex }
+                
+            } else {
+                
+                if nex < field.fd.center.x { center.x = nex }
+                
+            }
             
         } else {
             
-            if nex < field.fd.center.x { center.x = nex }
+            center.x = nex
             
         }
         
@@ -70,6 +78,9 @@ class LosMKR: UIView {
         
         field.tracker.sequenceTBL.reloadData()
         field.tracker.sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: field.tracker.index, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Top)
+        
+        field.tracker.draw()
+        field.tracker.drawButtons()
         
     }
     

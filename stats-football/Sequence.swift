@@ -9,7 +9,7 @@ import UIKit
 
 class Sequence {
     
-    var pos_id: String!
+    var pos_id: Int!
     var qtr: Int!
     var key: String!
     var down: Int?
@@ -37,7 +37,7 @@ class Play {
     var player_b: Int?
     var penaltyKey: String?
     var penaltyDistance: Int?
-    var pos_id: String?
+    var pos_id: Int?
     var score: Int?
     var touchback: Bool = false
     var tackles: [Int] = []

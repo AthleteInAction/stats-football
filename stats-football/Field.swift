@@ -30,7 +30,7 @@ class Field: UIView {
     
     override func drawRect(rect: CGRect) {
         
-        for v in subviews { if v.tag == -3 { v.removeFromSuperview() } }
+        for v in subviews { if v.tag == -2 || v.tag == -3 { v.removeFromSuperview() } }
         
         if tracker.log.count > 0 {
             
@@ -38,7 +38,7 @@ class Field: UIView {
             
             let c = UIGraphicsGetCurrentContext()
             
-            let pos_right: Bool = (s.pos_id == tracker.homeTeam && tracker.rightHome) || (s.pos_id == tracker.awayTeam && !tracker.rightHome)
+            let pos_right: Bool = (s.pos_id == tracker.homeTeam.id && tracker.rightHome) || (s.pos_id == tracker.awayTeam.id && !tracker.rightHome)
             
             var x = toX(s.startX.yardToFull(pos_right))
             var y = toP(s.startY)
@@ -59,7 +59,7 @@ class Field: UIView {
                     var v = PenaltyMKR(frame: CGRect(x: toX(play.endX!.yardToFull(pos_right)) - w, y: 0, width: w, height: bounds.height))
                     v.field = self
                     v.tag = -3
-                    v.setArrow((tracker.rightHome && play.pos_id == tracker.homeTeam) || (!tracker.rightHome && play.pos_id == tracker.awayTeam))
+                    v.setArrow((tracker.rightHome && play.pos_id == tracker.homeTeam.id) || (!tracker.rightHome && play.pos_id == tracker.awayTeam.id))
                     addSubview(v)
                     
                 } else {

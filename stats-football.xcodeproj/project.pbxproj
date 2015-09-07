@@ -29,8 +29,13 @@
 		AD879B0E1B8F1930002C96CA /* PlaykeyTBL.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B0D1B8F1930002C96CA /* PlaykeyTBL.swift */; };
 		ADA927AB1B8F3A1900DA4B8E /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA927AA1B8F3A1900DA4B8E /* Sequence.swift */; };
 		ADB8F9211B9D440D0049BDF0 /* PenaltyMKR.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9201B9D440D0049BDF0 /* PenaltyMKR.swift */; };
-		ADB8F9241B9D5DB90049BDF0 /* PenaltyPOP.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADB8F9231B9D5DB90049BDF0 /* PenaltyPOP.xib */; };
-		ADB8F9281B9D5F1F0049BDF0 /* PenaltyPOP.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9271B9D5F1F0049BDF0 /* PenaltyPOP.swift */; };
+		ADB8F92F1B9D6D500049BDF0 /* PlayPOP.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F92D1B9D6D500049BDF0 /* PlayPOP.swift */; };
+		ADB8F9301B9D6D500049BDF0 /* PlayPOP.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADB8F92E1B9D6D500049BDF0 /* PlayPOP.xib */; };
+		ADB8F9321B9D6EB10049BDF0 /* PlayNumberSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9311B9D6EB00049BDF0 /* PlayNumberSelector.swift */; };
+		ADB8F9341B9D6F230049BDF0 /* PlayKeySelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9331B9D6F230049BDF0 /* PlayKeySelector.swift */; };
+		ADB8F9361B9D72B90049BDF0 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9351B9D72B90049BDF0 /* Team.swift */; };
+		ADB8F93B1B9D84B40049BDF0 /* PenaltyPOP.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9391B9D84B40049BDF0 /* PenaltyPOP.swift */; };
+		ADB8F93C1B9D84B40049BDF0 /* PenaltyPOP.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADB8F93A1B9D84B40049BDF0 /* PenaltyPOP.xib */; };
 		B54E3B3AF3B63AEF9BE2BCF5 /* Pods_stats_football.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139C0BD1F20EF3EAB56E4E21 /* Pods_stats_football.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -73,8 +78,13 @@
 		AD879B0D1B8F1930002C96CA /* PlaykeyTBL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaykeyTBL.swift; sourceTree = "<group>"; };
 		ADA927AA1B8F3A1900DA4B8E /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		ADB8F9201B9D440D0049BDF0 /* PenaltyMKR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenaltyMKR.swift; sourceTree = "<group>"; };
-		ADB8F9231B9D5DB90049BDF0 /* PenaltyPOP.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PenaltyPOP.xib; sourceTree = "<group>"; };
-		ADB8F9271B9D5F1F0049BDF0 /* PenaltyPOP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenaltyPOP.swift; sourceTree = "<group>"; };
+		ADB8F92D1B9D6D500049BDF0 /* PlayPOP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayPOP.swift; sourceTree = "<group>"; };
+		ADB8F92E1B9D6D500049BDF0 /* PlayPOP.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayPOP.xib; sourceTree = "<group>"; };
+		ADB8F9311B9D6EB00049BDF0 /* PlayNumberSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayNumberSelector.swift; sourceTree = "<group>"; };
+		ADB8F9331B9D6F230049BDF0 /* PlayKeySelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayKeySelector.swift; sourceTree = "<group>"; };
+		ADB8F9351B9D72B90049BDF0 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
+		ADB8F9391B9D84B40049BDF0 /* PenaltyPOP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenaltyPOP.swift; sourceTree = "<group>"; };
+		ADB8F93A1B9D84B40049BDF0 /* PenaltyPOP.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PenaltyPOP.xib; sourceTree = "<group>"; };
 		CC07A1E0985B5649009E1AAC /* Pods-stats-football.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stats-football.release.xcconfig"; path = "Pods/Target Support Files/Pods-stats-football/Pods-stats-football.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -224,6 +234,7 @@
 				ADA927AA1B8F3A1900DA4B8E /* Sequence.swift */,
 				AD1F8DA11B8F6B31001A6C52 /* SequenceTBL.swift */,
 				AD1F8DA31B8F7145001A6C52 /* PlayTBL.swift */,
+				ADB8F9351B9D72B90049BDF0 /* Team.swift */,
 			);
 			name = Sequence;
 			sourceTree = "<group>";
@@ -231,10 +242,30 @@
 		ADB8F9221B9D5D9D0049BDF0 /* Popovers */ = {
 			isa = PBXGroup;
 			children = (
-				ADB8F9231B9D5DB90049BDF0 /* PenaltyPOP.xib */,
-				ADB8F9271B9D5F1F0049BDF0 /* PenaltyPOP.swift */,
+				ADB8F9381B9D84960049BDF0 /* Penalty */,
+				ADB8F9371B9D84810049BDF0 /* Play */,
 			);
 			name = Popovers;
+			sourceTree = "<group>";
+		};
+		ADB8F9371B9D84810049BDF0 /* Play */ = {
+			isa = PBXGroup;
+			children = (
+				ADB8F92D1B9D6D500049BDF0 /* PlayPOP.swift */,
+				ADB8F92E1B9D6D500049BDF0 /* PlayPOP.xib */,
+				ADB8F9311B9D6EB00049BDF0 /* PlayNumberSelector.swift */,
+				ADB8F9331B9D6F230049BDF0 /* PlayKeySelector.swift */,
+			);
+			name = Play;
+			sourceTree = "<group>";
+		};
+		ADB8F9381B9D84960049BDF0 /* Penalty */ = {
+			isa = PBXGroup;
+			children = (
+				ADB8F9391B9D84B40049BDF0 /* PenaltyPOP.swift */,
+				ADB8F93A1B9D84B40049BDF0 /* PenaltyPOP.xib */,
+			);
+			name = Penalty;
 			sourceTree = "<group>";
 		};
 		EADBDD7131EBF9B8ED736B23 /* Pods */ = {
@@ -338,9 +369,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD879AD31B8C2979002C96CA /* Main.storyboard in Resources */,
+				ADB8F9301B9D6D500049BDF0 /* PlayPOP.xib in Resources */,
 				AD879AD81B8C2979002C96CA /* LaunchScreen.xib in Resources */,
+				ADB8F93C1B9D84B40049BDF0 /* PenaltyPOP.xib in Resources */,
 				AD879AD51B8C2979002C96CA /* Images.xcassets in Resources */,
-				ADB8F9241B9D5DB90049BDF0 /* PenaltyPOP.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,13 +446,17 @@
 				AD1F8DA41B8F7145001A6C52 /* PlayTBL.swift in Sources */,
 				AD879B011B8D614C002C96CA /* NumberSelectorCell.swift in Sources */,
 				ADA927AB1B8F3A1900DA4B8E /* Sequence.swift in Sources */,
+				ADB8F93B1B9D84B40049BDF0 /* PenaltyPOP.swift in Sources */,
+				ADB8F9361B9D72B90049BDF0 /* Team.swift in Sources */,
 				AD1F8DAA1B96632E001A6C52 /* SubBTN.swift in Sources */,
 				AD1F8DA21B8F6B31001A6C52 /* SequenceTBL.swift in Sources */,
 				AD879AD01B8C2979002C96CA /* TrackerCTRL.swift in Sources */,
-				ADB8F9281B9D5F1F0049BDF0 /* PenaltyPOP.swift in Sources */,
+				ADB8F9321B9D6EB10049BDF0 /* PlayNumberSelector.swift in Sources */,
+				ADB8F92F1B9D6D500049BDF0 /* PlayPOP.swift in Sources */,
 				AD879B0E1B8F1930002C96CA /* PlaykeyTBL.swift in Sources */,
 				AD1F8DA81B9514BD001A6C52 /* PointBTN.swift in Sources */,
 				AD879B041B8E9E04002C96CA /* Field.swift in Sources */,
+				ADB8F9341B9D6F230049BDF0 /* PlayKeySelector.swift in Sources */,
 				AD879AFF1B8D5AF1002C96CA /* NumberSelector.swift in Sources */,
 				AD879B061B8EBF32002C96CA /* LosMKR.swift in Sources */,
 				AD879ACE1B8C2979002C96CA /* stats_football.xcdatamodeld in Sources */,
