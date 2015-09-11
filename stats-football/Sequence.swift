@@ -9,6 +9,7 @@ import UIKit
 
 class Sequence {
     
+    var id: Int?
     var pos_id: Int!
     var qtr: Int!
     var key: String!
@@ -30,6 +31,7 @@ class Sequence {
 
 class Play {
     
+    var id: Int?
     var key: String!
     var endX: Int?
     var endY: Int?

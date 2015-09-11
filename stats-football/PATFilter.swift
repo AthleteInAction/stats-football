@@ -12,9 +12,9 @@ class PATFilter {
         
         var s = Sequence()
         
-        var pos_right: Bool = (original.pos_id == tracker.homeTeam.id && tracker.rightHome) || (original.pos_id == tracker.awayTeam.id && !tracker.rightHome)
+        var pos_right: Bool = (original.pos_id == tracker.game.home.id && tracker.rightHome) || (original.pos_id == tracker.game.away.id && !tracker.rightHome)
         
-        let pos_right_original: Bool = (original.pos_id == tracker.homeTeam.id && tracker.rightHome) || (original.pos_id == tracker.awayTeam.id && !tracker.rightHome)
+        let pos_right_original: Bool = (original.pos_id == tracker.game.home.id && tracker.rightHome) || (original.pos_id == tracker.game.away.id && !tracker.rightHome)
         
         s.pos_id = original.pos_id
         s.startX = original.startX

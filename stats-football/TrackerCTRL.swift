@@ -10,14 +10,13 @@ import UIKit
 
 class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
+    var game: Game!
+    
     var selectedPlayKey: String?
     
     var log: [Sequence] = []
     var index: Int = 0
     var drawings: [UIView] = []
-    
-    var awayTeam: Team!
-    var homeTeam: Team!
     
     var popover: UIPopoverController!
 
@@ -49,18 +48,10 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        awayTeam = Team()
-        awayTeam.name = "Leigh High School"
-        awayTeam.id = 7689
-        awayTeam.short = "LHS"
+        title = "\(game.away.name) @ \(game.home.name)"
         
-        homeTeam = Team()
-        homeTeam.name = "Willow Glen High School"
-        homeTeam.id = 8324
-        homeTeam.short = "WGHS"
-        
-        rightPTY.tag = homeTeam.id
-        leftPTY.tag = awayTeam.id
+        rightPTY.tag = game.home.id
+        leftPTY.tag = game.away.id
         
         field.tracker = self
         
@@ -212,10 +203,10 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         let s = log[index]
         
-        if s.pos_id == homeTeam.id {
-            s.pos_id = awayTeam.id
+        if s.pos_id == game.home.id {
+            s.pos_id = game.away.id
         } else {
-            s.pos_id = homeTeam.id
+            s.pos_id = game.home.id
         }
         
         sequenceTBL.reload()
@@ -266,9 +257,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     @IBAction func penaltyTPD(sender: UIButton) {
         
-        var team = homeTeam
+        var team = game.home
         
-        if sender.tag != team.id { team = awayTeam }
+        if sender.tag != team.id { team = game.away }
         
         newPlay = Play()
         newPlay?.key = "penalty"
@@ -313,7 +304,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
             let s = log[index]
             
-            let pos_right: Bool = (s.pos_id == homeTeam.id && rightHome) || (s.pos_id == awayTeam.id && !rightHome)
+            let pos_right: Bool = (s.pos_id == game.home.id && rightHome) || (s.pos_id == game.away.id && !rightHome)
             
             let x = field.toY(field.crossV.center.x).fullToYard(pos_right)
             
@@ -354,13 +345,13 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         for (i,play) in enumerate(s.plays) {
             
-            let pos_right: Bool = (s.pos_id == homeTeam.id && rightHome) || (s.pos_id == awayTeam.id && !rightHome)
+            let pos_right: Bool = (s.pos_id == game.home.id && rightHome) || (s.pos_id == game.away.id && !rightHome)
             
             if play.key == "penalty" {
                 
                 if let z = play.endX {
                     
-                    let dir = (play.pos_id == homeTeam.id && rightHome) || (play.pos_id == awayTeam.id && !rightHome)
+                    let dir = (play.pos_id == game.home.id && rightHome) || (play.pos_id == game.away.id && !rightHome)
                     
                     var v = PenaltyMKR(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
                     v.tracker = self
@@ -439,7 +430,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         let s = log[index]
         
-        let pos_right: Bool = (s.pos_id == homeTeam.id && rightHome) || (s.pos_id == awayTeam.id && !rightHome)
+        let pos_right: Bool = (s.pos_id == game.home.id && rightHome) || (s.pos_id == game.away.id && !rightHome)
         
         for play in s.plays {
             
@@ -576,7 +567,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
             let s = log[index]
             
-            let pos_right: Bool = (s.pos_id == homeTeam.id && rightHome) || (s.pos_id == awayTeam.id && !rightHome)
+            let pos_right: Bool = (s.pos_id == game.home.id && rightHome) || (s.pos_id == game.away.id && !rightHome)
             
             s.plays[b.index].endX = field.toY(x).fullToYard(pos_right)
             s.plays[b.index].endY = Int(round((y / field.bounds.height) * 100))
@@ -647,12 +638,12 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
             var alert2 = UIAlertController(title: "Recovery", message: nil, preferredStyle: .ActionSheet)
             
-            var away = UIAlertAction(title: self.awayTeam.short, style: .Default, handler: { action -> Void in
+            var away = UIAlertAction(title: self.game.away.short, style: .Default, handler: { action -> Void in
                 
                 self.newPlay = Play()
                 self.newPlay?.key = "fumble"
                 self.newPlay?.player_a = b.titleLabel?.text?.toInt()
-                self.newPlay?.pos_id = self.awayTeam.id
+                self.newPlay?.pos_id = self.game.away.id
                 
                 var nsel = NumberSelector(nibName: "NumberSelector",bundle: nil)
                 nsel.tracker = self
@@ -668,12 +659,12 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
                 
             })
             
-            var home = UIAlertAction(title: self.homeTeam.short, style: .Default, handler: { action -> Void in
+            var home = UIAlertAction(title: self.game.home.short, style: .Default, handler: { action -> Void in
                 
                 self.newPlay = Play()
                 self.newPlay?.key = "fumble"
                 self.newPlay?.player_a = b.titleLabel?.text?.toInt()
-                self.newPlay?.pos_id = self.homeTeam.id
+                self.newPlay?.pos_id = self.game.home.id
                 
                 var nsel = NumberSelector(nibName: "NumberSelector",bundle: nil)
                 nsel.tracker = self
@@ -903,7 +894,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             playTypeSelector.selectedSegmentIndex = 3
         }
         
-        let pos_right: Bool = (s.pos_id == homeTeam.id && rightHome) || (s.pos_id == awayTeam.id && !rightHome)
+        let pos_right: Bool = (s.pos_id == game.home.id && rightHome) || (s.pos_id == game.away.id && !rightHome)
         
         if pos_right {
             
@@ -926,17 +917,17 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         if rightHome {
             
-            rightPTY.tag = homeTeam.id
-            rightPTY.setTitle(homeTeam.short, forState: UIControlState.Normal)
-            leftPTY.tag = awayTeam.id
-            leftPTY.setTitle(awayTeam.short, forState: UIControlState.Normal)
+            rightPTY.tag = game.home.id
+            rightPTY.setTitle(game.home.short, forState: UIControlState.Normal)
+            leftPTY.tag = game.away.id
+            leftPTY.setTitle(game.away.short, forState: UIControlState.Normal)
             
         } else {
             
-            rightPTY.tag = awayTeam.id
-            rightPTY.setTitle(awayTeam.short, forState: UIControlState.Normal)
-            leftPTY.tag = homeTeam.id
-            leftPTY.setTitle(homeTeam.short, forState: UIControlState.Normal)
+            rightPTY.tag = game.away.id
+            rightPTY.setTitle(game.away.short, forState: UIControlState.Normal)
+            leftPTY.tag = game.home.id
+            leftPTY.setTitle(game.home.short, forState: UIControlState.Normal)
             
         }
         
@@ -966,7 +957,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
         } else {
             
-            s.pos_id = awayTeam.id
+            s.pos_id = game.away.id
             s.qtr = 1
             s.key = "kickoff"
             s.startX = -40
@@ -1211,10 +1202,10 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     // ===============================================================
     func getTeam(id: Int) -> Team {
         
-        if id == homeTeam.id {
-            return homeTeam
+        if id == game.home.id {
+            return game.home
         } else {
-            return awayTeam
+            return game.away
         }
         
     }

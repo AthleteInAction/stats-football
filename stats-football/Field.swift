@@ -38,7 +38,7 @@ class Field: UIView {
             
             let c = UIGraphicsGetCurrentContext()
             
-            let pos_right: Bool = (s.pos_id == tracker.homeTeam.id && tracker.rightHome) || (s.pos_id == tracker.awayTeam.id && !tracker.rightHome)
+            let pos_right: Bool = (s.pos_id == tracker.game.home.id && tracker.rightHome) || (s.pos_id == tracker.game.away.id && !tracker.rightHome)
             
             var x = toX(s.startX.yardToFull(pos_right))
             var y = toP(s.startY)

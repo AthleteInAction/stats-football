@@ -189,10 +189,10 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                     
                     if tracker.rightHome {
                         
-                        teamSEL.setTitle(tracker.awayTeam.short, forSegmentAtIndex: 0)
-                        teamSEL.setTitle(tracker.homeTeam.short, forSegmentAtIndex: 1)
+                        teamSEL.setTitle(tracker.game.away.short, forSegmentAtIndex: 0)
+                        teamSEL.setTitle(tracker.game.home.short, forSegmentAtIndex: 1)
                         
-                        if id == tracker.homeTeam.id {
+                        if id == tracker.game.home.id {
                             
                             teamSEL.selectedSegmentIndex = 1
                             
@@ -204,10 +204,10 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                         
                     } else {
                         
-                        teamSEL.setTitle(tracker.awayTeam.short, forSegmentAtIndex: 1)
-                        teamSEL.setTitle(tracker.homeTeam.short, forSegmentAtIndex: 0)
+                        teamSEL.setTitle(tracker.game.away.short, forSegmentAtIndex: 1)
+                        teamSEL.setTitle(tracker.game.home.short, forSegmentAtIndex: 0)
                         
-                        if id == tracker.homeTeam.id {
+                        if id == tracker.game.home.id {
                             
                             teamSEL.selectedSegmentIndex = 0
                             

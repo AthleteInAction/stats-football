@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TeamDetail" customModule="stats_football" customModuleProvider="target">
+            <connections>
+                <outlet property="nameTXT" destination="L0J-pO-Xee" id="JiM-ig-zJ3"/>
+                <outlet property="shortTXT" destination="S4C-bz-gla" id="knF-Ge-o04"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Team Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L0J-pO-Xee">
+                    <rect key="frame" x="8" y="40" width="584" height="30"/>
+                    <color key="textColor" red="0.30050069060000001" green="0.30050069060000001" blue="0.30050069060000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Team Abbreviation" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="S4C-bz-gla">
+                    <rect key="frame" x="8" y="90" width="584" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1xM-x7-0lV">
+                    <rect key="frame" x="265" y="160" width="70" height="30"/>
+                    <color key="backgroundColor" red="0.98111619480000001" green="0.32013011359999999" blue="0.34837192169999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="75n-f3-ffz"/>
+                    </constraints>
+                    <state key="normal" title="Save">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="saveTPD:" destination="-1" eventType="touchUpInside" id="wQA-93-8jq"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="L0J-pO-Xee" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="40" id="0Fw-gH-6m8"/>
+                <constraint firstItem="1xM-x7-0lV" firstAttribute="top" secondItem="S4C-bz-gla" secondAttribute="bottom" constant="40" id="El0-gM-aOp"/>
+                <constraint firstAttribute="centerX" secondItem="1xM-x7-0lV" secondAttribute="centerX" id="KWT-V2-g9K"/>
+                <constraint firstItem="L0J-pO-Xee" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="PLO-tw-B0L"/>
+                <constraint firstAttribute="trailing" secondItem="L0J-pO-Xee" secondAttribute="trailing" constant="8" id="dMp-ED-dZb"/>
+                <constraint firstItem="S4C-bz-gla" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="l9C-QN-dFg"/>
+                <constraint firstItem="S4C-bz-gla" firstAttribute="top" secondItem="L0J-pO-Xee" secondAttribute="bottom" constant="20" id="ocn-dG-z4V"/>
+                <constraint firstAttribute="trailing" secondItem="S4C-bz-gla" secondAttribute="trailing" constant="8" id="ryE-Fc-K3N"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+</document>

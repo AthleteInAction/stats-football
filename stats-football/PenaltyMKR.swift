@@ -57,7 +57,7 @@ class PenaltyMKR: UIButton {
         let s = tracker.log[tracker.index]
         let p = s.plays[index]
         
-        let pos_right: Bool = (s.pos_id == tracker.homeTeam.id && tracker.rightHome) || (s.pos_id == tracker.awayTeam.id && !tracker.rightHome)
+        let pos_right: Bool = (s.pos_id == tracker.game.home.id && tracker.rightHome) || (s.pos_id == tracker.game.away.id && !tracker.rightHome)
         
         var translation  = sender.translationInView(superview!)
         
@@ -89,7 +89,7 @@ class PenaltyMKR: UIButton {
         let s = tracker.log[tracker.index]
         let p = s.plays[index]
         
-        let pos_right: Bool = (s.pos_id == tracker.homeTeam.id && tracker.rightHome) || (s.pos_id == tracker.awayTeam.id && !tracker.rightHome)
+        let pos_right: Bool = (s.pos_id == tracker.game.home.id && tracker.rightHome) || (s.pos_id == tracker.game.away.id && !tracker.rightHome)
         
         var newEndFull = spot.yardToFull(pos_right)
         

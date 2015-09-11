@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 
+let domain = "http://will-big.local:3000"
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
