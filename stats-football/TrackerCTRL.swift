@@ -968,10 +968,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
             s.pos_id = awayTeam.id
             s.qtr = 1
-            s.down = 4
-            s.key = "down"
-            s.startX = 20
-            s.fd = s.startX.plus(10)
+            s.key = "kickoff"
+            s.startX = -40
             s.startY = 50
             
         }
