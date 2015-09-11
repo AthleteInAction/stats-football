@@ -42,7 +42,7 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let p = s.plays[indexPath.row]
         
-        cell.textLabel?.text = "#\(p.player_a) : \(p.key) : \(p.endX!) : \(indexPath.row)"
+        cell.textLabel?.text = "#\(p.player_a) : \(p.key) : \(p.endX) : \(indexPath.row)"
         
         return cell
         
@@ -51,6 +51,22 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         
+        
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            
+            let s = tracker.log[tracker.index]
+            
+            s.plays.removeAtIndex(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
+            
+            tracker.draw()
+            tracker.drawButtons()
+            
+        }
         
     }
     

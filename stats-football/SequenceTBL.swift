@@ -45,7 +45,7 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         switch s.key {
         case "kickoff","freekick","pat":
             
-            cell.textLabel?.text = "\(s.pos_id) \(s.key) from \(s.startX)"
+            cell.textLabel?.text = "\(tracker.getTeam(s.pos_id).short) \(s.key) from \(s.startX)"
             
         case "down":
             
@@ -88,7 +88,7 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
                 
             }
             
-            cell.textLabel?.text = "\(s.pos_id) \(d)n\(togo)\(f) from \(s.startX)"
+            cell.textLabel?.text = "\(tracker.getTeam(s.pos_id).short) \(d)n\(togo)\(f) from \(s.startX)"
             
         default:
             
@@ -96,7 +96,6 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
         }
         
-        println("CELL \(indexPath.row) : \(tracker.log.count)")
         if tracker.log.count == 1 {
             
             cell.selected = true

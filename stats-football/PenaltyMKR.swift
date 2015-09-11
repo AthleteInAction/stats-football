@@ -8,24 +8,31 @@
 
 import UIKit
 
-class PenaltyMKR: UIView {
+class PenaltyMKR: UIButton {
     
-    var field: Field!
+    var tracker: TrackerCTRL!
     
     var index: Int!
     
     var pan = UIPanGestureRecognizer()
     
     var lastLocation: CGPoint!
+    
+    var dir: Bool = true
+    
+    var img: UIImageView!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = UIColor.yellowColor()
-        alpha = 0.6
+        backgroundColor = UIColor(red: 255/255, green: 255/255, blue: 0/255, alpha: 0.6)
         
         pan = UIPanGestureRecognizer(target: self, action: "dDrag:")
         addGestureRecognizer(pan)
+        
+        img = UIImageView()
+        
+        addSubview(img)
         
     }
     
@@ -35,7 +42,7 @@ class PenaltyMKR: UIView {
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         
-        lastLocation = center
+        lastLocation = frame.origin
         
     }
     
@@ -47,20 +54,86 @@ class PenaltyMKR: UIView {
     
     func dDrag(sender: UIPanGestureRecognizer){
         
+        let s = tracker.log[tracker.index]
+        let p = s.plays[index]
+        
+        let pos_right: Bool = (s.pos_id == tracker.homeTeam.id && tracker.rightHome) || (s.pos_id == tracker.awayTeam.id && !tracker.rightHome)
+        
         var translation  = sender.translationInView(superview!)
         
-        var nex = round((lastLocation.x + translation.x) / field.ratio) * field.ratio
+        var nex = round((lastLocation.x + translation.x) / tracker.field.ratio) * tracker.field.ratio
         
-        center.x = nex
+        var yard_inc: Int = Int(round(translation.x / tracker.field.ratio))
         
+        let newEndX = (p.endX!.yardToFull(pos_right) + yard_inc).fullToYard(pos_right)
+        
+        setMKR(newEndX)
+        
+        if sender.state == UIGestureRecognizerState.Ended {
+            
+            p.endX = newEndX
+            tracker.playTBL.reloadData()
+            
+        }
+        
+    }
+    
+    func setMKR(spot: Int) -> Bool {
+        
+        if (spot <= 50 && spot > 0) || (spot <= -1 && spot >= -49) {
+            
+        } else {
+            return false
+        }
+        
+        let s = tracker.log[tracker.index]
+        let p = s.plays[index]
+        
+        let pos_right: Bool = (s.pos_id == tracker.homeTeam.id && tracker.rightHome) || (s.pos_id == tracker.awayTeam.id && !tracker.rightHome)
+        
+        var newEndFull = spot.yardToFull(pos_right)
+        
+        var w = CGFloat(p.penaltyDistance!) * tracker.field.ratio
+        
+        if pos_right && dir {
+            
+            if (100 - newEndFull) < p.penaltyDistance! {
+                
+                w = (100 - CGFloat(newEndFull)) * tracker.field.ratio
+                
+            }
+            
+        } else {
+            
+            if newEndFull < p.penaltyDistance! {
+                
+                w = CGFloat(newEndFull) * tracker.field.ratio
+                
+            }
+            
+        }
+        
+        var x = tracker.field.toX(newEndFull)
+        
+        if dir { x -= w }
+        
+        frame = CGRect(x: x, y: 0, width: w, height: tracker.field.bounds.height)
+        
+        setArrow(dir)
+        
+        return true
+    
     }
     
     func setArrow(right: Bool){
         
+        dir = right
+        
         let x = bounds.width / 2
         let y = bounds.height / 2
         
-        var img = UIImageView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height))
+        img.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
+        img.alpha = 0.6
         
         img.center.x = x
         img.center.y = y
@@ -73,11 +146,8 @@ class PenaltyMKR: UIView {
         } else {
             
             img.image = UIImage(named: "arrow_l.png")
-            img.frame.origin.x = bounds.width * -1
             
         }
-        
-        addSubview(img)
         
     }
 

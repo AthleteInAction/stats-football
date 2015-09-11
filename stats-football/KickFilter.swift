@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
 
-class KickoffFilter {
+class KickFilter {
     
     static func run(tracker: TrackerCTRL,original: Sequence) -> Sequence {
         
@@ -20,6 +20,7 @@ class KickoffFilter {
         s.startX = original.startX
         s.startY = 50
         s.qtr = original.qtr
+        s.key = original.key
         
         // REPLAY DOWN
         // =======================================================
@@ -28,13 +29,25 @@ class KickoffFilter {
             
             s.startX = original.startX
             
+            var penalties: Bool = false
+            
+            for play in original.plays {
+                
+                if play.key == "penalty" { penalties = true }
+                
+            }
+            
             for play in original.plays {
                 
                 if let x = play.endX {
                     
-                    s.startX = x
-                    
-                    break
+                    if penalties {
+                        
+                        s.startX = x
+                        
+                        break
+                        
+                    }
                     
                 }
                 

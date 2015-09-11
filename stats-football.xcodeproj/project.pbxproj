@@ -12,7 +12,7 @@
 		AD1F8DA61B94FD5B001A6C52 /* BallBTN.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */; };
 		AD1F8DA81B9514BD001A6C52 /* PointBTN.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA71B9514BD001A6C52 /* PointBTN.swift */; };
 		AD1F8DAA1B96632E001A6C52 /* SubBTN.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA91B96632E001A6C52 /* SubBTN.swift */; };
-		AD1F8DAD1B9902AE001A6C52 /* KickoffFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DAC1B9902AE001A6C52 /* KickoffFilter.swift */; };
+		AD1F8DAD1B9902AE001A6C52 /* KickFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DAC1B9902AE001A6C52 /* KickFilter.swift */; };
 		AD1F8DAF1B991D7D001A6C52 /* FirstDownMKR.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DAE1B991D7D001A6C52 /* FirstDownMKR.swift */; };
 		AD879ACB1B8C2979002C96CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879ACA1B8C2979002C96CA /* AppDelegate.swift */; };
 		AD879ACE1B8C2979002C96CA /* stats_football.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AD879ACC1B8C2979002C96CA /* stats_football.xcdatamodeld */; };
@@ -21,8 +21,6 @@
 		AD879AD51B8C2979002C96CA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD879AD41B8C2979002C96CA /* Images.xcassets */; };
 		AD879AD81B8C2979002C96CA /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD879AD61B8C2979002C96CA /* LaunchScreen.xib */; };
 		AD879AE41B8C2979002C96CA /* stats_footballTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879AE31B8C2979002C96CA /* stats_footballTests.swift */; };
-		AD879AFF1B8D5AF1002C96CA /* NumberSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879AFE1B8D5AF1002C96CA /* NumberSelector.swift */; };
-		AD879B011B8D614C002C96CA /* NumberSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B001B8D614C002C96CA /* NumberSelectorCell.swift */; };
 		AD879B041B8E9E04002C96CA /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B031B8E9E04002C96CA /* Field.swift */; };
 		AD879B061B8EBF32002C96CA /* LosMKR.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B051B8EBF32002C96CA /* LosMKR.swift */; };
 		AD879B091B8EE778002C96CA /* Playlog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879B081B8EE778002C96CA /* Playlog.swift */; };
@@ -32,10 +30,15 @@
 		ADB8F92F1B9D6D500049BDF0 /* PlayPOP.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F92D1B9D6D500049BDF0 /* PlayPOP.swift */; };
 		ADB8F9301B9D6D500049BDF0 /* PlayPOP.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADB8F92E1B9D6D500049BDF0 /* PlayPOP.xib */; };
 		ADB8F9321B9D6EB10049BDF0 /* PlayNumberSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9311B9D6EB00049BDF0 /* PlayNumberSelector.swift */; };
-		ADB8F9341B9D6F230049BDF0 /* PlayKeySelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9331B9D6F230049BDF0 /* PlayKeySelector.swift */; };
+		ADB8F9341B9D6F230049BDF0 /* PlayKeySelectorOLD.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9331B9D6F230049BDF0 /* PlayKeySelectorOLD.swift */; };
 		ADB8F9361B9D72B90049BDF0 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9351B9D72B90049BDF0 /* Team.swift */; };
-		ADB8F93B1B9D84B40049BDF0 /* PenaltyPOP.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9391B9D84B40049BDF0 /* PenaltyPOP.swift */; };
-		ADB8F93C1B9D84B40049BDF0 /* PenaltyPOP.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADB8F93A1B9D84B40049BDF0 /* PenaltyPOP.xib */; };
+		ADB8F9431B9D95750049BDF0 /* NumberSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9411B9D95750049BDF0 /* NumberSelector.swift */; };
+		ADB8F9441B9D95750049BDF0 /* NumberSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADB8F9421B9D95750049BDF0 /* NumberSelector.xib */; };
+		ADB8F9491B9D9A720049BDF0 /* KeySelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9471B9D9A720049BDF0 /* KeySelector.swift */; };
+		ADB8F94A1B9D9A720049BDF0 /* KeySelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADB8F9481B9D9A720049BDF0 /* KeySelector.xib */; };
+		ADB8F94F1BA15C2A0049BDF0 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F94E1BA15C2A0049BDF0 /* Filters.swift */; };
+		ADB8F9511BA233AC0049BDF0 /* DownFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9501BA233AC0049BDF0 /* DownFilter.swift */; };
+		ADB8F9531BA252070049BDF0 /* PATFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9521BA252070049BDF0 /* PATFilter.swift */; };
 		B54E3B3AF3B63AEF9BE2BCF5 /* Pods_stats_football.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139C0BD1F20EF3EAB56E4E21 /* Pods_stats_football.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -57,7 +60,7 @@
 		AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BallBTN.swift; sourceTree = "<group>"; };
 		AD1F8DA71B9514BD001A6C52 /* PointBTN.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointBTN.swift; sourceTree = "<group>"; };
 		AD1F8DA91B96632E001A6C52 /* SubBTN.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubBTN.swift; sourceTree = "<group>"; };
-		AD1F8DAC1B9902AE001A6C52 /* KickoffFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KickoffFilter.swift; sourceTree = "<group>"; };
+		AD1F8DAC1B9902AE001A6C52 /* KickFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KickFilter.swift; sourceTree = "<group>"; };
 		AD1F8DAE1B991D7D001A6C52 /* FirstDownMKR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstDownMKR.swift; sourceTree = "<group>"; };
 		AD879AC51B8C2979002C96CA /* stats-football.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "stats-football.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD879AC91B8C2979002C96CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,8 +73,6 @@
 		AD879ADD1B8C2979002C96CA /* stats-footballTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "stats-footballTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD879AE21B8C2979002C96CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AD879AE31B8C2979002C96CA /* stats_footballTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = stats_footballTests.swift; sourceTree = "<group>"; };
-		AD879AFE1B8D5AF1002C96CA /* NumberSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberSelector.swift; sourceTree = "<group>"; };
-		AD879B001B8D614C002C96CA /* NumberSelectorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberSelectorCell.swift; sourceTree = "<group>"; };
 		AD879B031B8E9E04002C96CA /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		AD879B051B8EBF32002C96CA /* LosMKR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LosMKR.swift; sourceTree = "<group>"; };
 		AD879B081B8EE778002C96CA /* Playlog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlog.swift; sourceTree = "<group>"; };
@@ -81,10 +82,15 @@
 		ADB8F92D1B9D6D500049BDF0 /* PlayPOP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayPOP.swift; sourceTree = "<group>"; };
 		ADB8F92E1B9D6D500049BDF0 /* PlayPOP.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayPOP.xib; sourceTree = "<group>"; };
 		ADB8F9311B9D6EB00049BDF0 /* PlayNumberSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayNumberSelector.swift; sourceTree = "<group>"; };
-		ADB8F9331B9D6F230049BDF0 /* PlayKeySelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayKeySelector.swift; sourceTree = "<group>"; };
+		ADB8F9331B9D6F230049BDF0 /* PlayKeySelectorOLD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayKeySelectorOLD.swift; sourceTree = "<group>"; };
 		ADB8F9351B9D72B90049BDF0 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
-		ADB8F9391B9D84B40049BDF0 /* PenaltyPOP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenaltyPOP.swift; sourceTree = "<group>"; };
-		ADB8F93A1B9D84B40049BDF0 /* PenaltyPOP.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PenaltyPOP.xib; sourceTree = "<group>"; };
+		ADB8F9411B9D95750049BDF0 /* NumberSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberSelector.swift; sourceTree = "<group>"; };
+		ADB8F9421B9D95750049BDF0 /* NumberSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NumberSelector.xib; sourceTree = "<group>"; };
+		ADB8F9471B9D9A720049BDF0 /* KeySelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeySelector.swift; sourceTree = "<group>"; };
+		ADB8F9481B9D9A720049BDF0 /* KeySelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KeySelector.xib; sourceTree = "<group>"; };
+		ADB8F94E1BA15C2A0049BDF0 /* Filters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
+		ADB8F9501BA233AC0049BDF0 /* DownFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownFilter.swift; sourceTree = "<group>"; };
+		ADB8F9521BA252070049BDF0 /* PATFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PATFilter.swift; sourceTree = "<group>"; };
 		CC07A1E0985B5649009E1AAC /* Pods-stats-football.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stats-football.release.xcconfig"; path = "Pods/Target Support Files/Pods-stats-football/Pods-stats-football.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,12 +113,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AD1F8DAB1B990272001A6C52 /* PlayFilters */ = {
+		AD1F8DAB1B990272001A6C52 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
-				AD1F8DAC1B9902AE001A6C52 /* KickoffFilter.swift */,
+				AD1F8DAC1B9902AE001A6C52 /* KickFilter.swift */,
+				ADB8F9501BA233AC0049BDF0 /* DownFilter.swift */,
+				ADB8F9521BA252070049BDF0 /* PATFilter.swift */,
+				ADB8F94E1BA15C2A0049BDF0 /* Filters.swift */,
 			);
-			name = PlayFilters;
+			name = Filters;
 			sourceTree = "<group>";
 		};
 		AD879ABC1B8C2979002C96CA = {
@@ -138,13 +147,14 @@
 		AD879AC71B8C2979002C96CA /* stats-football */ = {
 			isa = PBXGroup;
 			children = (
-				AD1F8DAB1B990272001A6C52 /* PlayFilters */,
+				ADB8F94B1BA135F10049BDF0 /* Test */,
+				AD1F8DAB1B990272001A6C52 /* Filters */,
 				ADA927A91B8F3A0400DA4B8E /* Sequence */,
 				AD879B0C1B8F191E002C96CA /* Playkey */,
 				AD879B071B8EE76C002C96CA /* Playlog */,
 				ADB8F9221B9D5D9D0049BDF0 /* Popovers */,
 				AD879B021B8E9DED002C96CA /* Field */,
-				AD879AFB1B8D5A63002C96CA /* NumberSelector */,
+				ADB8F9451B9D996B0049BDF0 /* Components */,
 				AD879AED1B8D4AE7002C96CA /* Tracker */,
 				AD879ACA1B8C2979002C96CA /* AppDelegate.swift */,
 				AD879AD11B8C2979002C96CA /* Main.storyboard */,
@@ -192,8 +202,8 @@
 		AD879AFB1B8D5A63002C96CA /* NumberSelector */ = {
 			isa = PBXGroup;
 			children = (
-				AD879AFE1B8D5AF1002C96CA /* NumberSelector.swift */,
-				AD879B001B8D614C002C96CA /* NumberSelectorCell.swift */,
+				ADB8F9421B9D95750049BDF0 /* NumberSelector.xib */,
+				ADB8F9411B9D95750049BDF0 /* NumberSelector.swift */,
 			);
 			name = NumberSelector;
 			sourceTree = "<group>";
@@ -242,7 +252,6 @@
 		ADB8F9221B9D5D9D0049BDF0 /* Popovers */ = {
 			isa = PBXGroup;
 			children = (
-				ADB8F9381B9D84960049BDF0 /* Penalty */,
 				ADB8F9371B9D84810049BDF0 /* Play */,
 			);
 			name = Popovers;
@@ -254,18 +263,34 @@
 				ADB8F92D1B9D6D500049BDF0 /* PlayPOP.swift */,
 				ADB8F92E1B9D6D500049BDF0 /* PlayPOP.xib */,
 				ADB8F9311B9D6EB00049BDF0 /* PlayNumberSelector.swift */,
-				ADB8F9331B9D6F230049BDF0 /* PlayKeySelector.swift */,
+				ADB8F9331B9D6F230049BDF0 /* PlayKeySelectorOLD.swift */,
 			);
 			name = Play;
 			sourceTree = "<group>";
 		};
-		ADB8F9381B9D84960049BDF0 /* Penalty */ = {
+		ADB8F9451B9D996B0049BDF0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				ADB8F9391B9D84B40049BDF0 /* PenaltyPOP.swift */,
-				ADB8F93A1B9D84B40049BDF0 /* PenaltyPOP.xib */,
+				ADB8F9461B9D997C0049BDF0 /* KeySelector */,
+				AD879AFB1B8D5A63002C96CA /* NumberSelector */,
 			);
-			name = Penalty;
+			name = Components;
+			sourceTree = "<group>";
+		};
+		ADB8F9461B9D997C0049BDF0 /* KeySelector */ = {
+			isa = PBXGroup;
+			children = (
+				ADB8F9481B9D9A720049BDF0 /* KeySelector.xib */,
+				ADB8F9471B9D9A720049BDF0 /* KeySelector.swift */,
+			);
+			name = KeySelector;
+			sourceTree = "<group>";
+		};
+		ADB8F94B1BA135F10049BDF0 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Test;
 			sourceTree = "<group>";
 		};
 		EADBDD7131EBF9B8ED736B23 /* Pods */ = {
@@ -371,7 +396,8 @@
 				AD879AD31B8C2979002C96CA /* Main.storyboard in Resources */,
 				ADB8F9301B9D6D500049BDF0 /* PlayPOP.xib in Resources */,
 				AD879AD81B8C2979002C96CA /* LaunchScreen.xib in Resources */,
-				ADB8F93C1B9D84B40049BDF0 /* PenaltyPOP.xib in Resources */,
+				ADB8F94A1B9D9A720049BDF0 /* KeySelector.xib in Resources */,
+				ADB8F9441B9D95750049BDF0 /* NumberSelector.xib in Resources */,
 				AD879AD51B8C2979002C96CA /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -439,25 +465,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD879B091B8EE778002C96CA /* Playlog.swift in Sources */,
+				ADB8F9511BA233AC0049BDF0 /* DownFilter.swift in Sources */,
+				ADB8F9531BA252070049BDF0 /* PATFilter.swift in Sources */,
 				AD1F8DAF1B991D7D001A6C52 /* FirstDownMKR.swift in Sources */,
 				ADB8F9211B9D440D0049BDF0 /* PenaltyMKR.swift in Sources */,
-				AD1F8DAD1B9902AE001A6C52 /* KickoffFilter.swift in Sources */,
+				AD1F8DAD1B9902AE001A6C52 /* KickFilter.swift in Sources */,
 				AD1F8DA61B94FD5B001A6C52 /* BallBTN.swift in Sources */,
 				AD1F8DA41B8F7145001A6C52 /* PlayTBL.swift in Sources */,
-				AD879B011B8D614C002C96CA /* NumberSelectorCell.swift in Sources */,
 				ADA927AB1B8F3A1900DA4B8E /* Sequence.swift in Sources */,
-				ADB8F93B1B9D84B40049BDF0 /* PenaltyPOP.swift in Sources */,
 				ADB8F9361B9D72B90049BDF0 /* Team.swift in Sources */,
 				AD1F8DAA1B96632E001A6C52 /* SubBTN.swift in Sources */,
 				AD1F8DA21B8F6B31001A6C52 /* SequenceTBL.swift in Sources */,
+				ADB8F94F1BA15C2A0049BDF0 /* Filters.swift in Sources */,
 				AD879AD01B8C2979002C96CA /* TrackerCTRL.swift in Sources */,
 				ADB8F9321B9D6EB10049BDF0 /* PlayNumberSelector.swift in Sources */,
 				ADB8F92F1B9D6D500049BDF0 /* PlayPOP.swift in Sources */,
+				ADB8F9491B9D9A720049BDF0 /* KeySelector.swift in Sources */,
 				AD879B0E1B8F1930002C96CA /* PlaykeyTBL.swift in Sources */,
 				AD1F8DA81B9514BD001A6C52 /* PointBTN.swift in Sources */,
 				AD879B041B8E9E04002C96CA /* Field.swift in Sources */,
-				ADB8F9341B9D6F230049BDF0 /* PlayKeySelector.swift in Sources */,
-				AD879AFF1B8D5AF1002C96CA /* NumberSelector.swift in Sources */,
+				ADB8F9431B9D95750049BDF0 /* NumberSelector.swift in Sources */,
+				ADB8F9341B9D6F230049BDF0 /* PlayKeySelectorOLD.swift in Sources */,
 				AD879B061B8EBF32002C96CA /* LosMKR.swift in Sources */,
 				AD879ACE1B8C2979002C96CA /* stats_football.xcdatamodeld in Sources */,
 				AD879ACB1B8C2979002C96CA /* AppDelegate.swift in Sources */,

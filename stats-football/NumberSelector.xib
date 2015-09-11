@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NumberSelector" customModule="stats_football" customModuleProvider="target">
+            <connections>
+                <outlet property="table" destination="3aQ-Ky-eXg" id="u2a-u1-EJI"/>
+                <outlet property="teamSEL" destination="Nga-CA-wUE" id="SdB-ic-HyU"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Nga-CA-wUE">
+                    <rect key="frame" x="245" y="8" width="111" height="29"/>
+                    <segments>
+                        <segment title="LHS"/>
+                        <segment title="WGHS"/>
+                    </segments>
+                </segmentedControl>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3aQ-Ky-eXg">
+                    <rect key="frame" x="8" y="44" width="584" height="548"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="Nga-CA-wUE" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="4OE-dN-H2d"/>
+                <constraint firstAttribute="centerX" secondItem="Nga-CA-wUE" secondAttribute="centerX" id="PXM-Ke-pAC"/>
+                <constraint firstItem="3aQ-Ky-eXg" firstAttribute="top" secondItem="Nga-CA-wUE" secondAttribute="bottom" constant="8" id="UEN-t4-5Eo"/>
+                <constraint firstItem="3aQ-Ky-eXg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="iDh-zP-tGI"/>
+                <constraint firstAttribute="trailing" secondItem="3aQ-Ky-eXg" secondAttribute="trailing" constant="8" id="jJI-28-CZt"/>
+                <constraint firstAttribute="bottom" secondItem="3aQ-Ky-eXg" secondAttribute="bottom" constant="8" id="vB0-zE-3er"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+</document>

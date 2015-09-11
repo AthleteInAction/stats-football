@@ -37,6 +37,7 @@ class Play {
     var player_b: Int?
     var penaltyKey: String?
     var penaltyDistance: Int?
+    var penaltyOffset: Bool = false
     var pos_id: Int?
     var score: Int?
     var touchback: Bool = false

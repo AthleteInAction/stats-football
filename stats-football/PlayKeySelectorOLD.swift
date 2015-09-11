@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PlayKeySelector: UITableView,UITableViewDataSource,UITableViewDelegate {
+class PlayKeySelectorOLD: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     var keys: [String] = ["run","pass","interception"]
     
