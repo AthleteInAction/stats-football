@@ -291,6 +291,7 @@
 		ADB8F9451B9D996B0049BDF0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				ADB8F9691BA3952F0049BDF0 /* Roster */,
 				ADB8F9641BA2D6F10049BDF0 /* GameDetail */,
 				ADB8F95F1BA293200049BDF0 /* TeamDetail */,
 				ADB8F9461B9D997C0049BDF0 /* KeySelector */,
@@ -342,6 +343,13 @@
 				ADB8F9661BA2D7080049BDF0 /* GameDetail.xib */,
 			);
 			name = GameDetail;
+			sourceTree = "<group>";
+		};
+		ADB8F9691BA3952F0049BDF0 /* Roster */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Roster;
 			sourceTree = "<group>";
 		};
 		EADBDD7131EBF9B8ED736B23 /* Pods */ = {

@@ -11,6 +11,7 @@ class DownFilter {
     static func run(tracker: TrackerCTRL,original: Sequence) -> Sequence {
         
         var s = Sequence()
+        s.game_id = tracker.game.id
         
         var pos_right: Bool = (original.pos_id == tracker.game.home.id && tracker.rightHome) || (original.pos_id == tracker.game.away.id && !tracker.rightHome)
         

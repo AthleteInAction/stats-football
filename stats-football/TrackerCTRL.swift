@@ -19,6 +19,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     var drawings: [UIView] = []
     
     var popover: UIPopoverController!
+    
+    var numbers: [Player] = []
+    var test: [Int] = [3,67,89,5,43,11,2,13]
 
     @IBOutlet weak var playTypeSelector: UISegmentedControl!
     @IBOutlet weak var field: Field!
@@ -47,6 +50,14 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        for n in test {
+            
+            let p = Player(n: n)
+            
+            numbers.append(p)
+            
+        }
         
         title = "\(game.away.name) @ \(game.home.name)"
         
@@ -196,6 +207,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         s.down = Int(downSelector.value)
         
         downTXT.text = "\(Int(downSelector.value))"
+        
+        sequenceTBL.reloadData()
         
     }
     
@@ -957,6 +970,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
         } else {
             
+            s.game_id = game.id
             s.pos_id = game.away.id
             s.qtr = 1
             s.key = "kickoff"
@@ -970,6 +984,13 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     }
     
     func addSequence(){
+        
+        if let prev = log.first {
+            
+            println(prev.key)
+            prev.save { (s) -> Void in }
+            
+        }
         
         let s = createSequence()
         

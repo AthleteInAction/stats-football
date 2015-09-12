@@ -8,10 +8,11 @@
 
 import UIKit
 
-class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate {
+class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate {
 
     @IBOutlet weak var table: UITableView!
-    @IBOutlet weak var teamSEL: UISegmentedControl!
+    @IBOutlet weak var freqTBL: UITableView!
+    @IBOutlet weak var nTXT: UITextField!
     
     var tracker: TrackerCTRL!
     var newPlay: Play?
@@ -21,12 +22,15 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
     var nsel: NumberSelector!
     var ksel: KeySelector!
     
-    var numbers: [Int] = []
+    var freq: [Player] = []
     
     var s: Sequence!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        table.tag = 1
+        freqTBL.tag = 2
         
         s = tracker.log[tracker.index]
         
@@ -36,33 +40,19 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         ksel = KeySelector(nibName: "KeySelector", bundle: nil)
         ksel.tracker = tracker
         
+        nTXT.delegate = self
+        
         table.delegate = self
         table.dataSource = self
-        
-        let getRandom = randomSequenceGenerator(min: 1, max: 99)
-        
-        for _ in 1...34 {
-            
-            numbers.append(getRandom())
-            
-        }
-        
-        numbers.sort( {$0 < $1 } )
+        freqTBL.delegate = self
+        freqTBL.dataSource = self
         
         edgesForExtendedLayout = UIRectEdge()
         
-        setTeamSel()
+        freq = tracker.numbers
         
-        switch type {
-        case "penalty","fumble":
-            
-            teamSEL.hidden = false
-            
-        default:
-            
-            teamSEL.hidden = true
-            
-        }
+        tracker.numbers.sort({ $0.number < $1.number })
+        freq.sort({ $0.used > $1.used })
         
     }
 
@@ -73,16 +63,44 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
     }
     
-    func randomSequenceGenerator(#min: Int,max: Int) -> () -> Int {
-        var numbers: [Int] = []
-        return {
-            if numbers.count == 0 {
-                numbers = Array(min ... max)
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        
+        if nTXT.text != "" {
+            
+            let n = nTXT.text.toInt()
+            
+            let player = Player(n: n!)
+            
+            var foundPlayer: Player?
+            for p in tracker.numbers {
+                
+                if p.number == player.number { foundPlayer = p }
+                
             }
             
-            let index = Int(arc4random_uniform(UInt32(numbers.count)))
-            return numbers.removeAtIndex(index)
+            if let p = foundPlayer {
+                
+                p.used++
+                
+            } else {
+                
+                player.used++
+                tracker.numbers.insert(player, atIndex: 0)
+                
+            }
+            
+            selectPlayer(player)
+            
         }
+        
+        return true
+        
+    }
+    
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        nTXT.endEditing(true)
+        
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -93,7 +111,15 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return numbers.count
+        if tableView.tag == 1 {
+            
+            return tracker.numbers.count
+            
+        } else {
+            
+            return freq.count
+            
+        }
         
     }
     
@@ -101,9 +127,19 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell")
         
-        let n = numbers[indexPath.row]
+        var n: Player!
         
-        cell.textLabel?.text = "#\(n)"
+        if tableView.tag == 1 {
+            
+            n = tracker.numbers[indexPath.row]
+            
+        } else {
+            
+            n = freq[indexPath.row]
+            
+        }
+        
+        cell.textLabel?.text = "#\(n.number)"
         
         return cell
         
@@ -111,7 +147,27 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        let n = numbers[indexPath.row]
+        var n: Player!
+        
+        if tableView.tag == 1 {
+            
+            n = tracker.numbers[indexPath.row]
+            n.used++
+            freq = tracker.numbers
+            
+        } else {
+            
+            n = freq[indexPath.row]
+            n.used++
+            tracker.numbers = freq
+            
+        }
+        
+        selectPlayer(n)
+        
+    }
+    
+    func selectPlayer(n: Player){
         
         // =========================================================
         // =========================================================
@@ -120,7 +176,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
             switch type {
             case "player_a":
                 
-                play.player_a = n
+                play.player_a = n.number
                 
                 ksel.type = "play_key_select"
                 ksel.newPlay = play
@@ -129,7 +185,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                 
             case "player_b":
                 
-                play.player_b = n
+                play.player_b = n.number
                 
                 tracker.newPlay = play
                 
@@ -139,7 +195,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                 
             case "tackle":
                 
-                s.plays[i].tackles.append(n)
+                s.plays[i].tackles.append(n.number)
                 
                 tracker.draw()
                 
@@ -147,7 +203,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                 
             case "sack":
                 
-                s.plays[i].sacks.append(n)
+                s.plays[i].sacks.append(n.number)
                 
                 tracker.draw()
                 
@@ -155,7 +211,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                 
             case "penalty_player":
                 
-                play.player_a = n
+                play.player_a = n.number
                 ksel.newPlay = play
                 ksel.type = "penalty_options"
                 
@@ -179,53 +235,15 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
     }
     
-    func setTeamSel(){
+    func reload(){
         
-        if let play = newPlay {
-            
-            if let id = play.pos_id {
-                
-                if play.key == "penalty" {
-                    
-                    if tracker.rightHome {
-                        
-                        teamSEL.setTitle(tracker.game.away.short, forSegmentAtIndex: 0)
-                        teamSEL.setTitle(tracker.game.home.short, forSegmentAtIndex: 1)
-                        
-                        if id == tracker.game.home.id {
-                            
-                            teamSEL.selectedSegmentIndex = 1
-                            
-                        } else {
-                            
-                            teamSEL.selectedSegmentIndex = 0
-                            
-                        }
-                        
-                    } else {
-                        
-                        teamSEL.setTitle(tracker.game.away.short, forSegmentAtIndex: 1)
-                        teamSEL.setTitle(tracker.game.home.short, forSegmentAtIndex: 0)
-                        
-                        if id == tracker.game.home.id {
-                            
-                            teamSEL.selectedSegmentIndex = 0
-                            
-                        } else {
-                            
-                            teamSEL.selectedSegmentIndex = 1
-                            
-                        }
-                        
-                    }
-                    
-                    teamSEL.userInteractionEnabled = false
-                    
-                }
-                
-            }
-            
-        }
+        tracker.numbers.sort({ $0.number < $1.number })
+        
+        freq = tracker.numbers
+        freq.sort({ $0.used > $1.used })
+        
+        table.reloadData()
+        freqTBL.reloadData()
         
     }
     

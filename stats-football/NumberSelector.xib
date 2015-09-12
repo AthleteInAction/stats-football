@@ -6,8 +6,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NumberSelector" customModule="stats_football" customModuleProvider="target">
             <connections>
+                <outlet property="freqTBL" destination="riC-X9-I3h" id="mu6-If-uXK"/>
+                <outlet property="nTXT" destination="lJC-Tm-8DU" id="BCV-BG-e4i"/>
                 <outlet property="table" destination="3aQ-Ky-eXg" id="u2a-u1-EJI"/>
-                <outlet property="teamSEL" destination="Nga-CA-wUE" id="SdB-ic-HyU"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -16,28 +17,49 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Nga-CA-wUE">
-                    <rect key="frame" x="245" y="8" width="111" height="29"/>
-                    <segments>
-                        <segment title="LHS"/>
-                        <segment title="WGHS"/>
-                    </segments>
-                </segmentedControl>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3aQ-Ky-eXg">
-                    <rect key="frame" x="8" y="44" width="584" height="548"/>
+                    <rect key="frame" x="0.0" y="46" width="295" height="554"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aA9-9p-Otp">
+                    <rect key="frame" x="295" y="295" width="10" height="10"/>
+                    <color key="backgroundColor" red="0.98111619480000001" green="0.32013011359999999" blue="0.34837192169999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="10" id="Lll-vJ-HeG"/>
+                        <constraint firstAttribute="height" constant="10" id="xYC-pX-wWa"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="riC-X9-I3h">
+                    <rect key="frame" x="305" y="46" width="295" height="554"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New #" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lJC-Tm-8DU">
+                    <rect key="frame" x="250" y="8" width="100" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="100" id="QEn-hE-e6P"/>
+                    </constraints>
+                    <color key="textColor" red="0.20062154700000001" green="0.20062154700000001" blue="0.20062154700000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
+                </textField>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="Nga-CA-wUE" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="4OE-dN-H2d"/>
-                <constraint firstAttribute="centerX" secondItem="Nga-CA-wUE" secondAttribute="centerX" id="PXM-Ke-pAC"/>
-                <constraint firstItem="3aQ-Ky-eXg" firstAttribute="top" secondItem="Nga-CA-wUE" secondAttribute="bottom" constant="8" id="UEN-t4-5Eo"/>
-                <constraint firstItem="3aQ-Ky-eXg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="iDh-zP-tGI"/>
-                <constraint firstAttribute="trailing" secondItem="3aQ-Ky-eXg" secondAttribute="trailing" constant="8" id="jJI-28-CZt"/>
-                <constraint firstAttribute="bottom" secondItem="3aQ-Ky-eXg" secondAttribute="bottom" constant="8" id="vB0-zE-3er"/>
+                <constraint firstItem="lJC-Tm-8DU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="2w1-cT-UuD"/>
+                <constraint firstItem="riC-X9-I3h" firstAttribute="top" secondItem="lJC-Tm-8DU" secondAttribute="bottom" constant="8" id="5V0-J2-NM3"/>
+                <constraint firstAttribute="bottom" secondItem="riC-X9-I3h" secondAttribute="bottom" id="CgH-JD-c8e"/>
+                <constraint firstAttribute="centerX" secondItem="lJC-Tm-8DU" secondAttribute="centerX" id="LXS-eT-Xrd"/>
+                <constraint firstItem="3aQ-Ky-eXg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Mrq-BN-wcu"/>
+                <constraint firstItem="riC-X9-I3h" firstAttribute="leading" secondItem="aA9-9p-Otp" secondAttribute="trailing" id="UTL-A2-IB0"/>
+                <constraint firstAttribute="trailing" secondItem="riC-X9-I3h" secondAttribute="trailing" id="Xk3-9L-l8C"/>
+                <constraint firstItem="aA9-9p-Otp" firstAttribute="leading" secondItem="3aQ-Ky-eXg" secondAttribute="trailing" id="YzZ-r2-EkU"/>
+                <constraint firstAttribute="centerY" secondItem="aA9-9p-Otp" secondAttribute="centerY" id="adb-Xc-6vR"/>
+                <constraint firstAttribute="centerX" secondItem="aA9-9p-Otp" secondAttribute="centerX" id="jMz-mX-Lv1"/>
+                <constraint firstItem="3aQ-Ky-eXg" firstAttribute="top" secondItem="lJC-Tm-8DU" secondAttribute="bottom" constant="8" id="vot-2l-Cl5"/>
+                <constraint firstAttribute="bottom" secondItem="3aQ-Ky-eXg" secondAttribute="bottom" id="wX3-PW-vOI"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="417" y="498"/>
         </view>
     </objects>
 </document>

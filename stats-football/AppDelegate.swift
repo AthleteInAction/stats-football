@@ -9,7 +9,8 @@
 import UIKit
 import CoreData
 
-let domain = "http://will-big.local:3000"
+//let domain = "http://will-big.local:3000"
+let domain = "https://wambl-stats-api-staging.herokuapp.com"
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

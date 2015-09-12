@@ -119,6 +119,25 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
     }
     
+    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        println("DESELECT")
+        
+        let s = tracker.log[indexPath.row]
+        
+        let cell = tableView.cellForRowAtIndexPath(indexPath)
+        let text = cell?.textLabel?.text
+        
+        cell?.textLabel?.text = "Saving..."
+        
+        s.save { (s) -> Void in
+            
+            cell?.textLabel?.text = text
+            
+        }
+        
+    }
+    
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
         if editingStyle == UITableViewCellEditingStyle.Delete {

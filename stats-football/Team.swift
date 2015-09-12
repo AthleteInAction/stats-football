@@ -12,13 +12,29 @@ class Team {
     var id: Int!
     var name: String!
     var short: String!
-    var roster: [Int] = []
+    var roster: [Player] = []
     
     init(json: JSON){
         
         id = json["id"].intValue
         name = json["name"].stringValue
         short = json["short"].stringValue
+        
+        if let players = json["roster"].array {
+            
+            var tmp: [Player] = []
+            
+            for player in players {
+                
+                let p = Player(n: player.intValue)
+                
+                tmp.append(p)
+                
+            }
+            
+            roster = tmp
+            
+        }
         
     }
     
@@ -46,6 +62,19 @@ class Game {
         away = Team(json: json["away"])
         home_id = json["home_id"].intValue
         home = Team(json: json["home"])
+        
+    }
+    
+}
+
+class Player {
+    
+    var number: Int!
+    var used: Int = 0
+    
+    init(n: Int){
+        
+        number = n
         
     }
     
