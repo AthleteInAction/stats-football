@@ -65,7 +65,7 @@ class Filters {
             
         case "penalty_options":
             
-            return ["spot","offset","other"]
+            return ["spot","offset","kick"]
             
         default:
             

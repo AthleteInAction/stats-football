@@ -55,7 +55,7 @@ class PenaltyMKR: UIButton {
     func dDrag(sender: UIPanGestureRecognizer){
         
         let s = tracker.log[tracker.index]
-        let p = s.plays[index]
+        let p = s.penalties[index]
         
         let pos_right: Bool = (s.pos_id == tracker.game.home.id && tracker.rightHome) || (s.pos_id == tracker.game.away.id && !tracker.rightHome)
         
@@ -72,7 +72,7 @@ class PenaltyMKR: UIButton {
         if sender.state == UIGestureRecognizerState.Ended {
             
             p.endX = newEndX
-            tracker.playTBL.reloadData()
+            tracker.penaltyTBL.reloadData()
             
         }
         
@@ -87,17 +87,17 @@ class PenaltyMKR: UIButton {
         }
         
         let s = tracker.log[tracker.index]
-        let p = s.plays[index]
+        let p = s.penalties[index]
         
         let pos_right: Bool = (s.pos_id == tracker.game.home.id && tracker.rightHome) || (s.pos_id == tracker.game.away.id && !tracker.rightHome)
         
         var newEndFull = spot.yardToFull(pos_right)
         
-        var w = CGFloat(p.penaltyDistance!) * tracker.field.ratio
+        var w = CGFloat(p.distance) * tracker.field.ratio
         
         if pos_right && dir {
             
-            if (100 - newEndFull) < p.penaltyDistance! {
+            if (100 - newEndFull) < p.distance {
                 
                 w = (100 - CGFloat(newEndFull)) * tracker.field.ratio
                 
@@ -105,7 +105,7 @@ class PenaltyMKR: UIButton {
             
         } else {
             
-            if newEndFull < p.penaltyDistance! {
+            if newEndFull < p.distance {
                 
                 w = CGFloat(newEndFull) * tracker.field.ratio
                 

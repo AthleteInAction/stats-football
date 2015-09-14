@@ -20,12 +20,12 @@
                     <rect key="frame" x="8" y="40" width="584" height="30"/>
                     <color key="textColor" red="0.30050069060000001" green="0.30050069060000001" blue="0.30050069060000001" alpha="1" colorSpace="calibratedRGB"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no"/>
                 </textField>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Team Abbreviation" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="S4C-bz-gla">
                     <rect key="frame" x="8" y="90" width="584" height="30"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" spellCheckingType="no"/>
                 </textField>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1xM-x7-0lV">
                     <rect key="frame" x="265" y="160" width="70" height="30"/>

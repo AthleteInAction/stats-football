@@ -27,33 +27,19 @@ class PATFilter {
         // =======================================================
         if original.replay || original.plays.count == 0 {
             
-            s.startX = original.startX
+            s.key = original.key
             
-            var penalties: Bool = false
-            
-            for play in original.plays {
+            for penalty in reverse(original.penalties) {
                 
-                if play.key == "penalty" { penalties = true }
-                
-            }
-            
-            for play in original.plays {
-                
-                if let x = play.endX {
+                if let x = penalty.endX {
                     
-                    if penalties {
-                        
-                        s.startX = x
-                        
-                        break
-                        
-                    }
+                    s.startX = x
+                    
+                    return s
                     
                 }
                 
             }
-            
-            s.key = original.key
             
             return s
             

@@ -30,35 +30,22 @@ class DownFilter {
         if original.replay || original.plays.count == 0 {
             
             s.startX = original.startX
-            
-            var penalties: Bool = false
-            
-            for play in original.plays {
-                
-                if play.key == "penalty" { penalties = true }
-                
-            }
-            
-            for play in original.plays {
-                
-                if let x = play.endX {
-                    
-                    if penalties {
-                        
-                        s.startX = x
-                        
-                        break
-                        
-                    }
-                    
-                }
-                
-            }
-            
             s.key = original.key
             s.down = original.down
             s.fd = original.fd
             s.startY = original.startY
+            
+            for penalty in reverse(original.penalties) {
+                
+                if let x = penalty.endX {
+                    
+                    s.startX = x
+                    
+                    return s
+                    
+                }
+                
+            }
             
             return s
             
@@ -152,6 +139,25 @@ class DownFilter {
             if let x = play.endX { lastSpot = play }
             
             if pos_right != pos_right_original { possessionChanged = true }
+            
+        }
+        // =======================================================
+        // =======================================================
+        
+        
+        // PENALTIES
+        // =======================================================
+        // =======================================================
+        for penalty in reverse(original.penalties) {
+            
+            if let x = penalty.endX {
+                
+                lastSpot = Play()
+                lastSpot?.endX = x
+                
+                break
+                
+            }
             
         }
         // =======================================================

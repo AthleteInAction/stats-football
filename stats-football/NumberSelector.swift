@@ -16,6 +16,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     var tracker: TrackerCTRL!
     var newPlay: Play?
+    var newPenalty: Penalty?
     var type: String!
     var i: Int!
     
@@ -32,7 +33,11 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         table.tag = 1
         freqTBL.tag = 2
         
-        s = tracker.log[tracker.index]
+        if tracker.log.count > 0 {
+            s = tracker.log[tracker.index]
+        } else {
+            s = Sequence()
+        }
         
         nsel = NumberSelector(nibName: "NumberSelector", bundle: nil)
         nsel.tracker = tracker
@@ -181,7 +186,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                 ksel.type = "play_key_select"
                 ksel.newPlay = play
                 
-                navigationController?.pushViewController(ksel, animated: true)
+                navigationController?.pushViewController(ksel, animated: false)
                 
             case "player_b":
                 
@@ -209,14 +214,6 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                 
                 close()
                 
-            case "penalty_player":
-                
-                play.player_a = n.number
-                ksel.newPlay = play
-                ksel.type = "penalty_options"
-                
-                navigationController?.pushViewController(ksel, animated: true)
-                
             default:
                 
                 ()
@@ -226,6 +223,16 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         }
         // =========================================================
         // =========================================================
+        
+        if let penalty = newPenalty {
+            
+            penalty.player = n.number
+            ksel.newPenalty = penalty
+            ksel.type = "penalty_options"
+            
+            navigationController?.pushViewController(ksel, animated: false)
+            
+        }
         
     }
     

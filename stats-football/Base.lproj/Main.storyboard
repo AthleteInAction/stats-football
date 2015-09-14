@@ -99,7 +99,7 @@
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="9UF-Ve-a5e" customClass="PlayTBL" customModule="stats_football" customModuleProvider="target">
-                                <rect key="frame" x="844" y="64" width="180" height="289"/>
+                                <rect key="frame" x="664" y="64" width="180" height="289"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="180" id="4fA-Z8-E0w"/>
@@ -123,7 +123,7 @@
                                 </prototypes>
                             </tableView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="RXZ-e0-gsY" customClass="SequenceTBL" customModule="stats_football" customModuleProvider="target">
-                                <rect key="frame" x="664" y="64" width="180" height="289"/>
+                                <rect key="frame" x="484" y="64" width="180" height="289"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="180" id="Ywu-dW-sMV"/>
@@ -159,7 +159,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fJG-fg-FRu">
-                                <rect key="frame" x="572" y="315" width="84" height="30"/>
+                                <rect key="frame" x="392" y="315" width="84" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Wo2-Xk-wvf"/>
@@ -174,7 +174,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Ut-Sx-Rkm">
-                                <rect key="frame" x="480" y="315" width="84" height="30"/>
+                                <rect key="frame" x="300" y="315" width="84" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="84" id="BK9-g0-TjK"/>
@@ -189,11 +189,18 @@
                                 </connections>
                             </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ma3-Wf-JLE">
-                                <rect key="frame" x="590" y="259" width="51" height="31"/>
+                                <rect key="frame" x="410" y="259" width="51" height="31"/>
                                 <connections>
                                     <action selector="replayCHG:" destination="BYZ-38-t0r" eventType="valueChanged" id="eMc-wj-29F"/>
                                 </connections>
                             </switch>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="QeI-oK-9g7" customClass="PenaltyTBL" customModule="stats_football" customModuleProvider="target">
+                                <rect key="frame" x="844" y="64" width="180" height="289"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="180" id="TZi-cC-Sgh"/>
+                                </constraints>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" red="0.20062154696132595" green="0.20062154696132595" blue="0.20062154696132595" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -202,10 +209,12 @@
                             <constraint firstItem="yiD-MP-Dzw" firstAttribute="top" secondItem="9UF-Ve-a5e" secondAttribute="bottom" id="5Yd-uR-qY8"/>
                             <constraint firstItem="9UF-Ve-a5e" firstAttribute="leading" secondItem="RXZ-e0-gsY" secondAttribute="trailing" id="8X6-uO-NMK"/>
                             <constraint firstItem="yiD-MP-Dzw" firstAttribute="top" secondItem="QXB-N4-DGY" secondAttribute="bottom" constant="8" id="8tU-2V-147"/>
+                            <constraint firstItem="QeI-oK-9g7" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="99Z-Oh-BXZ"/>
                             <constraint firstAttribute="trailing" secondItem="yiD-MP-Dzw" secondAttribute="trailing" id="C4C-QH-giR"/>
                             <constraint firstItem="mwm-K5-KTB" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="8" id="CEP-VA-FlM"/>
                             <constraint firstItem="HVI-7f-T66" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="8" id="CEj-7F-2fJ"/>
                             <constraint firstItem="1Ye-t8-RNl" firstAttribute="top" secondItem="mwm-K5-KTB" secondAttribute="bottom" constant="8" id="FCf-tu-gG4"/>
+                            <constraint firstItem="QeI-oK-9g7" firstAttribute="leading" secondItem="9UF-Ve-a5e" secondAttribute="trailing" id="Gm0-Lo-RiU"/>
                             <constraint firstItem="yiD-MP-Dzw" firstAttribute="top" secondItem="RXZ-e0-gsY" secondAttribute="bottom" id="JlX-Yt-mml"/>
                             <constraint firstItem="7kM-oV-ade" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="8" id="N49-mK-Wv2"/>
                             <constraint firstItem="Q0S-tT-GYH" firstAttribute="centerY" secondItem="7kM-oV-ade" secondAttribute="centerY" id="NcD-AM-Aj0"/>
@@ -214,9 +223,11 @@
                             <constraint firstItem="fJG-fg-FRu" firstAttribute="top" secondItem="ma3-Wf-JLE" secondAttribute="bottom" constant="25" id="RR4-C9-vU5"/>
                             <constraint firstItem="eCm-n4-NO2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="8" id="SMo-NB-Imc"/>
                             <constraint firstItem="Q0S-tT-GYH" firstAttribute="leading" secondItem="7kM-oV-ade" secondAttribute="trailing" constant="8" id="Slj-wJ-tXM"/>
+                            <constraint firstAttribute="trailing" secondItem="QeI-oK-9g7" secondAttribute="trailing" id="UmH-FO-xV7"/>
                             <constraint firstItem="IcT-lD-XNu" firstAttribute="top" secondItem="HVI-7f-T66" secondAttribute="bottom" constant="8" id="V7q-3v-IWm"/>
                             <constraint firstItem="9UF-Ve-a5e" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="bJr-Vs-fKw"/>
                             <constraint firstItem="4pK-LX-1U6" firstAttribute="centerY" secondItem="yiD-MP-Dzw" secondAttribute="centerY" id="dqR-Fd-lKd"/>
+                            <constraint firstItem="yiD-MP-Dzw" firstAttribute="top" secondItem="QeI-oK-9g7" secondAttribute="bottom" id="euG-pJ-ccp"/>
                             <constraint firstItem="1Ye-t8-RNl" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="8" id="h2X-Os-aEa"/>
                             <constraint firstItem="yiD-MP-Dzw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="hj2-gh-WvV"/>
                             <constraint firstItem="4pK-LX-1U6" firstAttribute="width" secondItem="yiD-MP-Dzw" secondAttribute="width" id="irX-HZ-2gi"/>
@@ -224,7 +235,6 @@
                             <constraint firstItem="Q0S-tT-GYH" firstAttribute="leading" secondItem="pbx-ws-5GO" secondAttribute="leading" id="jkb-Wf-bts"/>
                             <constraint firstItem="yiD-MP-Dzw" firstAttribute="top" secondItem="7Ut-Sx-Rkm" secondAttribute="bottom" constant="8" id="lPK-lo-o5C"/>
                             <constraint firstItem="yiD-MP-Dzw" firstAttribute="top" secondItem="eCm-n4-NO2" secondAttribute="bottom" constant="8" id="n8H-7y-Pe2"/>
-                            <constraint firstAttribute="trailing" secondItem="9UF-Ve-a5e" secondAttribute="trailing" id="nq8-lE-oOS"/>
                             <constraint firstItem="4pK-LX-1U6" firstAttribute="centerX" secondItem="yiD-MP-Dzw" secondAttribute="centerX" id="pBR-1f-qEE"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="yiD-MP-Dzw" secondAttribute="bottom" id="q6M-U1-gOL"/>
                             <constraint firstItem="ma3-Wf-JLE" firstAttribute="centerX" secondItem="fJG-fg-FRu" secondAttribute="centerX" constant="0.5" id="rLl-aK-7oO"/>
@@ -253,6 +263,7 @@
                         <outlet property="field" destination="yiD-MP-Dzw" id="u1U-hW-IYC"/>
                         <outlet property="fimg" destination="4pK-LX-1U6" id="a0P-xn-OKz"/>
                         <outlet property="leftPTY" destination="7Ut-Sx-Rkm" id="hv0-wE-O5a"/>
+                        <outlet property="penaltyTBL" destination="QeI-oK-9g7" id="erw-17-o6P"/>
                         <outlet property="playTBL" destination="9UF-Ve-a5e" id="bEQ-TT-U5M"/>
                         <outlet property="playTypeSelector" destination="IcT-lD-XNu" id="aex-eC-wHQ"/>
                         <outlet property="posSelector" destination="mwm-K5-KTB" id="rHX-0D-YGo"/>

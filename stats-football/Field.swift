@@ -50,35 +50,27 @@ class Field: UIView {
             var i = 0
             for play in s.plays {
                 
-                if play.key == "penalty" {
-                    
-                    
-                    
-                } else {
+                x = toX(play.endX!.yardToFull(pos_right))
+                y = toP(play.endY!)
                 
-                    x = toX(play.endX!.yardToFull(pos_right))
-                    y = toP(play.endY!)
-                    
-                    CGContextSetLineWidth(c, 10.0)
-                    CGContextSetLineDash(c, 10, [6,3], 2)
-                    
-                    var color = Filters.colors(play.key, alpha: 0.7).CGColor
-                    
-                    CGContextSetStrokeColorWithColor(c,color)
-                    
-                    CGContextAddLineToPoint(c,CGFloat(x),CGFloat(y))
-                    
-                    CGContextStrokePath(c)
-                    
-                    CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
-                    
-                    prev = play
-                    
-                    tracker.drawSubButtons(i)
-                    
-                    i++
-                    
-                }
+                CGContextSetLineWidth(c, 10.0)
+                CGContextSetLineDash(c, 10, [6,3], 2)
+                
+                var color = Filters.colors(play.key, alpha: 0.7).CGColor
+                
+                CGContextSetStrokeColorWithColor(c,color)
+                
+                CGContextAddLineToPoint(c,CGFloat(x),CGFloat(y))
+                
+                CGContextStrokePath(c)
+                
+                CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
+                
+                prev = play
+                
+                tracker.drawSubButtons(i)
+                
+                i++
                 
             }
             

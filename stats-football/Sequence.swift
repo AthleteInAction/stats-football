@@ -11,7 +11,7 @@ import SwiftyJSON
 
 class Sequence {
     
-    var id: Int?
+    var id: Int64!
     var game_id: Int!
     var pos_id: Int!
     var qtr: Int!
@@ -22,9 +22,13 @@ class Sequence {
     var startY: Int = 50
     var replay: Bool = false
     var plays: [Play] = []
+    var penalties: [Penalty] = []
+    var create: Bool = true
     var ind = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
     
     init(){
+        
+        id = Int64(round(NSDate().timeIntervalSinceReferenceDate*1000))
         
         ind.hidesWhenStopped = true
         ind.stopAnimating()
@@ -33,66 +37,66 @@ class Sequence {
     
     func save(completion: (s: Bool) -> Void){
         
-//        ind.startAnimating()
-//        
-//        if let ID = id {
-//            
-//            println("UPDATE")
-//            
-//            let s = "\(domain)/api/v1/sequences/\(ID).json"
-//            
-//            var sequence: JSON = [
-//                "sequence":[
-//                    "game_id": game_id,
-//                    "pos_id": pos_id,
-//                    "key": key,
-//                    "qtr": qtr,
-//                    "start_x": startX,
-//                    "start_y": startY,
-//                    "replay": replay
-//                ]
-//            ]
-//            
-//            if let d = down { sequence["sequence"]["down"].intValue = d }
-//            if let d = fd { sequence["sequence"]["fd"].intValue = d }
-//            
-//            println(sequence)
-//            
-//            Alamofire.request(.PUT, s, parameters: sequence.dictionaryObject, encoding: .JSON)
-//                .responseJSON { (request, response, data, error) in
-//                    
-//                    if error == nil {
-//                        
-//                        if response?.statusCode == 200 {
-//                            
-//                            var json = JSON(data!)
-//                            
-//                        } else {
-//                            
-//                            println("Status Code Error: \(response?.statusCode)")
-//                            println(request)
-//                            
-//                        }
-//                        
-//                    } else {
-//                        
-//                        println("Error!")
-//                        println(error)
-//                        println(request)
-//                        
-//                    }
-//                    
-//                    completion(s: (error == nil))
-//                    self.ind.stopAnimating()
-//                    
-//            }
-//            
-//        } else {
-//            
-//            println("NEW")
-//            
-//            let s = "\(domain)/api/v1/sequences.json"
-//            
+        ind.startAnimating()
+        
+        if !create {
+            
+            println("UPDATE")
+            
+            let s = "\(domain)/api/v1/sequences/\(id).json"
+            
+            var sequence: JSON = [
+                "sequence":[
+                    "game_id": game_id,
+                    "pos_id": pos_id,
+                    "key": key,
+                    "qtr": qtr,
+                    "start_x": startX,
+                    "start_y": startY,
+                    "replay": replay
+                ]
+            ]
+            
+            if let d = down { sequence["sequence"]["down"].intValue = d }
+            if let d = fd { sequence["sequence"]["fd"].intValue = d }
+            
+            println(sequence)
+            
+            Alamofire.request(.PUT, s, parameters: sequence.dictionaryObject, encoding: .JSON)
+                .responseJSON { (request, response, data, error) in
+                    
+                    if error == nil {
+                        
+                        if response?.statusCode == 200 {
+                            
+                            var json = JSON(data!)
+                            
+                        } else {
+                            
+                            println("Status Code Error: \(response?.statusCode)")
+                            println(request)
+                            
+                        }
+                        
+                    } else {
+                        
+                        println("Error!")
+                        println(error)
+                        println(request)
+                        
+                    }
+                    
+                    completion(s: (error == nil))
+                    self.ind.stopAnimating()
+                    
+            }
+            
+        } else {
+            
+            println("NEW")
+            
+            let s = "\(domain)/api/v1/sequences.json"
+            
 //            var pp: [JSON] = []
 //            
 //            for play in plays {
@@ -115,57 +119,58 @@ class Sequence {
 //                pp.append(o)
 //                
 //            }
-//            
-//            var sequence: JSON = [
-//                "sequence":[
-//                "game_id": game_id,
-//                "pos_id": pos_id,
-//                "key": key,
-//                "qtr": qtr,
-//                "start_x": startX,
-//                "start_y": startY,
-//                "replay": replay,
-//                "plays": pp
-//                ]
-//            ]
-//            
-//            if let d = down { sequence["sequence"]["down"].intValue = d }
-//            if let d = fd { sequence["sequence"]["fd"].intValue = d }
-//            
-//            println(sequence)
-//            
-//            Alamofire.request(.POST, s, parameters: sequence.dictionaryObject, encoding: .JSON)
-//                .responseJSON { (request, response, data, error) in
-//                    
-//                    if error == nil {
-//                        
-//                        if response?.statusCode == 201 {
-//                            
-//                            var json = JSON(data!)
-//                            
-//                            self.id = json["sequence"]["id"].intValue
-//                            
-//                        } else {
-//                            
-//                            println("Status Code Error: \(response?.statusCode)")
-//                            println(request)
-//                            
-//                        }
-//                        
-//                    } else {
-//                        
-//                        println("Error!")
-//                        println(error)
-//                        println(request)
-//                        
-//                    }
-//                    
-//                    completion(s: (error == nil))
-//                    self.ind.stopAnimating()
-//                    
-//            }
-//            
-//        }
+            
+            var sequence: JSON = [
+                "sequence":[
+                    "id": String(id),
+                    "game_id": game_id,
+                    "pos_id": pos_id,
+                    "key": key,
+                    "qtr": qtr,
+                    "start_x": startX,
+                    "start_y": startY,
+                    "replay": replay
+                ]
+            ]
+            
+            if let d = down { sequence["sequence"]["down"].intValue = d }
+            if let d = fd { sequence["sequence"]["fd"].intValue = d }
+            
+            println(sequence)
+            
+            Alamofire.request(.POST, s, parameters: sequence.dictionaryObject, encoding: .JSON)
+                .responseJSON { (request, response, data, error) in
+                    
+                    if error == nil {
+                        
+                        if response?.statusCode == 201 {
+                            
+                            var json = JSON(data!)
+                            
+                            self.id = json["sequence"]["id"].int64Value
+                            self.create = false
+                            
+                        } else {
+                            
+                            println("Status Code Error: \(response?.statusCode)")
+                            println(request)
+                            
+                        }
+                        
+                    } else {
+                        
+                        println("Error!")
+                        println(error)
+                        println(request)
+                        
+                    }
+                    
+                    completion(s: (error == nil))
+                    self.ind.stopAnimating()
+                    
+            }
+            
+        }
         
     }
     
@@ -186,6 +191,26 @@ class Play {
     var pos_id: Int?
     var tackles: [Int] = []
     var sacks: [Int] = []
+    
+    init(){
+        
+        
+        
+    }
+    
+}
+
+
+class Penalty {
+    
+    var id: Int?
+    var game_id: Int!
+    var sequence_id: Int64!
+    var pos_id: Int!
+    var distance: Int!
+    var endX: Int?
+    var enforcement: String?
+    var player: Int?
     
     init(){
         

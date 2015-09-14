@@ -52,46 +52,21 @@ class TeamDetail: UIViewController,UITextFieldDelegate {
         nameTXT.endEditing(true)
         shortTXT.endEditing(true)
         
-        let s = "\(domain)/api/v1/teams.json"
+        let team = Team()
+        team.name = nameTXT.text
+        team.short = shortTXT.text
         
-        var newTeam = [
-            "team" : [
-                "name" : nameTXT.text,
-                "short" : shortTXT.text
-            ]
-        ]
-        
-        Alamofire.request(.POST, s, parameters: newTeam, encoding: .JSON)
-            .responseJSON { (request, response, data, error) in
+        team.save { (s) -> Void in
+            
+            if s {
                 
-                if error == nil {
-                    
-                    if response?.statusCode == 201 {
-                        
-                        var json = JSON(data!)
-                        
-                        var team = Team(json: json["team"])
-                        
-                        self.main.teamsTBL.teams.insert(team, atIndex: 0)
-                        self.main.teamsTBL.reloadData()
-                        
-                        self.dismissViewControllerAnimated(true, completion: nil)
-                        
-                    } else {
-                        
-                        println("Status Code Error: \(response?.statusCode)")
-                        println(request)
-                        
-                    }
-                    
-                } else {
-                    
-                    println("Error!")
-                    println(error)
-                    println(request)
-                    
-                }
+                self.main.teamsTBL.teams.insert(team, atIndex: 0)
+                self.main.teamsTBL.reloadData()
                 
+                self.dismissViewControllerAnimated(true, completion: nil)
+                
+            }
+            
         }
         
         return true

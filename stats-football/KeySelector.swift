@@ -12,6 +12,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
 
     var tracker: TrackerCTRL!
     var newPlay: Play?
+    var newPenalty: Penalty?
     private var keys: [String] = []
     var type: String!
     
@@ -101,7 +102,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     nsel.newPlay = play
                     nsel.type = "player_b"
                     
-                    navigationController?.pushViewController(nsel, animated: true)
+                    navigationController?.pushViewController(nsel, animated: false)
                     
                 default:
                     
@@ -113,55 +114,6 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     close()
                     
                 }
-            
-            // ++++++++++++++++++++++++++++++++++++++++++++++++
-            case "penalty_type":
-            // ++++++++++++++++++++++++++++++++++++++++++++++++
-                
-                play.penaltyKey = key
-                ksel.newPlay = play
-                ksel.type = "penalty_distance"
-                
-                navigationController?.pushViewController(ksel, animated: true)
-                
-            // ++++++++++++++++++++++++++++++++++++++++++++++++
-            case "penalty_distance":
-            // ++++++++++++++++++++++++++++++++++++++++++++++++
-                
-                play.penaltyDistance = key.toInt()
-                nsel.newPlay = play
-                nsel.type = "penalty_player"
-                
-                navigationController?.pushViewController(nsel, animated: true)
-                
-            // ++++++++++++++++++++++++++++++++++++++++++++++++
-            case "penalty_options":
-            // ++++++++++++++++++++++++++++++++++++++++++++++++
-                
-                switch key {
-                case "offset":
-                    
-                    play.penaltyOffset = true
-                    
-                    s.plays.append(play)
-                    
-                    tracker.playTBL.reloadData()
-                    
-                case "other":
-                    
-                    s.plays.append(play)
-                    
-                    tracker.playTBL.reloadData()
-                    
-                default:
-                    
-                    tracker.newPlay = play
-                    
-                    tracker.spot()
-                    
-                }
-                
-                close()
                 
             // ++++++++++++++++++++++++++++++++++++++++++++++++
             default:
@@ -173,6 +125,68 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         }
         // =========================================================
         // =========================================================
+        
+        if let penalty = newPenalty {
+            
+            switch type {
+            // ++++++++++++++++++++++++++++++++++++++++++++++++
+//            case "penalty_type":
+//            // ++++++++++++++++++++++++++++++++++++++++++++++++
+//                
+//                play.penaltyKey = key
+//                ksel.newPlay = play
+//                ksel.type = "penalty_distance"
+//                
+//                navigationController?.pushViewController(ksel, animated: false)
+                
+            // ++++++++++++++++++++++++++++++++++++++++++++++++
+            case "penalty_distance":
+            // ++++++++++++++++++++++++++++++++++++++++++++++++
+                
+                penalty.distance = key.toInt()
+                nsel.newPenalty = penalty
+                nsel.type = "penalty_player"
+                
+                navigationController?.pushViewController(nsel, animated: false)
+                
+            // ++++++++++++++++++++++++++++++++++++++++++++++++
+            case "penalty_options":
+            // ++++++++++++++++++++++++++++++++++++++++++++++++
+                
+                switch key {
+                case "offset":
+                    
+                    penalty.enforcement = "offset"
+                    
+                    s.penalties.append(penalty)
+                    
+                    tracker.penaltyTBL.reloadData()
+                    
+                case "kick":
+                    
+                    penalty.enforcement = "kick"
+                    s.penalties.append(penalty)
+                    
+                    tracker.penaltyTBL.reloadData()
+                    
+                default:
+                    
+                    tracker.newPenalty = penalty
+                    
+                    tracker.spot()
+                    
+                }
+                
+                close()
+            
+            // ++++++++++++++++++++++++++++++++++++++++++++++++
+            default:
+                
+                ()
+                
+            }
+            
+        }
         
     }
     

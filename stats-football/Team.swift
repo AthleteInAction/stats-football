@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
 import SwiftyJSON
+import CoreData
 
 class Team {
     
@@ -16,7 +17,7 @@ class Team {
     
     init(json: JSON){
         
-        id = json["id"].intValue
+        id = json["id"].int
         name = json["name"].stringValue
         short = json["short"].stringValue
         
@@ -40,7 +41,45 @@ class Team {
     
     init(){
         
+        id = Int(round(NSDate().timeIntervalSinceReferenceDate))
         
+    }
+    
+    init(item: NSManagedObject){
+        
+        name = item.valueForKey("name") as! String
+        short = item.valueForKey("short") as! String
+        
+    }
+    
+    func save(completion: (s: Bool) -> Void){
+        
+        var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        var context: NSManagedObjectContext = appDel.managedObjectContext!
+        
+        var team: NSManagedObject = NSEntityDescription.insertNewObjectForEntityForName("Teams", inManagedObjectContext: context) as! NSManagedObject
+        
+        team.setValue(name, forKey: "name")
+        team.setValue(short, forKey: "short")
+        
+        var error: NSError?
+        
+        context.save(&error)
+        
+        if let e = error {
+            
+            println(e)
+            
+            
+            completion(s: false)
+            
+        } else {
+            
+            println("SAVED!")
+            
+            completion(s: true)
+            
+        }
         
     }
     
@@ -50,17 +89,17 @@ class Game {
     
     var id: Int!
     var start_time: NSDate!
-    var away_id: Int!
+    var away_id: Int64!
+    var home_id: Int64!
     var away: Team!
-    var home_id: Int!
     var home: Team!
     
     init(json: JSON){
         
         id = json["id"].intValue
-        away_id = json["away_id"].intValue
+        away_id = json["away_id"].int64Value
+        home_id = json["home_id"].int64Value
         away = Team(json: json["away"])
-        home_id = json["home_id"].intValue
         home = Team(json: json["home"])
         
     }

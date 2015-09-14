@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import CoreData
 
 class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
@@ -50,40 +51,7 @@ class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
-            Loading.start()
             
-            let team = teams[indexPath.row]
-            
-            let s = "\(domain)/api/v1/teams/\(team.id).json"
-            
-            Alamofire.request(.DELETE,s)
-                .responseJSON { request, response, data, error in
-                    
-                    if error == nil {
-                        
-                        if response?.statusCode == 200 {
-                            
-                            self.teams.removeAtIndex(indexPath.row)
-                            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
-                            
-                        } else {
-                            
-                            println("Status Code Error: \(response?.statusCode)")
-                            println(request)
-                            
-                        }
-                        
-                    } else {
-                        
-                        println("Error!")
-                        println(error)
-                        println(request)
-                        
-                    }
-                    
-                    Loading.stop()
-                    
-            }
             
         }
         
@@ -97,54 +65,10 @@ class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func getData(){
         
-        Loading.start()
-        
-        let s = "\(domain)/api/v1/teams.json"
-        
-        Alamofire.request(.GET, s.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!, parameters: nil)
-            .responseJSON { request, response, data, error in
-                
-                if error == nil {
-                    
-                    if response?.statusCode == 200 {
-                        
-                        var json = JSON(data!)
-                        
-                        var tmp: [Team] = []
-                        
-                        if let teams = json["teams"].array {
-                            
-                            for team in teams {
-                                
-                                let t = Team(json: team)
-                                
-                                tmp.append(t)
-                                
-                            }
-                            
-                        }
-                        
-                        self.teams = tmp
-                        
-                        self.reloadData()
-                        
-                    } else {
-                        
-                        println("Status Code Error: \(response?.statusCode)")
-                        println(request)
-                        
-                    }
-                    
-                } else {
-                    
-                    println("Error!")
-                    println(error)
-                    println(request)
-                    
-                }
-                
-                Loading.stop()
-                
+        DB.teams.local.get { (s,items) -> Void in
+            
+            if s { self.teams = items }
+            
         }
         
     }
