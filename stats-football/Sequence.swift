@@ -1,4 +1,5 @@
-//
+// ========================================================
+// ========================================================
 //  Sequence.swift
 //  stats-football
 //
@@ -6,224 +7,133 @@
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
 import UIKit
-import Alamofire
-import SwiftyJSON
-
+import CoreData
+// ========================================================
+// ========================================================
 class Sequence {
     
-    var id: Int64!
-    var game_id: Int!
-    var pos_id: Int!
+    var game: Game!
+    var team: Team!
     var qtr: Int!
     var key: String!
     var down: Int?
     var fd: Int?
     var startX: Int!
-    var startY: Int = 50
+    var startY: Int!
     var replay: Bool = false
     var plays: [Play] = []
     var penalties: [Penalty] = []
-    var create: Bool = true
-    var ind = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+    var object: SequenceObject!
     
     init(){
         
-        id = Int64(round(NSDate().timeIntervalSinceReferenceDate*1000))
+        var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        var context: NSManagedObjectContext = appDel.managedObjectContext!
+        var entity = NSEntityDescription.entityForName("Sequences", inManagedObjectContext: context)
+        var o = SequenceObject(entity: entity!, insertIntoManagedObjectContext: context)
         
-        ind.hidesWhenStopped = true
-        ind.stopAnimating()
+        object = o
+        startY = 50
         
     }
     
-    func save(completion: (s: Bool) -> Void){
+    init(sequence: SequenceObject){
         
-        ind.startAnimating()
+        println("[][][][]")
+        println(sequence)
+        println("[][][][]")
         
-        if !create {
+        team = Team(team: sequence.team)
+        game = Game(game: sequence.game)
+        qtr = String(sequence.qtr).toInt()
+        key = String(sequence.key)
+        if let d = sequence.down { down = String(d).toInt() }
+        if let f = sequence.fd { fd = String(f).toInt() }
+        startX = String(sequence.startX).toInt()
+        startY = String(sequence.startY).toInt()
+        replay = sequence.replay
+        object = sequence
+        
+    }
+    
+    typealias Completion = (error: NSError?) -> Void
+    
+    func delete(completion: Completion?){
+        
+        var c = completion
+        
+        var error: NSError?
+        
+        object.managedObjectContext?.deleteObject(object)
+        object.managedObjectContext?.save(&error)
+        
+        if let e = error {
             
-            println("UPDATE")
-            
-            let s = "\(domain)/api/v1/sequences/\(id).json"
-            
-            var sequence: JSON = [
-                "sequence":[
-                    "game_id": game_id,
-                    "pos_id": pos_id,
-                    "key": key,
-                    "qtr": qtr,
-                    "start_x": startX,
-                    "start_y": startY,
-                    "replay": replay
-                ]
-            ]
-            
-            if let d = down { sequence["sequence"]["down"].intValue = d }
-            if let d = fd { sequence["sequence"]["fd"].intValue = d }
-            
-            println(sequence)
-            
-            Alamofire.request(.PUT, s, parameters: sequence.dictionaryObject, encoding: .JSON)
-                .responseJSON { (request, response, data, error) in
-                    
-                    if error == nil {
-                        
-                        if response?.statusCode == 200 {
-                            
-                            var json = JSON(data!)
-                            
-                        } else {
-                            
-                            println("Status Code Error: \(response?.statusCode)")
-                            println(request)
-                            
-                        }
-                        
-                    } else {
-                        
-                        println("Error!")
-                        println(error)
-                        println(request)
-                        
-                    }
-                    
-                    completion(s: (error == nil))
-                    self.ind.stopAnimating()
-                    
-            }
+            println("DELETE SEQUENCE ERROR!")
+            println(e)
             
         } else {
             
-            println("NEW")
-            
-            let s = "\(domain)/api/v1/sequences.json"
-            
-//            var pp: [JSON] = []
-//            
-//            for play in plays {
-//                
-//                var o: JSON = [
-//                    "key": play.key,
-//                    "player_a": play.player_a,
-//                    "penaltyOffset": play.penaltyOffset,
-//                    "tackles": [],
-//                    "sacks": []
-//                ]
-//                
-//                if let v = play.endX { o["end_x"].intValue = v }
-//                if let v = play.endY { o["end_y"].intValue = v }
-//                if let v = play.player_b { o["player_b"].intValue = v }
-//                if let v = play.penaltyKey { o["penaltyKey"].stringValue = v }
-//                if let v = play.penaltyDistance { o["penaltyDistance"].intValue = v }
-//                if let v = play.pos_id { o["pos_id"].intValue = v }
-//                
-//                pp.append(o)
-//                
-//            }
-            
-            var sequence: JSON = [
-                "sequence":[
-                    "id": String(id),
-                    "game_id": game_id,
-                    "pos_id": pos_id,
-                    "key": key,
-                    "qtr": qtr,
-                    "start_x": startX,
-                    "start_y": startY,
-                    "replay": replay
-                ]
-            ]
-            
-            if let d = down { sequence["sequence"]["down"].intValue = d }
-            if let d = fd { sequence["sequence"]["fd"].intValue = d }
-            
-            println(sequence)
-            
-            Alamofire.request(.POST, s, parameters: sequence.dictionaryObject, encoding: .JSON)
-                .responseJSON { (request, response, data, error) in
-                    
-                    if error == nil {
-                        
-                        if response?.statusCode == 201 {
-                            
-                            var json = JSON(data!)
-                            
-                            self.id = json["sequence"]["id"].int64Value
-                            self.create = false
-                            
-                        } else {
-                            
-                            println("Status Code Error: \(response?.statusCode)")
-                            println(request)
-                            
-                        }
-                        
-                    } else {
-                        
-                        println("Error!")
-                        println(error)
-                        println(request)
-                        
-                    }
-                    
-                    completion(s: (error == nil))
-                    self.ind.stopAnimating()
-                    
-            }
+            println("SEQUENCE DELETED!")
             
         }
         
-    }
-    
-}
-
-
-class Play {
-    
-    var id: Int?
-    var key: String!
-    var endX: Int?
-    var endY: Int?
-    var player_a: Int!
-    var player_b: Int?
-    var penaltyKey: String?
-    var penaltyDistance: Int?
-    var penaltyOffset: Bool = false
-    var pos_id: Int?
-    var tackles: [Int] = []
-    var sacks: [Int] = []
-    
-    init(){
-        
-        
+        c?(error: error)
         
     }
     
-}
-
-
-class Penalty {
-    
-    var id: Int?
-    var game_id: Int!
-    var sequence_id: Int64!
-    var pos_id: Int!
-    var distance: Int!
-    var endX: Int?
-    var enforcement: String?
-    var player: Int?
-    
-    init(){
+    func save(completion: Completion?){
         
+        var c = completion
         
+        var error: NSError?
         
-    }
-    
-}
-
-extension Dictionary {
-    mutating func update(other:Dictionary) {
-        for (key,value) in other {
-            self.updateValue(value, forKey:key)
+        object.game = game.object
+        object.key = key
+        object.team = team.object
+        object.qtr = "\(qtr)"
+        if let d = down { object.down = "\(d)" }
+        if let f = fd { object.fd = "\(f)" }
+        object.startX = "\(startX)"
+        object.startY = "\(startY)"
+        object.replay = replay
+        
+        object.managedObjectContext?.save(&error)
+        
+        if let e = error {
+            
+            println("SEQUENCE SAVE ERROR!")
+            println(e)
+            
+        } else {
+            
+            println(object)
+            println("SEQUENCE SAVED!")
+            
         }
+        
+        c?(error: error)
+        
     }
+    
 }
+// ========================================================
+// ========================================================
+@objc(SequenceObject)
+class SequenceObject: NSManagedObject {
+    
+    @NSManaged var game: GameObject
+    @NSManaged var team: TeamObject
+    @NSManaged var qtr: NSString
+    @NSManaged var key: NSString
+    @NSManaged var down: NSString?
+    @NSManaged var fd: NSString?
+    @NSManaged var startX: NSString
+    @NSManaged var startY: NSString
+    @NSManaged var replay: Bool
+    @NSManaged var plays: NSSet
+    @NSManaged var penalties: NSSet
+    
+}
+// ========================================================
+// ========================================================

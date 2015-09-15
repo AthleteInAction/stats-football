@@ -58,8 +58,6 @@ class PlaykeyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let key = keys[indexPath.row]
         
-        d.playKeySelected(key)
-        
     }
 
 }

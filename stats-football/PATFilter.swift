@@ -11,13 +11,12 @@ class PATFilter {
     static func run(tracker: TrackerCTRL,original: Sequence) -> Sequence {
         
         var s = Sequence()
-        s.game_id = tracker.game.id
         
-        var pos_right: Bool = (original.pos_id == tracker.game.home.id && tracker.rightHome) || (original.pos_id == tracker.game.away.id && !tracker.rightHome)
+        var pos_right = tracker.posRight(original)
         
-        let pos_right_original: Bool = (original.pos_id == tracker.game.home.id && tracker.rightHome) || (original.pos_id == tracker.game.away.id && !tracker.rightHome)
+        let pos_right_original = tracker.posRight(original)
         
-        s.pos_id = original.pos_id
+        s.team = original.team
         s.startX = original.startX
         s.startY = 50
         s.qtr = original.qtr

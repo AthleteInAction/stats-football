@@ -47,7 +47,7 @@ class GameDetail: UIViewController,UIPickerViewDataSource,UIPickerViewDelegate {
         
         let team = main.teamsTBL.teams[row]
         
-        return team.name
+        return String(team.name)
         
     }
 
@@ -62,47 +62,13 @@ class GameDetail: UIViewController,UIPickerViewDataSource,UIPickerViewDelegate {
         let away = main.teamsTBL.teams[teamPK.selectedRowInComponent(0)]
         let home = main.teamsTBL.teams[teamPK.selectedRowInComponent(1)]
         
-        let s = "\(domain)/api/v1/games.json"
+        let game = Game(away: away, home: home)
         
-        var newGame = [
-            "game" : [
-                "away_id" : away.id,
-                "home_id" : home.id
-            ]
-        ]
+        game.save(nil)
         
-        Alamofire.request(.POST, s, parameters: newGame, encoding: .JSON)
-            .responseJSON { (request, response, data, error) in
-                
-                if error == nil {
-                    
-                    if response?.statusCode == 201 {
-                        
-                        var json = JSON(data!)
-                        
-                        var game = Game(json: json["game"])
-                        
-                        self.main.gamesTBL.games.insert(game, atIndex: 0)
-                        self.main.gamesTBL.reloadData()
-                        
-                        self.dismissViewControllerAnimated(true, completion: nil)
-                        
-                    } else {
-                        
-                        println("Status Code Error: \(response?.statusCode)")
-                        println(request)
-                        
-                    }
-                    
-                } else {
-                    
-                    println("Error!")
-                    println(error)
-                    println(request)
-                    
-                }
-                
-        }
+        main.gamesTBL.games.insert(game, atIndex: 0)
+        main.gamesTBL.reloadData()
+        dismissViewControllerAnimated(true, completion: nil)
         
         return true
         

@@ -54,39 +54,17 @@ class GamesTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
         
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
-            Loading.start()
-            
             let game = games[indexPath.row]
             
-            let s = "\(domain)/api/v1/games/\(game.id).json"
-            
-            Alamofire.request(.DELETE,s)
-                .responseJSON { request, response, data, error in
+            game.delete { (error) -> Void in
+                
+                if error == nil {
                     
-                    if error == nil {
-                        
-                        if response?.statusCode == 200 {
-                            
-                            self.games.removeAtIndex(indexPath.row)
-                            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
-                            
-                        } else {
-                            
-                            println("Status Code Error: \(response?.statusCode)")
-                            println(request)
-                            
-                        }
-                        
-                    } else {
-                        
-                        println("Error!")
-                        println(error)
-                        println(request)
-                        
-                    }
+                    self.games.removeAtIndex(indexPath.row)
+                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
                     
-                    Loading.stop()
-                    
+                }
+                
             }
             
         }
@@ -107,55 +85,17 @@ class GamesTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
     
     func getData(){
         
-//        Loading.start()
-//        
-//        let s = "\(domain)/api/v1/games.json"
-//        
-//        Alamofire.request(.GET, s.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!, parameters: nil)
-//            .responseJSON { request, response, data, error in
-//                
-//                if error == nil {
-//                    
-//                    if response?.statusCode == 200 {
-//                        
-//                        var json = JSON(data!)
-//                        
-//                        var tmp: [Game] = []
-//                        
-//                        if let games = json["games"].array {
-//                            
-//                            for game in games {
-//                                
-//                                let t = Game(json: game)
-//                                
-//                                tmp.append(t)
-//                                
-//                            }
-//                            
-//                        }
-//                        
-//                        self.games = tmp
-//                        
-//                        self.reloadData()
-//                        
-//                    } else {
-//                        
-//                        println("Status Code Error: \(response?.statusCode)")
-//                        println(request)
-//                        
-//                    }
-//                    
-//                } else {
-//                    
-//                    println("Error!")
-//                    println(error)
-//                    println(request)
-//                    
-//                }
-//                
-//                Loading.stop()
-//                
-//        }
+        println("GET GAMES")
+        DB.games.local.get { (s,items) -> Void in
+            
+            if s {
+                
+                self.games = items
+                self.reloadData()
+                
+            }
+            
+        }
         
     }
 

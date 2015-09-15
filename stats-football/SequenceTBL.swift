@@ -40,12 +40,12 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let s = tracker.log[indexPath.row]
         
-        let pos_right: Bool = (s.pos_id == tracker.game.home.id && tracker.rightHome) || (s.pos_id == tracker.game.away.id && !tracker.rightHome)
+        let pos_right: Bool = tracker.posRight(s)
         
         switch s.key {
         case "kickoff","freekick","pat":
             
-            cell.textLabel?.text = "\(tracker.getTeam(s.pos_id).short) \(s.key) from \(s.startX)"
+            cell.textLabel?.text = "\(s.team.short) \(s.key) from \(s.startX)"
             
         case "down":
             
@@ -88,7 +88,7 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
                 
             }
             
-            cell.textLabel?.text = "\(tracker.getTeam(s.pos_id).short) \(d)n\(togo)\(f) from \(s.startX)"
+            cell.textLabel?.text = "\(s.team.short) \(d)n\(togo)\(f) from \(s.startX)"
             
         default:
             
@@ -130,11 +130,11 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         cell?.textLabel?.text = "Saving..."
         
-        s.save { (s) -> Void in
-            
-            cell?.textLabel?.text = text
-            
-        }
+//        s.save(nil)
+//        tracker.game.addSequence(s)
+//        tracker.game.save(nil)
+        
+        cell?.textLabel?.text = text
         
     }
     
@@ -176,6 +176,8 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         reloadData()
         tracker.playTBL.reloadData()
+        tracker.penaltyTBL.reloadData()
+        tracker.selectSequence(tracker.index)
         
     }
     

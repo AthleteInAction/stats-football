@@ -52,6 +52,18 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         freqTBL.delegate = self
         freqTBL.dataSource = self
         
+        let getRandom = randomSequenceGenerator(min: 1, max: 99)
+        
+        var tmp: [Player] = []
+        
+        for _ in 1...34 {
+            
+            tmp.append(Player(n: getRandom()))
+            
+        }
+        
+        tracker.numbers = tmp
+        
         edgesForExtendedLayout = UIRectEdge()
         
         freq = tracker.numbers
@@ -59,6 +71,18 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         tracker.numbers.sort({ $0.number < $1.number })
         freq.sort({ $0.used > $1.used })
         
+    }
+    
+    func randomSequenceGenerator(#min: Int,max: Int) -> () -> Int {
+        var numbers: [Int] = []
+        return {
+            if numbers.count == 0 {
+                numbers = Array(min ... max)
+            }
+            
+            let index = Int(arc4random_uniform(UInt32(numbers.count)))
+            return numbers.removeAtIndex(index)
+        }
     }
 
     override func didReceiveMemoryWarning() {

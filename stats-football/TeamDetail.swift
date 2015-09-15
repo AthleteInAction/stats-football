@@ -52,22 +52,13 @@ class TeamDetail: UIViewController,UITextFieldDelegate {
         nameTXT.endEditing(true)
         shortTXT.endEditing(true)
         
-        let team = Team()
-        team.name = nameTXT.text
-        team.short = shortTXT.text
+        let team = Team(name: nameTXT.text, short: shortTXT.text)
         
-        team.save { (s) -> Void in
-            
-            if s {
-                
-                self.main.teamsTBL.teams.insert(team, atIndex: 0)
-                self.main.teamsTBL.reloadData()
-                
-                self.dismissViewControllerAnimated(true, completion: nil)
-                
-            }
-            
-        }
+        team.save(nil)
+        
+        main.teamsTBL.teams.insert(team, atIndex: 0)
+        main.teamsTBL.reloadData()
+        dismissViewControllerAnimated(true, completion: nil)
         
         return true
         

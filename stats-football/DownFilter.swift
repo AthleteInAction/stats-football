@@ -11,13 +11,12 @@ class DownFilter {
     static func run(tracker: TrackerCTRL,original: Sequence) -> Sequence {
         
         var s = Sequence()
-        s.game_id = tracker.game.id
         
-        var pos_right: Bool = (original.pos_id == tracker.game.home.id && tracker.rightHome) || (original.pos_id == tracker.game.away.id && !tracker.rightHome)
+        var pos_right = tracker.posRight(original)
         
-        let pos_right_original: Bool = (original.pos_id == tracker.game.home.id && tracker.rightHome) || (original.pos_id == tracker.game.away.id && !tracker.rightHome)
+        let pos_right_original = tracker.posRight(original)
         
-        s.pos_id = original.pos_id
+        s.team = original.team
         s.startX = original.startX
         s.startY = 50
         s.qtr = original.qtr
@@ -63,10 +62,10 @@ class DownFilter {
                 
                 if (p.endX > 0 && p.endX <= 50) || (p.endX < 0 && p.endX > -50) {
                     
-                    if tracker.game.home.id == original.pos_id {
-                        s.pos_id = tracker.game.away.id
+                    if tracker.game.home.object!.isEqual(original.team.object!) {
+                        s.team = tracker.game.away
                     } else {
-                        s.pos_id = tracker.game.home.id
+                        s.team = tracker.game.home
                     }
                     s.key = "down"
                     s.down = 1
@@ -112,7 +111,7 @@ class DownFilter {
                 
                 if let player = play.player_b {
                     
-                    pos_right = (tracker.rightHome && play.pos_id == tracker.game.home.id) || (!tracker.rightHome && play.pos_id == tracker.game.away.id)
+                    pos_right = tracker.posRightPlay(play)
                     
                 }
                 
@@ -169,7 +168,7 @@ class DownFilter {
             s.key = "kickoff"
             s.startX = -40
             s.fd = nil
-            s.pos_id = original.pos_id
+            s.team = original.team
             
             return s
             
@@ -186,10 +185,10 @@ class DownFilter {
             s.down = 1
             s.fd = s.startX.plus(10)
             
-            if original.pos_id == tracker.game.home.id {
-                s.pos_id = tracker.game.away.id
+            if original.team.object!.isEqual(tracker.game.home.object!) {
+                s.team = tracker.game.away
             } else {
-                s.pos_id = tracker.game.home.id
+                s.team = tracker.game.home
             }
             
             return s
@@ -211,7 +210,7 @@ class DownFilter {
                 if pos_right_original == pos_right {
                     
                     println("TOUCHDOWN")
-                    s.pos_id = original.pos_id
+                    s.team = original.team
                     s.key = "pat"
                     s.startX = 3
                     s.fd = nil
@@ -225,10 +224,10 @@ class DownFilter {
                         if l == pos_right {
                             
                             println("SAFETY")
-                            if tracker.game.home.id == original.pos_id {
-                                s.pos_id = tracker.game.away.id
+                            if tracker.game.home.object!.isEqual(original.team.object!) {
+                                s.team = tracker.game.away
                             } else {
-                                s.pos_id = tracker.game.home.id
+                                s.team = tracker.game.home
                             }
                             s.key = "freekick"
                             s.startX = 3
@@ -236,10 +235,10 @@ class DownFilter {
                         } else {
                             
                             println("TOUCHBACK A")
-                            if tracker.game.home.id == original.pos_id {
-                                s.pos_id = tracker.game.away.id
+                            if tracker.game.home.object!.isEqual(original.team.object!) {
+                                s.team = tracker.game.away
                             } else {
-                                s.pos_id = tracker.game.home.id
+                                s.team = tracker.game.home
                             }
                             s.key = "down"
                             s.startX = -20
@@ -250,10 +249,10 @@ class DownFilter {
                     } else {
                         
                         println("TOUCHBACK B")
-                        if tracker.game.home.id == original.pos_id {
-                            s.pos_id = tracker.game.away.id
+                        if tracker.game.home.object!.isEqual(original.team.object!) {
+                            s.team = tracker.game.away
                         } else {
-                            s.pos_id = tracker.game.home.id
+                            s.team = tracker.game.home
                         }
                         s.key = "down"
                         s.startX = -20
@@ -280,7 +279,7 @@ class DownFilter {
                 if pos_right_original != pos_right {
                     
                     println("TOUCHDOWN")
-                    s.pos_id = original.pos_id
+                    s.team = original.team
                     s.key = "pat"
                     s.startX = 3
                     s.fd = nil
@@ -294,10 +293,10 @@ class DownFilter {
                         if l == pos_right {
                             
                             println("SAFETY")
-                            if tracker.game.home.id == original.pos_id {
-                                s.pos_id = tracker.game.away.id
+                            if tracker.game.home.object!.isEqual(original.team.object!) {
+                                s.team = tracker.game.away
                             } else {
-                                s.pos_id = tracker.game.home.id
+                                s.team = tracker.game.home
                             }
                             s.key = "freekick"
                             s.startX = 3
@@ -305,10 +304,10 @@ class DownFilter {
                         } else {
                             
                             println("TOUCHBACK A")
-                            if tracker.game.home.id == original.pos_id {
-                                s.pos_id = tracker.game.away.id
+                            if tracker.game.home.object!.isEqual(original.team.object!) {
+                                s.team = tracker.game.away
                             } else {
-                                s.pos_id = tracker.game.home.id
+                                s.team = tracker.game.home
                             }
                             s.key = "down"
                             s.startX = -20
@@ -319,10 +318,10 @@ class DownFilter {
                     } else {
                         
                         println("TOUCHBACK B")
-                        if tracker.game.home.id == original.pos_id {
-                            s.pos_id = tracker.game.away.id
+                        if tracker.game.home.object!.isEqual(original.team.object!) {
+                            s.team = tracker.game.away
                         } else {
-                            s.pos_id = tracker.game.home.id
+                            s.team = tracker.game.home
                         }
                         s.key = "down"
                         s.startX = -20
@@ -364,10 +363,10 @@ class DownFilter {
             
                 s.startX = s.startX.flipSpot()
                 s.fd = s.startX.plus(10)
-                if original.pos_id == tracker.game.home.id {
-                    s.pos_id = tracker.game.away.id
+                if tracker.game.home.object!.isEqual(original.team.object!) {
+                    s.team = tracker.game.away
                 } else {
-                    s.pos_id = tracker.game.home.id
+                    s.team = tracker.game.home
                 }
                 
             }
@@ -393,10 +392,10 @@ class DownFilter {
                 
                 s.down = 1
                 
-                if original.pos_id == tracker.game.home.id {
-                    s.pos_id = tracker.game.away.id
+                if tracker.game.home.object!.isEqual(original.team.object!) {
+                    s.team = tracker.game.away
                 } else {
-                    s.pos_id = tracker.game.home.id
+                    s.team = tracker.game.home
                 }
                 
                 s.startX = s.startX.flipSpot()

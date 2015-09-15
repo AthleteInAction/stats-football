@@ -11,13 +11,12 @@ class KickFilter {
     static func run(tracker: TrackerCTRL,original: Sequence) -> Sequence {
         
         var s = Sequence()
-        s.game_id = tracker.game.id
         
-        var pos_right: Bool = (original.pos_id == tracker.game.home.id && tracker.rightHome) || (original.pos_id == tracker.game.away.id && !tracker.rightHome)
+        var pos_right = tracker.posRight(original)
         
-        let pos_right_original: Bool = (original.pos_id == tracker.game.home.id && tracker.rightHome) || (original.pos_id == tracker.game.away.id && !tracker.rightHome)
+        let pos_right_original = tracker.posRight(original)
         
-        s.pos_id = original.pos_id
+        s.team = original.team
         s.startX = original.startX
         s.startY = 50
         s.qtr = original.qtr
@@ -40,12 +39,14 @@ class KickFilter {
                     
                     s.startX = x
                     
+                    println("A")
                     return s
                     
                 }
                 
             }
             
+            println("B")
             return s
             
         }
@@ -62,16 +63,17 @@ class KickFilter {
                 
                 if (p.endX > 0 && p.endX <= 50) || (p.endX < 0 && p.endX > -50) {
                     
-                    if tracker.game.home.id == original.pos_id {
-                        s.pos_id = tracker.game.away.id
+                    if tracker.game.home.object!.isEqual(original.team.object!) {
+                        s.team = tracker.game.away
                     } else {
-                        s.pos_id = tracker.game.home.id
+                        s.team = tracker.game.home
                     }
                     s.key = "down"
                     s.down = 1
                     s.startX = p.endX!.flipSpot()
                     s.fd = s.startX.plus(10)
                     
+                    println("C")
                     return s
                     
                 }
@@ -103,7 +105,7 @@ class KickFilter {
                 
                 if let player = play.player_b {
                     
-                    pos_right = (tracker.rightHome && play.pos_id == tracker.game.home.id) || (!tracker.rightHome && play.pos_id == tracker.game.away.id)
+                    pos_right = tracker.posRightPlay(play)
                     
                 }
                 
@@ -154,17 +156,17 @@ class KickFilter {
         s.key = "down"
         s.down = 1
         if pos_right_original == pos_right {
-            if tracker.game.home.id == original.pos_id {
-                s.pos_id = tracker.game.home.id
+            if tracker.game.home.object!.isEqual(original.team.object!) {
+                s.team = tracker.game.home
             } else {
-                s.pos_id = tracker.game.away.id
+                s.team = tracker.game.away
             }
             s.startX = lastSpot!.endX
         } else {
-            if tracker.game.home.id == original.pos_id {
-                s.pos_id = tracker.game.away.id
+            if tracker.game.home.object!.isEqual(original.team.object!) {
+                s.team = tracker.game.away
             } else {
-                s.pos_id = tracker.game.home.id
+                s.team = tracker.game.home
             }
             s.startX = lastSpot!.endX?.flipSpot()
         }
@@ -185,7 +187,7 @@ class KickFilter {
                 if pos_right_original == pos_right {
                     
                     println("TOUCHDOWN")
-                    s.pos_id = original.pos_id
+                    s.team = original.team
                     s.key = "pat"
                     s.startX = 3
                     
@@ -198,10 +200,10 @@ class KickFilter {
                         if l == pos_right {
                             
                             println("SAFETY")
-                            if tracker.game.home.id == original.pos_id {
-                                s.pos_id = tracker.game.away.id
+                            if tracker.game.home.object!.isEqual(original.team.object!) {
+                                s.team = tracker.game.away
                             } else {
-                                s.pos_id = tracker.game.home.id
+                                s.team = tracker.game.home
                             }
                             s.key = "freekick"
                             s.startX = 3
@@ -209,10 +211,10 @@ class KickFilter {
                         } else {
                             
                             println("TOUCHBACK A")
-                            if tracker.game.home.id == original.pos_id {
-                                s.pos_id = tracker.game.away.id
+                            if tracker.game.home.object!.isEqual(original.team.object!) {
+                                s.team = tracker.game.away
                             } else {
-                                s.pos_id = tracker.game.home.id
+                                s.team = tracker.game.home
                             }
                             s.key = "down"
                             s.startX = -20
@@ -223,10 +225,10 @@ class KickFilter {
                     } else {
                         
                         println("TOUCHBACK B")
-                        if tracker.game.home.id == original.pos_id {
-                            s.pos_id = tracker.game.away.id
+                        if tracker.game.home.object!.isEqual(original.team.object!) {
+                            s.team = tracker.game.away
                         } else {
-                            s.pos_id = tracker.game.home.id
+                            s.team = tracker.game.home
                         }
                         s.key = "down"
                         s.startX = -20
@@ -251,7 +253,7 @@ class KickFilter {
                 if pos_right_original != pos_right {
                     
                     println("TOUCHDOWN")
-                    s.pos_id = original.pos_id
+                    s.team = original.team
                     s.key = "pat"
                     s.startX = 3
                     
@@ -264,10 +266,10 @@ class KickFilter {
                         if l == pos_right {
                             
                             println("SAFETY")
-                            if tracker.game.home.id == original.pos_id {
-                                s.pos_id = tracker.game.away.id
+                            if tracker.game.home.object!.isEqual(original.team.object!) {
+                                s.team = tracker.game.away
                             } else {
-                                s.pos_id = tracker.game.home.id
+                                s.team = tracker.game.home
                             }
                             s.key = "freekick"
                             s.startX = 3
@@ -275,10 +277,10 @@ class KickFilter {
                         } else {
                             
                             println("TOUCHBACK A")
-                            if tracker.game.home.id == original.pos_id {
-                                s.pos_id = tracker.game.away.id
+                            if tracker.game.home.object!.isEqual(original.team.object!) {
+                                s.team = tracker.game.away
                             } else {
-                                s.pos_id = tracker.game.home.id
+                                s.team = tracker.game.home
                             }
                             s.key = "down"
                             s.startX = -20
@@ -289,10 +291,10 @@ class KickFilter {
                     } else {
                         
                         println("TOUCHBACK B")
-                        if tracker.game.home.id == original.pos_id {
-                            s.pos_id = tracker.game.away.id
+                        if tracker.game.home.object!.isEqual(original.team.object!) {
+                            s.team = tracker.game.away
                         } else {
-                            s.pos_id = tracker.game.home.id
+                            s.team = tracker.game.home
                         }
                         s.key = "down"
                         s.startX = -20
@@ -311,6 +313,7 @@ class KickFilter {
         // =======================================================
         // =======================================================
         
+        println("D")
         return s
         
     }

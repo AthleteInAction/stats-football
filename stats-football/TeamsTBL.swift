@@ -41,7 +41,7 @@ class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell")
         
-        cell.textLabel?.text = teams[indexPath.row].name
+        cell.textLabel?.text = "\(teams[indexPath.row].name)"
         
         return cell
         
@@ -61,13 +61,20 @@ class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
+        let team = teams[indexPath.row]
+        
     }
     
     func getData(){
         
         DB.teams.local.get { (s,items) -> Void in
             
-            if s { self.teams = items }
+            if s {
+                
+                self.teams = items
+                self.reloadData()
+                
+            }
             
         }
         
