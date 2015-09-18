@@ -142,7 +142,7 @@ class KickFilter {
             
             if let x = penalty.endX {
                 
-                lastSpot = Play()
+                lastSpot = Play(s: s)
                 lastSpot?.endX = x
                 
                 break

@@ -32,9 +32,9 @@ class Field: UIView {
         
         for v in subviews { if v.tag == -2 { v.removeFromSuperview() } }
         
-        if tracker.log.count > 0 {
+        if tracker.game.sequences.count > 0 {
             
-            let s = tracker.log[tracker.index]
+            let s = tracker.game.sequences[tracker.index]
             
             let c = UIGraphicsGetCurrentContext()
             
@@ -47,30 +47,31 @@ class Field: UIView {
             
             var prev: Play?
             
-            var i = 0
-            for play in s.plays {
+            for (i,play) in enumerate(s.plays) {
                 
-                x = toX(play.endX!.yardToFull(pos_right))
-                y = toP(play.endY!)
-                
-                CGContextSetLineWidth(c, 10.0)
-                CGContextSetLineDash(c, 10, [6,3], 2)
-                
-                var color = Filters.colors(play.key, alpha: 0.7).CGColor
-                
-                CGContextSetStrokeColorWithColor(c,color)
-                
-                CGContextAddLineToPoint(c,CGFloat(x),CGFloat(y))
-                
-                CGContextStrokePath(c)
-                
-                CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
-                
-                prev = play
-                
-                tracker.drawSubButtons(i)
-                
-                i++
+                if let endX = play.endX {
+                    
+                    x = toX(endX.yardToFull(pos_right))
+                    y = toP(play.endY!)
+                    
+                    CGContextSetLineWidth(c, 10.0)
+                    CGContextSetLineDash(c, 10, [6,3], 2)
+                    
+                    var color = Filters.colors(play.key, alpha: 0.7).CGColor
+                    
+                    CGContextSetStrokeColorWithColor(c,color)
+                    
+                    CGContextAddLineToPoint(c,CGFloat(x),CGFloat(y))
+                    
+                    CGContextStrokePath(c)
+                    
+                    CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
+                    
+                    prev = play
+                    
+                    tracker.drawSubButtons(i)
+                    
+                }
                 
             }
             

@@ -33,8 +33,8 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         table.tag = 1
         freqTBL.tag = 2
         
-        if tracker.log.count > 0 {
-            s = tracker.log[tracker.index]
+        if tracker.game.sequences.count > 0 {
+            s = tracker.game.sequences[tracker.index]
         } else {
             s = Sequence()
         }
@@ -52,17 +52,17 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         freqTBL.delegate = self
         freqTBL.dataSource = self
         
-        let getRandom = randomSequenceGenerator(min: 1, max: 99)
-        
-        var tmp: [Player] = []
-        
-        for _ in 1...34 {
-            
-            tmp.append(Player(n: getRandom()))
-            
-        }
-        
-        tracker.numbers = tmp
+//        let getRandom = randomSequenceGenerator(min: 1, max: 99)
+//        
+//        var tmp: [Player] = []
+//        
+//        for _ in 1...34 {
+//            
+//            tmp.append(Player(n: getRandom()))
+//            
+//        }
+//        
+//        tracker.numbers = tmp
         
         edgesForExtendedLayout = UIRectEdge()
         
@@ -96,29 +96,29 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         if nTXT.text != "" {
             
-            let n = nTXT.text.toInt()
-            
-            let player = Player(n: n!)
-            
-            var foundPlayer: Player?
-            for p in tracker.numbers {
-                
-                if p.number == player.number { foundPlayer = p }
-                
-            }
-            
-            if let p = foundPlayer {
-                
-                p.used++
-                
-            } else {
-                
-                player.used++
-                tracker.numbers.insert(player, atIndex: 0)
-                
-            }
-            
-            selectPlayer(player)
+//            let n = nTXT.text.toInt()
+//            
+//            let player = Player(n: n!)
+//            
+//            var foundPlayer: Player?
+//            for p in tracker.numbers {
+//                
+//                if p.number == player.number { foundPlayer = p }
+//                
+//            }
+//            
+//            if let p = foundPlayer {
+//                
+//                p.used++
+//                
+//            } else {
+//                
+//                player.used++
+//                tracker.numbers.insert(player, atIndex: 0)
+//                
+//            }
+//            
+//            selectPlayer(player)
             
         }
         
@@ -178,21 +178,21 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         var n: Player!
         
-        if tableView.tag == 1 {
-            
-            n = tracker.numbers[indexPath.row]
-            n.used++
-            freq = tracker.numbers
-            
-        } else {
-            
-            n = freq[indexPath.row]
-            n.used++
-            tracker.numbers = freq
-            
-        }
-        
-        selectPlayer(n)
+//        if tableView.tag == 1 {
+//            
+//            n = tracker.numbers[indexPath.row]
+//            n.used++
+//            freq = tracker.numbers
+//            
+//        } else {
+//            
+//            n = freq[indexPath.row]
+//            n.used++
+//            tracker.numbers = freq
+//            
+//        }
+//        
+//        selectPlayer(n)
         
     }
     

@@ -18,6 +18,11 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         delegate = self
         dataSource = self
         
+        estimatedRowHeight = 44
+        rowHeight = UITableViewAutomaticDimension
+        
+        registerNib(UINib(nibName: "PenaltyCell", bundle: nil), forCellReuseIdentifier: "penalty_cell")
+        
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -28,7 +33,7 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        let s = tracker.log[tracker.index]
+        let s = tracker.game.sequences[tracker.index]
         
         return s.penalties.count
         
@@ -36,19 +41,66 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let s = tracker.log[tracker.index]
+        let s = tracker.game.sequences[tracker.index]
         
         let penalty = s.penalties[indexPath.row]
         
-        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell")
+        let cell = tableView.dequeueReusableCellWithIdentifier("penalty_cell") as! PenaltyCell
         cell.backgroundColor = UIColor.yellowColor()
-        cell.textLabel?.font = cell.textLabel?.font.fontWithSize(11)
         
-        var desc = "\(penalty.distance) yards"
-        if let player = penalty.player { desc += " : #\(player)" }
-        if let x = penalty.endX { desc += " : \(x)" }
+        var top = "\(penalty.distance) yard penalty on \(penalty.team.short)"
         
-        cell.textLabel?.text = desc
+        if let p = penalty.player {
+            
+            top += " #\(p)"
+            
+        }
+        
+        cell.topTXT.text = top
+        
+        switch penalty.enforcement {
+        case "declined":
+            
+            cell.btmTXT.text = "Declined"
+            
+        case "offset":
+            
+            cell.btmTXT.text = "Offset"
+            
+        case "kick":
+            
+            cell.btmTXT.text = "Enforced on Kickoff"
+            
+        default:
+            
+            var t: String!
+            
+            if let endX = penalty.endX {
+                
+                if endX == 50 {
+                    t = 50.string()
+                } else if endX < 0 {
+                    
+                    // -38
+                    t = "\(s.team.short) \(endX * -1)"
+                    
+                } else {
+                    
+                    // 38
+                    t = "\(tracker.opTeam(penalty.team).short) \(endX)"
+                    
+                }
+                
+                cell.btmTXT.text = "Ball to \(t)"
+                
+            } else {
+                
+                cell.btmTXT.text = "No Spot"
+                
+            }
+            
+        }
+        
         cell.selectionStyle = .None
         
         return cell
@@ -59,7 +111,11 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
-            let s = tracker.log[tracker.index]
+            let s = tracker.game.sequences[tracker.index]
+            
+            let penalty = s.penalties[indexPath.row]
+            
+            penalty.delete(nil)
             
             s.penalties.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)

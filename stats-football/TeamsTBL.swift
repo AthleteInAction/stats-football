@@ -13,6 +13,7 @@ import CoreData
 
 class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
+    var main: MainCTRL!
     var teams: [Team] = []
 
     required init(coder aDecoder: NSCoder) {
@@ -51,7 +52,11 @@ class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
+            let team = teams[indexPath.row]
             
+            team.delete(nil)
+            teams.removeAtIndex(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
             
         }
         
@@ -63,6 +68,12 @@ class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let team = teams[indexPath.row]
         
+        let vc = TeamDetail(nibName: "TeamDetail",bundle: nil)
+        vc.team = team
+        vc.main = main
+        let nav = UINavigationController(rootViewController: vc)
+        main.presentViewController(nav, animated: true, completion: nil)
+        
     }
     
     func getData(){
@@ -72,6 +83,31 @@ class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             if s {
                 
                 self.teams = items
+                
+//                if self.teams.count == 0 {
+//                    
+//                    DB.teams.local.create(name: "Willow Glen", short: "WG", completion: { (s, team) -> Void in
+//                        
+//                        let t = Team(team: team)
+//                        
+//                        self.teams.append(t)
+//                        
+//                    })
+//                    DB.teams.local.create(name: "Terra Nova", short: "TN", completion: { (s, team) -> Void in
+//                        
+//                        let t = Team(team: team)
+//                        
+//                        self.teams.append(t)
+//                        
+//                    })
+//                    DB.games.local.create(away: self.teams[1], home: self.teams[0], completion: { (s, game) -> Void in
+//                        
+//                        
+//                        
+//                    })
+//                    
+//                }
+                
                 self.reloadData()
                 
             }

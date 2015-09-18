@@ -19,7 +19,7 @@ class Filters {
             
         case "pass":
             
-            return UIColor(red: 53/255, green: 255/255, blue: 63/255, alpha: alpha)
+            return UIColor(red: 127/255, green: 255/255, blue: 155/255, alpha: alpha)
             
         case "kick","punt":
             
@@ -48,6 +48,20 @@ class Filters {
         }
         
     }
+    static func textColors(key: String,alpha: CGFloat) -> UIColor {
+        
+        switch key {
+        case "pass":
+            
+            return UIColor(red: 64/255, green: 64/255, blue: 64/255, alpha: alpha)
+            
+        default:
+            
+            return UIColor.whiteColor()
+            
+        }
+        
+    }
     
     static func keys(sequence: Sequence,type: String) -> [String] {
         
@@ -65,7 +79,7 @@ class Filters {
             
         case "penalty_options":
             
-            return ["spot","offset","kick"]
+            return ["spot","declined","offset","kick"]
             
         default:
             
@@ -103,6 +117,21 @@ class Filters {
         }
         // ============================================================
         // ============================================================
+        
+    }
+    
+    func sentence(penalty: Penalty) -> String {
+        
+        var final: String!
+        
+        switch penalty.distance {
+        default:
+            
+            final = "\(penalty.distance) yard Penalty"
+            
+        }
+        
+        return final
         
     }
     

@@ -14,9 +14,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     var selectedPlayKey: String?
     
-    var log: [Sequence] = []
     var index: Int = 0
-    var drawings: [UIView] = []
     
     var popover: UIPopoverController!
     
@@ -37,8 +35,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     @IBOutlet weak var playTBL: PlayTBL!
     @IBOutlet weak var penaltyTBL: PenaltyTBL!
     @IBOutlet weak var fimg: UIImageView!
-    @IBOutlet weak var rightPTY: UIButton!
-    @IBOutlet weak var leftPTY: UIButton!
+    @IBOutlet weak var rightPTY: PenaltyBTN!
+    @IBOutlet weak var leftPTY: PenaltyBTN!
     @IBOutlet weak var replaySwitch: UISwitch!
     
     let playTypes: [String] = ["kickoff","freekick","down","pat"]
@@ -54,12 +52,10 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        println(game.object)
-        
         title = "\(game.away.name) @ \(game.home.name)"
         
-        rightPTY.tag = 1
-        leftPTY.tag = 2
+        rightPTY.team = game.home
+        leftPTY.team = game.away
         
         field.tracker = self
         
@@ -72,23 +68,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         disableCancelBTN()
         disableEnterBTN()
         
-        getSequences()
-        
-    }
-    
-    func getSequences(){
-        
-        var tmp = game.object.sequences.allObjects as! [SequenceObject]
-        
-        for o in tmp {
-            
-            let s = Sequence(sequence: o)
-            
-            log.append(s)
-            
-        }
-        
-        if log.count > 0 { selectSequence(0) } else { addSequence() }
+        if game.sequences.count > 0 { selectSequence(0) } else { addSequence() }
         
         sequenceTBL.reload()
         
@@ -103,7 +83,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
 
     @IBAction func playTypeChanged(sender: AnyObject) {
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         let p = playTypes[playTypeSelector.selectedSegmentIndex]
         
@@ -121,6 +101,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             s.fd = nil
             
         }
+        
+        s.save(nil)
         
         sequenceTBL.reload()
         
@@ -183,7 +165,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         nsel.title = "Player"
         nsel.tracker = self
         nsel.type = "player_a"
-        nsel.newPlay = Play()
+        nsel.newPlay = Play(s: game.sequences[index])
         
         var nav = UINavigationController(rootViewController: nsel)
         
@@ -196,11 +178,13 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     @IBAction func qtrChanged(sender: AnyObject) {
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         s.qtr = Int(qtrSelector.value)
         
         qtrTXT.text = "\(Int(qtrSelector.value))"
+        
+        s.save(nil)
         
         sequenceTBL.reload()
         
@@ -208,11 +192,13 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     @IBAction func downChanged(sender: AnyObject) {
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         s.down = Int(downSelector.value)
         
         downTXT.text = "\(Int(downSelector.value))"
+        
+        s.save(nil)
         
         sequenceTBL.reload()
         
@@ -220,13 +206,15 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     @IBAction func posChanged(sender: AnyObject) {
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         if s.team.object!.isEqual(game.home.object) {
             s.team = game.away
         } else {
             s.team = game.home
         }
+        
+        s.save(nil)
         
         sequenceTBL.reload()
         
@@ -252,9 +240,11 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     @IBAction func replayCHG(sender: AnyObject) {
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         s.replay = replaySwitch.on
+        
+        s.save(nil)
         
         sequenceTBL.reload()
         
@@ -279,22 +269,16 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
     }
     
-    @IBAction func penaltyTPD(sender: UIButton) {
+    @IBAction func penaltyTPD(sender: PenaltyBTN) {
         
-        let s = log[index]
+        let s = game.sequences[index]
         
-        var team = game.home
-        
-        if sender.tag == 0 { team = game.away }
-        
-        let newPenalty = Penalty()
-//        newPenalty.game_id = game.id
-//        newPenalty.sequence_id = s.id
-//        newPenalty.pos_id = team.id
+        let newPenalty = Penalty(s: s)
+        newPenalty.team = sender.team
         
         var vc = KeySelector(nibName: "KeySelector",bundle: nil)
         vc.tracker = self
-        vc.title = "\(team.short) Penalty"
+        vc.title = "\(sender.team.short) Penalty"
         vc.newPenalty = newPenalty
         vc.type = "penalty_distance"
         
@@ -327,14 +311,17 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         if field.crossH.hidden { return false }
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         let x = field.toY(field.crossV.center.x).fullToYard(posRight(s))
         
         if let n = newPlay {
             
+            println("NEW PLAY")
             n.endX = x
             n.endY = Int(round((field.crossH.center.y / field.bounds.height) * 100))
+            
+            n.save(nil)
             
             s.plays.append(n)
             
@@ -356,10 +343,15 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         if let penalty = newPenalty {
             
+            println("NEW PENALTY")
             penalty.endX = x
             
+            penalty.save(nil)
+            
             s.penalties.append(penalty)
+            
             penaltyTBL.reloadData()
+            playTBL.reloadData()
             
             newPenalty = nil
             
@@ -381,7 +373,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     func drawButtons(){
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         for v in field.subviews {
             
@@ -393,21 +385,21 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
             if let x = penalty.endX {
                 
-//                let dir = (penalty.pos_id == game.home.id && rightHome) || (penalty.pos_id == game.away.id && !rightHome)
+                let dir = posRight2(penalty.object.team)
                 
-//                var v = PenaltyMKR(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-//                v.tracker = self
-//                v.index = i
-//                v.tag = -3
-//                v.dir = dir
-//                v.setMKR(x)
-//                
-//                var tap2 = UITapGestureRecognizer()
-//                tap2.numberOfTapsRequired = 2
-//                tap2.addTarget(self, action: "penalty2Tapped:")
-//                v.addGestureRecognizer(tap2)
-//                
-//                field.addSubview(v)
+                var v = PenaltyMKR(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+                v.tracker = self
+                v.index = i
+                v.tag = -3
+                v.dir = dir
+                v.setMKR(x)
+                
+                var tap2 = UITapGestureRecognizer()
+                tap2.numberOfTapsRequired = 2
+                tap2.addTarget(self, action: "penalty2Tapped:")
+                v.addGestureRecognizer(tap2)
+                
+                field.addSubview(v)
                 
             }
             
@@ -415,54 +407,59 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         for (i,play) in enumerate(s.plays) {
             
-            var button = PointBTN.buttonWithType(.Custom) as! PointBTN
-            button.frame = CGRectMake(0,0,20,20)
-            button.layer.cornerRadius = 0.5 * button.bounds.size.width
-            button.titleLabel?.font = UIFont.systemFontOfSize(12)
-            button.tag = -1
-            button.index = i
-            
-            var x = field.toX(play.endX!.yardToFull(posRight(s)))
-            var y = field.toP(play.endY!)
-            
-            button.center = CGPoint(x: x, y: CGFloat(y))
-            
-            var color = Filters.colors(play.key, alpha: 1.0)
-            
-            button.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-            button.backgroundColor = color
-            
-            if play.key == "fumble" {
+            if let endX = play.endX {
                 
-                if let r = play.team {
+                var button = PointBTN.buttonWithType(.Custom) as! PointBTN
+                button.frame = CGRectMake(0,0,20,20)
+                button.layer.cornerRadius = 0.5 * button.bounds.size.width
+                button.titleLabel?.font = UIFont.systemFontOfSize(12)
+                button.tag = -1
+                button.index = i
+                
+                var x = field.toX(play.endX!.yardToFull(posRight(s)))
+                var y = field.toP(play.endY!)
+                
+                button.center = CGPoint(x: x, y: CGFloat(y))
+                
+                var color = Filters.colors(play.key, alpha: 1.0)
+                var textColor = Filters.textColors(play.key, alpha: 1.0)
+                
+                button.setTitleColor(textColor, forState: UIControlState.Normal)
+                button.backgroundColor = color
+                
+                if play.key == "fumble" {
                     
-                    if !r.object!.isEqual(s.team.object!) {
+                    if let r = play.team {
                         
-                        button.backgroundColor = UIColor.redColor()
+                        if !r.object!.isEqual(s.team.object!) {
+                            
+                            button.backgroundColor = UIColor.redColor()
+                            
+                        }
                         
                     }
                     
                 }
                 
+                if let p = play.player_b {
+                    button.setTitle("\(p)", forState: UIControlState.Normal)
+                } else {
+                    button.setTitle("\(play.player_a)", forState: UIControlState.Normal)
+                }
+                
+                var pan = UIPanGestureRecognizer()
+                pan.addTarget(self, action: "buttonDragged:")
+                
+                var tap2 = UITapGestureRecognizer()
+                tap2.numberOfTapsRequired = 2
+                tap2.addTarget(self, action: "button2Tapped:")
+                
+                button.addGestureRecognizer(pan)
+                button.addGestureRecognizer(tap2)
+                
+                field.addSubview(button)
+                
             }
-            
-            if let p = play.player_b {
-                button.setTitle("\(p)", forState: UIControlState.Normal)
-            } else {
-                button.setTitle("\(play.player_a)", forState: UIControlState.Normal)
-            }
-            
-            var pan = UIPanGestureRecognizer()
-            pan.addTarget(self, action: "buttonDragged:")
-            
-            var tap2 = UITapGestureRecognizer()
-            tap2.numberOfTapsRequired = 2
-            tap2.addTarget(self, action: "button2Tapped:")
-            
-            button.addGestureRecognizer(pan)
-            button.addGestureRecognizer(tap2)
-            
-            field.addSubview(button)
             
         }
         
@@ -470,7 +467,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     func drawSubButtons(playIndex: Int){
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         let pos_right = posRight(s)
         
@@ -583,6 +580,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         let b: PointBTN = sender.view as! PointBTN
         
+        let s = game.sequences[index]
+        let play = s.plays[b.index]
+        
         if sender.state == UIGestureRecognizerState.Began {
             
             bLast = sender.view?.center
@@ -607,10 +607,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             sender.view?.center.x = x
             sender.view?.center.y = y
             
-            let s = log[index]
-            
-            s.plays[b.index].endX = field.toY(x).fullToYard(posRight(s))
-            s.plays[b.index].endY = Int(round((y / field.bounds.height) * 100))
+            play.endX = field.toY(x).fullToYard(posRight(s))
+            play.endY = Int(round((y / field.bounds.height) * 100))
             
             field.showCrosses()
             field.crossV.center.x = x
@@ -624,6 +622,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         if sender.state == UIGestureRecognizerState.Ended {
             
+            play.save(nil)
+            
             field.hideCrosses()
             
         }
@@ -636,7 +636,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         let b: PointBTN = sender.view as! PointBTN
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         var alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         
@@ -645,7 +645,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             var nsel = NumberSelector(nibName: "NumberSelector",bundle: nil)
             nsel.tracker = self
             nsel.type = "tackle"
-            nsel.newPlay = Play()
+            nsel.newPlay = Play(s: s)
             nsel.i = b.index
             
             var nav = UINavigationController(rootViewController: nsel)
@@ -662,7 +662,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             var nsel = NumberSelector(nibName: "NumberSelector",bundle: nil)
             nsel.tracker = self
             nsel.type = "sack"
-            nsel.newPlay = Play()
+            nsel.newPlay = Play(s: s)
             nsel.i = b.index
             
             var nav = UINavigationController(rootViewController: nsel)
@@ -680,7 +680,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
             var away = UIAlertAction(title: String(self.game.away.short), style: .Default, handler: { action -> Void in
                 
-                self.newPlay = Play()
+                self.newPlay = Play(s: s)
                 self.newPlay?.key = "fumble"
                 self.newPlay?.player_a = b.titleLabel?.text?.toInt()
                 self.newPlay?.team = self.game.away
@@ -701,7 +701,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
             var home = UIAlertAction(title: String(self.game.home.short), style: .Default, handler: { action -> Void in
                 
-                self.newPlay = Play()
+                self.newPlay = Play(s: s)
                 self.newPlay?.key = "fumble"
                 self.newPlay?.player_a = b.titleLabel?.text?.toInt()
                 self.newPlay?.team = self.game.home
@@ -722,7 +722,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
             var no = UIAlertAction(title: "No Recovery", style: .Default, handler: { action -> Void in
                 
-                self.newPlay = Play()
+                self.newPlay = Play(s: s)
                 self.newPlay?.key = "fumble"
                 self.newPlay?.player_a = b.titleLabel?.text?.toInt()
                 
@@ -759,6 +759,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             var delete2 = UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive) { action -> Void in
                 
                 let play = s.plays[b.index]
+                play.delete(nil)
                 s.plays.removeAtIndex(b.index)
                 
                 self.playTBL.deleteRowsAtIndexPaths([NSIndexPath(forRow: b.index, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
@@ -808,11 +809,15 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         let b: PenaltyMKR = sender.view as! PenaltyMKR
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         var alert = UIAlertController(title: "Delete this penalty?", message: nil, preferredStyle: .ActionSheet)
         
         var yes = UIAlertAction(title: "Yes", style: UIAlertActionStyle.Destructive) { action -> Void in
+            
+            let penalty = s.penalties[b.index]
+            
+            penalty.delete(nil)
             
             s.penalties.removeAtIndex(b.index)
             self.penaltyTBL.deleteRowsAtIndexPaths([NSIndexPath(forRow: b.index, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
@@ -852,7 +857,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         var delete = UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive) { action -> Void in
             
-            self.log[self.index].plays.removeAtIndex(b.index)
+            self.game.sequences[self.index].plays.removeAtIndex(b.index)
             
             self.playTBL.deleteRowsAtIndexPaths([NSIndexPath(forRow: b.index, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Top)
             
@@ -898,7 +903,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     @IBAction func newTPD(sender: AnyObject) {
         
-        let s = log[index]
+        let s = game.sequences[index]
         
 //        let k = KickoffFilter.run(self, original: s)
         addSequence()
@@ -907,7 +912,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     func updateBoard(){
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         qtrSelector.value = Double(s.qtr)
         qtrTXT.text = "\(s.qtr)"
@@ -954,16 +959,16 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         if rightHome {
             
-//            rightPTY.tag = game.home.id
+            rightPTY.team = game.home
             rightPTY.setTitle(String(game.home.short), forState: UIControlState.Normal)
-//            leftPTY.tag = game.away.id
+            leftPTY.team = game.away
             leftPTY.setTitle(String(game.away.short), forState: UIControlState.Normal)
             
         } else {
             
-//            rightPTY.tag = game.away.id
+            rightPTY.team = game.away
             rightPTY.setTitle(String(game.away.short), forState: UIControlState.Normal)
-//            leftPTY.tag = game.home.id
+            leftPTY.team = game.home
             leftPTY.setTitle(String(game.home.short), forState: UIControlState.Normal)
             
         }
@@ -977,7 +982,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     func createSequence() -> Sequence {
         
-        if let prev = log.first {
+        if let prev = game.sequences.first {
             
             switch prev.key {
             case "kickoff","freekick":
@@ -1005,21 +1010,13 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     func addSequence(){
         
-//        var s = createSequence()
-        var s = Sequence()
+        var s = createSequence()
         s.game = game
-        s.team = game.away
-        s.qtr = 1
-        s.key = "kickoff"
-        s.startX = -40
-        s.startY = 50
-        
         s.save(nil)
-        game.addSequence(s)
         
-        if let prev = log.first {  }
+        if let prev = game.sequences.first { prev.save(nil) }
         
-        log.insert(s,atIndex: 0)
+        game.sequences.insert(s,atIndex: 0)
         
         sequenceTBL.reload()
         
@@ -1039,7 +1036,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             
             if let t = tn {
                 
-                log[index].plays[t].tackles.append(n)
+                game.sequences[index].plays[t].tackles.append(n)
                 
                 disableCancelBTN()
                 enableField()
@@ -1051,7 +1048,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
                 
             } else if let s = sn {
                 
-                log[index].plays[s].sacks.append(n)
+                game.sequences[index].plays[s].sacks.append(n)
                 
                 disableCancelBTN()
                 enableField()
@@ -1063,7 +1060,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
                 
             } else {
                 
-                newPlay = Play()
+                newPlay = Play(s: game.sequences[index])
                 newPlay?.player_a = n
                 
                 enableCancelBTN()
@@ -1093,7 +1090,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     func sequenceSelected(){
         
-        let s = log[index]
+        let s = game.sequences[index]
+        s.getPlays()
+        s.getPenalties()
         
         playTBL.reloadData()
         penaltyTBL.reloadData()
@@ -1114,7 +1113,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     var keys: [String] = []
     func draw(){
         
-        let s = log[index]
+        let s = game.sequences[index]
         
         switch playTypes[playTypeSelector.selectedSegmentIndex] {
         case "kickoff":
@@ -1146,6 +1145,20 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     func posRightPlay(p: Play) -> Bool {
         
         return (p.team!.object!.isEqual(game.home.object!) && rightHome) || (p.team!.object!.isEqual(game.away.object!) && !rightHome)
+        
+    }
+    func posRight2(team: TeamObject) -> Bool {
+        
+        return (team.isEqual(game.home.object!) && rightHome) || (team.isEqual(game.away.object!) && !rightHome)
+        
+    }
+    func opTeam(team: Team) -> Team {
+        
+        if team.object.isEqual(game.home.object) {
+            return game.away
+        } else {
+            return game.away
+        }
         
     }
     // ===============================================================
@@ -1240,16 +1253,20 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     }
     func disableTables(){
         
+        penaltyTBL.alpha = 0.3
         playTBL.alpha = 0.3
         sequenceTBL.alpha = 0.3
+        penaltyTBL.userInteractionEnabled = false
         playTBL.userInteractionEnabled = false
         sequenceTBL.userInteractionEnabled = false
         
     }
     func enableTables(){
         
+        penaltyTBL.alpha = 1
         playTBL.alpha = 1
         sequenceTBL.alpha = 1
+        penaltyTBL.userInteractionEnabled = true
         playTBL.userInteractionEnabled = true
         sequenceTBL.userInteractionEnabled = true
         

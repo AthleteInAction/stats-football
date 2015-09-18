@@ -56,16 +56,10 @@ class GamesTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
             
             let game = games[indexPath.row]
             
-            game.delete { (error) -> Void in
-                
-                if error == nil {
-                    
-                    self.games.removeAtIndex(indexPath.row)
-                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
-                    
-                }
-                
-            }
+            game.delete(nil)
+            
+            self.games.removeAtIndex(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
             
         }
         
@@ -76,6 +70,7 @@ class GamesTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         let game = games[indexPath.row]
+        game.getSequences()
         
         var vc = main.storyboard?.instantiateViewControllerWithIdentifier("tracker_ctrl") as! TrackerCTRL
         vc.game = game
@@ -85,7 +80,6 @@ class GamesTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
     
     func getData(){
         
-        println("GET GAMES")
         DB.games.local.get { (s,items) -> Void in
             
             if s {

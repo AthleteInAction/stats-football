@@ -11,6 +11,9 @@ import CoreData
 
 let domain = "http://will-big.local:3000"
 //let domain = "https://wambl-stats-api-staging.herokuapp.com"
+var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+var context: NSManagedObjectContext = appDel.managedObjectContext!
+typealias CoreDataCompletion = (error: NSError?) -> Void
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

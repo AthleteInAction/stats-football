@@ -54,7 +54,7 @@ class PenaltyMKR: UIButton {
     
     func dDrag(sender: UIPanGestureRecognizer){
         
-        let s = tracker.log[tracker.index]
+        let s = tracker.game.sequences[tracker.index]
         let p = s.penalties[index]
         
         let pos_right: Bool = tracker.posRight(s)
@@ -72,6 +72,7 @@ class PenaltyMKR: UIButton {
         if sender.state == UIGestureRecognizerState.Ended {
             
             p.endX = newEndX
+            p.save(nil)
             tracker.penaltyTBL.reloadData()
             
         }
@@ -86,7 +87,7 @@ class PenaltyMKR: UIButton {
             return false
         }
         
-        let s = tracker.log[tracker.index]
+        let s = tracker.game.sequences[tracker.index]
         let p = s.penalties[index]
         
         let pos_right: Bool = tracker.posRight(s)

@@ -16,6 +16,7 @@ class MainCTRL: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        teamsTBL.main = self
         gamesTBL.main = self
         
     }
@@ -41,7 +42,7 @@ class MainCTRL: UIViewController {
     
     @IBAction func newTeamTPD(sender: AnyObject) {
         
-        var vc = TeamDetail(nibName: "TeamDetail",bundle: nil)
+        var vc = TeamEdit(nibName: "TeamEdit",bundle: nil)
         vc.main = self
         
         var popover = UIPopoverController(contentViewController: vc)
@@ -52,7 +53,7 @@ class MainCTRL: UIViewController {
     
     @IBAction func newGameTPD(sender: AnyObject) {
         
-        var vc = GameDetail(nibName: "GameDetail",bundle: nil)
+        var vc = GameEdit(nibName: "GameEdit",bundle: nil)
         vc.main = self
         
         var popover = UIPopoverController(contentViewController: vc)

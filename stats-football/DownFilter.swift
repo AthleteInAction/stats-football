@@ -88,7 +88,7 @@ class DownFilter {
         // =======================================================
         // #######################################################
         var lastPossessionOutsideEndzone: Bool?
-        var lastSpot: Play?
+        var lastSpot: Int?
         var possessionChanged: Bool = false
         var fgm: Bool = false
         var fga: Bool = false
@@ -135,7 +135,7 @@ class DownFilter {
             }
             // ++++++++++++++++++++++++++++++++
             
-            if let x = play.endX { lastSpot = play }
+            if let x = play.endX { lastSpot = play.endX }
             
             if pos_right != pos_right_original { possessionChanged = true }
             
@@ -151,8 +151,7 @@ class DownFilter {
             
             if let x = penalty.endX {
                 
-                lastSpot = Play()
-                lastSpot?.endX = x
+                lastSpot = x
                 
                 break
                 
@@ -179,7 +178,7 @@ class DownFilter {
             s.key = "down"
             if let spot = lastSpot {
                 
-                s.startX = lastSpot?.endX?.flipSpot()
+                s.startX = spot.flipSpot()
                 
             }
             s.down = 1
@@ -199,11 +198,11 @@ class DownFilter {
         // CHECK IF BALL ENDED IN ENDZONE
         // =======================================================
         // =======================================================
-        if let play = lastSpot {
+        if let x = lastSpot {
             
             // RETURN TEAM ENDZONE
             // ++++++++++++++++++++++++++++++++
-            if play.endX! >= 100 {
+            if x >= 100 {
                 
                 // IF KICKING TEAM HAS BALL
                 // ------------------------------------
@@ -272,7 +271,7 @@ class DownFilter {
             
             // RETURN TEAM ENDZONE
             // ++++++++++++++++++++++++++++++++
-            if play.endX! <= -100 {
+            if x <= -100 {
                 
                 // IF KICKING TEAM HAS BALL
                 // ------------------------------------
@@ -347,7 +346,7 @@ class DownFilter {
         // =======================================================
         // =======================================================
         s.key = "down"
-        if let play = lastSpot { s.startX = play.endX }
+        if let x = lastSpot { s.startX = x }
         // Was there a possession change
         if possessionChanged {
             

@@ -12,7 +12,7 @@ import CoreData
 
 class DB {
     
-    // TEAMS
+    // SEQUENCES
     // ============================================================================================================
     // ============================================================================================================
     class sequences {
@@ -35,8 +35,6 @@ class DB {
                 
                 request.predicate = p
                 
-                var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-                var context: NSManagedObjectContext = appDel.managedObjectContext!
                 var results: NSArray = context.executeFetchRequest(request, error: &error)!
                 
                 if let e = error {
@@ -79,8 +77,6 @@ class DB {
                 
                 var error: NSError?
                 
-                var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-                var context: NSManagedObjectContext = appDel.managedObjectContext!
                 var results: NSArray = context.executeFetchRequest(request, error: &error)!
                 
                 if let e = error {
@@ -134,8 +130,6 @@ class DB {
             
             static func create(name _name: String,short _short: String,completion: (s: Bool,team: TeamObject) -> Void){
                 
-                var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-                var context: NSManagedObjectContext = appDel.managedObjectContext!
                 var entity = NSEntityDescription.entityForName("Teams", inManagedObjectContext: context)
                 var item = TeamObject(entity: entity!, insertIntoManagedObjectContext: context)
                 
@@ -169,8 +163,6 @@ class DB {
                 
                 var error: NSError?
                 
-                var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-                var context: NSManagedObjectContext = appDel.managedObjectContext!
                 var results: NSArray = context.executeFetchRequest(request, error: &error)!
                 
                 if let e = error {
@@ -224,8 +216,6 @@ class DB {
             
             static func create(away _away: Team,home _home: Team,completion: (s: Bool,game: Game?) -> Void){
                 
-                var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-                var context: NSManagedObjectContext = appDel.managedObjectContext!
                 var entity = NSEntityDescription.entityForName("Games", inManagedObjectContext: context)
                 var item = GameObject(entity: entity!, insertIntoManagedObjectContext: context)
                 
@@ -260,8 +250,6 @@ class DB {
                 
                 var error: NSError?
                 
-                var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-                var context: NSManagedObjectContext = appDel.managedObjectContext!
                 var results: NSArray = context.executeFetchRequest(request, error: &error)!
                 
                 if let e = error {
@@ -287,6 +275,164 @@ class DB {
                     }
                     
                     completion(s: true,games: tmp)
+                    
+                }
+                
+            }
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            
+        }
+        // LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+        // LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+        
+    }
+    // ============================================================================================================
+    // ============================================================================================================
+    
+    
+    // PLAYS
+    // ============================================================================================================
+    // ============================================================================================================
+    class plays {
+        
+        // CORE DATA (LOCAL)
+        // LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+        // LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+        class local {
+            
+            
+            // GET
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            static func get(completion: (s: Bool,items: [PlayObject]) -> Void){
+                
+                var request = NSFetchRequest(entityName: "Plays")
+                
+                var error: NSError?
+                
+                var results: NSArray = context.executeFetchRequest(request, error: &error)!
+                
+                if let e = error {
+                    
+                    println("ERROR:")
+                    println(e)
+                    
+                    completion(s: false,items: [])
+                    
+                } else {
+                    
+                    var tmp: [PlayObject] = []
+                    
+                    for team in results {
+                        
+                        let t = team as! PlayObject
+                        
+                        tmp.append(t)
+                        
+                    }
+                    
+                    completion(s: true,items: tmp)
+                    
+                }
+                
+            }
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            
+        }
+        // LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+        // LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+        
+    }
+    // ============================================================================================================
+    // ============================================================================================================
+    
+    
+    // PENALTIES
+    // ============================================================================================================
+    // ============================================================================================================
+    class penalties {
+        
+        // CORE DATA (LOCAL)
+        // LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+        // LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+        class local {
+            
+            // FIND
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            static func find(penalty: Penalty,completion: (s: Bool,items: [Penalty]) -> Void){
+                
+                var error: NSError?
+                
+                var request = NSFetchRequest(entityName: "Penalties")
+                
+                let p = NSPredicate(format: "game in %@", argumentArray: [penalty.object!])
+                
+                request.predicate = p
+                
+                var results: NSArray = context.executeFetchRequest(request, error: &error)!
+                
+                if let e = error {
+                    
+                    println("ERROR:")
+                    println(e)
+                    
+                    completion(s: false,items: [])
+                    
+                } else {
+                    
+                    var tmp: [Penalty] = []
+                    
+                    for team in results {
+                        
+                        let t = team as! PenaltyObject
+                        
+                    }
+                    
+                    completion(s: true,items: tmp)
+                    
+                }
+                
+            }
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            
+            
+            // GET
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            static func get(completion: (s: Bool,items: [Penalty]) -> Void){
+                
+                var request = NSFetchRequest(entityName: "Penalties")
+                
+                var error: NSError?
+                
+                var results: NSArray = context.executeFetchRequest(request, error: &error)!
+                
+                if let e = error {
+                    
+                    println("ERROR:")
+                    println(e)
+                    
+                    completion(s: false,items: [])
+                    
+                } else {
+                    
+                    var tmp: [Penalty] = []
+                    
+                    for team in results {
+                        
+                        let t = team as! PenaltyObject
+                        
+                        let final = Penalty(penalty: t)
+                        
+                        tmp.append(final)
+                        
+                    }
+                    
+                    completion(s: true,items: tmp)
                     
                 }
                 

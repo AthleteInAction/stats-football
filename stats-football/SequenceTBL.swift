@@ -18,6 +18,11 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         delegate = self
         dataSource = self
         
+        rowHeight = UITableViewAutomaticDimension
+        estimatedRowHeight = 90
+        
+        registerNib(UINib(nibName: "SequenceCell", bundle: nil), forCellReuseIdentifier: "sequence_cell")
+        
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -28,24 +33,52 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return tracker.log.count
+        return tracker.game.sequences.count
         
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("sequence_cell") as! SequenceCell
         
-        cell.backgroundColor = UIColor.clearColor()
-        
-        let s = tracker.log[indexPath.row]
+        let s = tracker.game.sequences[indexPath.row]
         
         let pos_right: Bool = tracker.posRight(s)
         
-        switch s.key {
-        case "kickoff","freekick","pat":
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
+        cell.userInteractionEnabled = true
+        cell.posIndicator.setTitle(s.team.short, forState: .Normal)
+        
+        let t: String!
+        
+        if s.startX == 50 {
+            t = 50.string()
+        } else if s.startX < 0 {
             
-            cell.textLabel?.text = "\(s.team.short) \(s.key) from \(s.startX)"
+            // -38
+            t = "\(s.team.short) \(s.startX * -1)"
+            
+        } else {
+            
+            // 38
+            t = "\(tracker.opTeam(s.team).short) \(s.startX)"
+            
+        }
+        
+        cell.ballPos.setTitle(t, forState: .Normal)
+        
+        switch s.key {
+        case "kickoff":
+            
+            cell.midTXT.text = "Kickoff"
+            
+        case "freekick":
+            
+            cell.midTXT.text = "Freekick"
+            
+        case "pat":
+            
+            cell.midTXT.text = "PAT"
             
         case "down":
             
@@ -84,29 +117,42 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             if let fd = s.fd {
                 
                 if fd == 100 { togo = "G" }
-                f = "(\(fd))"
+                f = "\(fd)"
                 
             }
             
-            cell.textLabel?.text = "\(s.team.short) \(d)n\(togo)\(f) from \(s.startX)"
+            switch d {
+            case 1.string():
+                d = "1st"
+            case 2.string():
+                d = "2nd"
+            case 3.string():
+                d = "3rd"
+            case 4.string():
+                d = "4th"
+            default:
+                ()
+            }
+            
+            cell.midTXT.text = "\(d) and \(togo)"
             
         default:
             
-            cell.textLabel?.text = "\(s.key) : \(s.qtr) : \(pos_right) : \(s.startX)"
+            cell.midTXT.text = "Error"
             
         }
         
-        if tracker.log.count == 1 {
-            
-            cell.selected = true
-            cell.selectionStyle = UITableViewCellSelectionStyle.Default
-            cell.userInteractionEnabled = false
-            
-        } else {
-            
-            cell.userInteractionEnabled = true
-            
-        }
+//        if tracker.game.sequences.count == 1 {
+//            
+//            cell.selected = true
+//            cell.selectionStyle = UITableViewCellSelectionStyle.Default
+//            cell.userInteractionEnabled = false
+//            
+//        } else {
+//            
+//            cell.userInteractionEnabled = true
+//            
+//        }
         
         return cell
         
@@ -123,16 +169,14 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         println("DESELECT")
         
-        let s = tracker.log[indexPath.row]
+        let s = tracker.game.sequences[indexPath.row]
         
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         let text = cell?.textLabel?.text
         
         cell?.textLabel?.text = "Saving..."
         
-//        s.save(nil)
-//        tracker.game.addSequence(s)
-//        tracker.game.save(nil)
+        s.save(nil)
         
         cell?.textLabel?.text = text
         
@@ -142,17 +186,21 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
-            if tracker.log.count > 1 {
+            if tracker.game.sequences.count > 1 {
+                
+                let s = tracker.game.sequences[tracker.index]
+                
+                s.delete(nil)
                 
                 tracker.index = 0
-                tracker.log.removeAtIndex(indexPath.row)
+                tracker.game.sequences.removeAtIndex(indexPath.row)
                 tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
                 
-                if tracker.log.count > (indexPath.row+1) {
+                if tracker.game.sequences.count > (indexPath.row+1) {
                     
                     tracker.index = indexPath.row
                     
-                } else if tracker.log.count >= (indexPath.row+1) && indexPath.row > 0 {
+                } else if tracker.game.sequences.count >= (indexPath.row+1) && indexPath.row > 0 {
                     
                     tracker.index = indexPath.row - 1
                     

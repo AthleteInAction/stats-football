@@ -6,7 +6,6 @@
 //  Created by grobinson on 8/27/15.
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
-import UIKit
 import CoreData
 // ========================================================
 // ========================================================
@@ -23,34 +22,31 @@ class Sequence {
     var replay: Bool = false
     var plays: [Play] = []
     var penalties: [Penalty] = []
+    var created_at: NSDate!
     var object: SequenceObject!
     
     init(){
         
-        var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-        var context: NSManagedObjectContext = appDel.managedObjectContext!
         var entity = NSEntityDescription.entityForName("Sequences", inManagedObjectContext: context)
         var o = SequenceObject(entity: entity!, insertIntoManagedObjectContext: context)
         
         object = o
         startY = 50
+        created_at = NSDate()
         
     }
     
     init(sequence: SequenceObject){
         
-        println("[][][][]")
-        println(sequence)
-        println("[][][][]")
-        
+        created_at = sequence.created_at
         team = Team(team: sequence.team)
         game = Game(game: sequence.game)
-        qtr = String(sequence.qtr).toInt()
-        key = String(sequence.key)
-        if let d = sequence.down { down = String(d).toInt() }
-        if let f = sequence.fd { fd = String(f).toInt() }
-        startX = String(sequence.startX).toInt()
-        startY = String(sequence.startY).toInt()
+        qtr = sequence.qtr.toInt()!
+        key = sequence.key
+        if let d = sequence.down { down = d.toInt()! }
+        if let f = sequence.fd { fd = f.toInt()! }
+        startX = sequence.startX.toInt()!
+        startY = sequence.startY.toInt()!
         replay = sequence.replay
         object = sequence
         
@@ -66,6 +62,10 @@ class Sequence {
         
         object.managedObjectContext?.deleteObject(object)
         object.managedObjectContext?.save(&error)
+        
+        // DELETE CHILDREN
+        for play in plays { play.delete(nil) }
+        for penalty in penalties { penalty.delete(nil) }
         
         if let e = error {
             
@@ -88,12 +88,13 @@ class Sequence {
         
         var error: NSError?
         
+        object.created_at = created_at
         object.game = game.object
         object.key = key
         object.team = team.object
         object.qtr = "\(qtr)"
-        if let d = down { object.down = "\(d)" }
-        if let f = fd { object.fd = "\(f)" }
+        if let d = down { object.down = "\(d)" } else { object.down = nil }
+        if let f = fd { object.fd = "\(f)" } else { object.fd = nil }
         object.startX = "\(startX)"
         object.startY = "\(startY)"
         object.replay = replay
@@ -116,24 +117,36 @@ class Sequence {
         
     }
     
-}
-// ========================================================
-// ========================================================
-@objc(SequenceObject)
-class SequenceObject: NSManagedObject {
+    func getPlays(){
+        
+        var playObjects = object.plays.allObjects as! [PlayObject]
+        
+        plays = playObjects.map { o in
+         
+            let play = Play(play: o)
+            
+            return play
+            
+        }
+        
+        plays.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedAscending })
+        
+    }
     
-    @NSManaged var game: GameObject
-    @NSManaged var team: TeamObject
-    @NSManaged var qtr: NSString
-    @NSManaged var key: NSString
-    @NSManaged var down: NSString?
-    @NSManaged var fd: NSString?
-    @NSManaged var startX: NSString
-    @NSManaged var startY: NSString
-    @NSManaged var replay: Bool
-    @NSManaged var plays: NSSet
-    @NSManaged var penalties: NSSet
+    func getPenalties(){
+        
+        var penaltyObjects = object.penalties.allObjects as! [PenaltyObject]
+        
+        penalties = penaltyObjects.map { o in
+            
+            let penalty = Penalty(penalty: o)
+            
+            return penalty
+            
+        }
+        
+        penalties.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedAscending })
+        
+    }
     
 }
-// ========================================================
-// ========================================================

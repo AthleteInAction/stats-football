@@ -15,8 +15,13 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        self.delegate = self
-        self.dataSource = self
+        delegate = self
+        dataSource = self
+        
+        estimatedRowHeight = 44
+        rowHeight = UITableViewAutomaticDimension
+        
+        registerNib(UINib(nibName: "PlayCell", bundle: nil), forCellReuseIdentifier: "play_cell")
         
     }
     
@@ -28,7 +33,7 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        let s = tracker.log[tracker.index]
+        let s = tracker.game.sequences[tracker.index]
         
         return s.plays.count
         
@@ -36,14 +41,62 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("play_cell") as! PlayCell
         
-        let s = tracker.log[tracker.index]
+        let s = tracker.game.sequences[tracker.index]
         
         let p = s.plays[indexPath.row]
         
-        cell.textLabel?.text = "#\(p.player_a) : \(p.key) : \(p.endX) : \(indexPath.row)"
         cell.userInteractionEnabled = false
+        
+        var t: String!
+        
+        if let endX = p.endX {
+            
+            if p.endX == 50 {
+                t = 50.string()
+            } else if p.endX < 0 {
+                
+                // -38
+                t = "\(s.team.short) \(p.endX! * -1)"
+                
+            } else {
+                
+                // 38
+                t = "\(tracker.opTeam(s.team).short) \(p.endX!)"
+                
+            }
+            
+        }
+        
+        cell.backgroundColor = Filters.colors(p.key, alpha: 1)
+        cell.TXT.textColor = Filters.textColors(p.key, alpha: 1)
+        
+        var txt = "#\(p.player_a) "
+        
+        switch p.key {
+        case "run":
+            txt += "runs"
+            txt += " to \(t)"
+        case "return":
+            txt += "returns"
+            txt += " to \(t)"
+        case "kick":
+            txt += "kicks"
+            txt += " to \(t)"
+        case "pass":
+            txt += "passes to #"
+            txt += p.player_b!.string()
+            txt += ", down at \(t)"
+            cell.TXT.textColor = UIColor(red: 64/155, green: 64/155, blue: 64/155, alpha: 1)
+        case "incomplete":
+            txt += " Incomplete"
+        default:
+            txt += p.key
+            txt += " to \(t)"
+        }
+        
+        cell.TXT.text = txt
         
         return cell
         

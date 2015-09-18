@@ -6,7 +6,6 @@
 //  Created by grobinson on 9/14/15.
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
-import UIKit
 import CoreData
 // =================================================================================
 // =================================================================================
@@ -14,12 +13,11 @@ class Game {
     
     var away: Team!
     var home: Team!
+    var sequences: [Sequence] = []
     var object: GameObject!
     
     init(away _away: Team,home _home: Team){
         
-        var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-        var context: NSManagedObjectContext = appDel.managedObjectContext!
         var entity = NSEntityDescription.entityForName("Games", inManagedObjectContext: context)
         var item = GameObject(entity: entity!, insertIntoManagedObjectContext: context)
         
@@ -57,17 +55,27 @@ class Game {
         
         var error: NSError?
         
+        let sequences = object.sequences.allObjects as! [SequenceObject]
+        
+        for object in sequences {
+            
+            let sequence = Sequence(sequence: object)
+            
+            sequence.delete(nil)
+            
+        }
+        
         object.managedObjectContext?.deleteObject(object)
         object.managedObjectContext?.save(&error)
         
         if let e = error {
             
-            println("DELETE SEQUENCE ERROR!")
+            println("DELETE GAME ERROR!")
             println(e)
             
         } else {
             
-            println("SEQUENCE DELETED!")
+            println("GAME DELETED!")
             
         }
         
@@ -102,16 +110,20 @@ class Game {
         
     }
     
-}
-// =================================================================================
-// =================================================================================
-@objc(GameObject)
-class GameObject: NSManagedObject {
+    func getSequences(){
+        
+        var sequenceObjects = object.sequences.allObjects as! [SequenceObject]
+        
+        sequences = sequenceObjects.map { o in
+            
+            let sequence = Sequence(sequence: o)
+            
+            return sequence
+            
+        }
+        
+        sequences.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedDescending })
+        
+    }
     
-    @NSManaged var away: TeamObject
-    @NSManaged var home: TeamObject
-    @NSManaged var sequences: NSSet
-    
 }
-// =================================================================================
-// =================================================================================

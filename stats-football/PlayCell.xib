@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="98" id="KGk-i7-Jjw" customClass="PlayCell" customModule="stats_football" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="413" height="98"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="768" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XDn-Cg-HeH">
+                        <rect key="frame" x="8" y="8" width="397" height="81"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.9799292127" green="0.9799292127" blue="0.9799292127" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="XDn-Cg-HeH" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="Bbu-ub-RB9"/>
+                    <constraint firstItem="XDn-Cg-HeH" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="IfC-Rj-WPl"/>
+                    <constraint firstItem="XDn-Cg-HeH" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" id="N1l-FN-Vu3"/>
+                    <constraint firstItem="XDn-Cg-HeH" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="kSW-kn-jiY"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" red="0.30050069060000001" green="0.30050069060000001" blue="0.30050069060000001" alpha="1" colorSpace="calibratedRGB"/>
+            <connections>
+                <outlet property="TXT" destination="XDn-Cg-HeH" id="Hjd-iR-9tt"/>
+            </connections>
+            <point key="canvasLocation" x="465.5" y="316"/>
+        </tableViewCell>
+    </objects>
+</document>

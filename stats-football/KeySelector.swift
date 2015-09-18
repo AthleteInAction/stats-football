@@ -26,7 +26,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        s = tracker.log[tracker.index]
+        s = tracker.game.sequences[tracker.index]
         
         keys = Filters.keys(s,type: type)
         
@@ -95,19 +95,30 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             case "play_key_select":
             // ++++++++++++++++++++++++++++++++++++++++++++++++
                 
+                play.key = key
+                tracker.newPlay = play
+                
                 switch key {
                 case "pass","interception":
                     
-                    play.key = key
-                    nsel.newPlay = play
                     nsel.type = "player_b"
+                    nsel.newPlay = play
                     
                     navigationController?.pushViewController(nsel, animated: false)
                     
-                default:
+                case "incomplete":
                     
-                    play.key = key
-                    tracker.newPlay = play
+                    play.save(nil)
+                    
+                    s.plays.append(play)
+                    
+                    tracker.playTBL.reloadData()
+                    
+                    tracker.newPlay = nil
+                    
+                    dismissViewControllerAnimated(false, completion: nil)
+                    
+                default:
                     
                     tracker.spot()
                     
@@ -130,20 +141,10 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             
             switch type {
             // ++++++++++++++++++++++++++++++++++++++++++++++++
-//            case "penalty_type":
-//            // ++++++++++++++++++++++++++++++++++++++++++++++++
-//                
-//                play.penaltyKey = key
-//                ksel.newPlay = play
-//                ksel.type = "penalty_distance"
-//                
-//                navigationController?.pushViewController(ksel, animated: false)
-                
-            // ++++++++++++++++++++++++++++++++++++++++++++++++
             case "penalty_distance":
             // ++++++++++++++++++++++++++++++++++++++++++++++++
                 
-                penalty.distance = key.toInt()
+                penalty.distance = key.toInt()!
                 nsel.newPenalty = penalty
                 nsel.type = "penalty_player"
                 
@@ -154,9 +155,11 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             // ++++++++++++++++++++++++++++++++++++++++++++++++
                 
                 switch key {
-                case "offset":
+                case "offset","declined":
                     
-                    penalty.enforcement = "offset"
+                    penalty.enforcement = key
+                    
+                    penalty.save(nil)
                     
                     s.penalties.append(penalty)
                     
@@ -165,11 +168,16 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                 case "kick":
                     
                     penalty.enforcement = "kick"
+
+                    penalty.save(nil)
+                    
                     s.penalties.append(penalty)
                     
                     tracker.penaltyTBL.reloadData()
                     
                 default:
+                    
+                    penalty.enforcement = "spot"
                     
                     tracker.newPenalty = penalty
                     

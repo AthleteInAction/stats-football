@@ -60,7 +60,7 @@ class FirstDownMKR: UIView {
             
         }
         
-        let s = field.tracker.log[field.tracker.index]
+        let s = field.tracker.game.sequences[field.tracker.index]
         
         let pos_right = field.tracker.posRight(s)
         
@@ -75,9 +75,14 @@ class FirstDownMKR: UIView {
         }
         
         s.fd = field.toY(center.x).fullToYard(pos_right)
-        println("FD: \(s.fd)")
-        println(field.toY(center.x))
-        println(field.toY(center.x).fullToYard(pos_right))
+        
+        if sender.state == UIGestureRecognizerState.Ended {
+            
+            println("<<< FD DRAG ENDED >>>")
+            
+            s.save(nil)
+            
+        }
         
         field.tracker.sequenceTBL.reload()
         

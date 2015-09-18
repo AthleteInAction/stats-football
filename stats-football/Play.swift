@@ -20,83 +20,86 @@ class Play {
     var tackles: [Int] = []
     var sacks: [Int] = []
     var object: PlayObject!
+    var created_at: NSDate!
     
-    init(){
+    init(s: Sequence){
         
+        var entity = NSEntityDescription.entityForName("Plays", inManagedObjectContext: context)
+        var o = PlayObject(entity: entity!, insertIntoManagedObjectContext: context)
         
+        object = o
+        object.sequence = s.object
+        created_at = NSDate()
         
     }
     
     init(play: PlayObject){
         
-        key = String(play.key)
-        if let x = play.endX { endX = String(x).toInt() }
-        if let y = play.endY { endY = String(y).toInt() }
-        player_a = String(play.player_a).toInt()
-        if let b = play.player_b { player_b = String(b).toInt() }
+        key = play.key
+        if let x = play.endX { endX = x.toInt()! }
+        if let y = play.endY { endY = y.toInt()! }
+        player_a = play.player_a.toInt()!
+        if let b = play.player_b { player_b = b.toInt()! }
         if let t = play.team { team = Team(team: t) }
         object = play
+        created_at = play.created_at
         
     }
     
-    typealias Completion = (error: NSError?) -> Void
-    
-    func save(completion: Completion?){
+    func delete(completion: CoreDataCompletion?){
         
         var c = completion
         
         var error: NSError?
         
-        if let o = object {
+        object.managedObjectContext?.deleteObject(object)
+        object.managedObjectContext?.save(&error)
+        
+        if let e = error {
             
-            o.key = key
-            if let x = endX {  o.endX = "\(x)" }
-            if let y = endY {  o.endY = "\(y)" }
-            o.player_a = "\(player_a)"
-            if let b = player_b { o.player_b = "\(b)" }
-            if let t = team { o.team = t.object }
-            
-            o.managedObjectContext?.save(&error)
-            
-            c?(error: error)
+            println("DELETE PLAY ERROR!")
+            println(e)
             
         } else {
             
-//            var entity = NSEntityDescription.entityForName("Plays", inManagedObjectContext: context)
-//            
-//            var o = PlayObject(entity: entity!, insertIntoManagedObjectContext: context)
-//            
-//            o.key = key
-//            if let x = endX {  o.endX = "\(x)" }
-//            if let y = endY {  o.endY = "\(y)" }
-//            o.player_a = "\(player_a)"
-//            if let b = player_b { o.player_b = "\(b)" }
-//            if let t = team { o.team = t.object }
-//            
-//            context.save(&error)
-//            
-//            if error == nil { object = o }
-//            
-//            c?(error: error)
+            println("PLAY DELETED!")
             
         }
+        
+        c?(error: error)
+        
+    }
+    
+    func save(completion: CoreDataCompletion?){
+        
+        var c = completion
+        
+        var error: NSError?
+        
+        object.created_at = created_at
+        object.key = key
+        if let x = endX { object.endX = "\(x)" } else { object.endX = nil }
+        if let y = endY { object.endY = "\(y)" } else { object.endY = nil }
+        object.player_a = "\(player_a)"
+        if let b = player_b { object.player_b = "\(b)" } else { object.player_b = nil }
+        if let t = team { object.team = t.object } else { object.team = nil }
+        
+        object.managedObjectContext?.save(&error)
+        
+        if let e = error {
+            
+            println("PLAY SAVE ERROR!")
+            println(e)
+            
+        } else {
+            
+            println(object)
+            println("PLAY SAVED!")
+            
+        }
+        
+        c?(error: error)
         
     }
     
 }
-// ========================================================
-// ========================================================
-@objc(PlayObject)
-class PlayObject: NSManagedObject {
-    
-    @NSManaged var sequence: SequenceObject
-    @NSManaged var team: TeamObject?
-    @NSManaged var key: NSString
-    @NSManaged var endX: NSString?
-    @NSManaged var endY: NSString?
-    @NSManaged var player_a: NSString
-    @NSManaged var player_b: NSString?
-    
-}
-// ========================================================
-// ========================================================

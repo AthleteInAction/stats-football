@@ -50,7 +50,7 @@ class LosMKR: UIView {
         if nex > max { nex = max }
         if nex < min { nex = min }
         
-        let s = field.tracker.log[field.tracker.index]
+        let s = field.tracker.game.sequences[field.tracker.index]
         
         let pos_right: Bool = field.tracker.posRight(s)
         
@@ -75,6 +75,14 @@ class LosMKR: UIView {
         field.ball.center.x = center.x
         
         s.startX = field.toY(nex).fullToYard(pos_right)
+        
+        if sender.state == UIGestureRecognizerState.Ended {
+            
+            println("<<< LOS DRAG ENDED >>>")
+            
+            s.save(nil)
+            
+        }
         
         field.tracker.sequenceTBL.reloadData()
         field.tracker.sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: field.tracker.index, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Top)
