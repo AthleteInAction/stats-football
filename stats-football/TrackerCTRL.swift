@@ -431,11 +431,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
                     
                     if let r = play.team {
                         
-                        if !r.object!.isEqual(s.team.object!) {
-                            
-                            button.backgroundColor = UIColor.redColor()
-                            
-                        }
+                        button.backgroundColor = r.color
                         
                     }
                     

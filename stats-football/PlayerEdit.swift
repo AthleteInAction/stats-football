@@ -11,6 +11,7 @@ import UIKit
 class PlayerEdit: UIViewController,UITextFieldDelegate {
     
     var teamDetail: TeamDetail!
+    var editPlayer: Player?
     
     @IBOutlet weak var numberTXT: UITextField!
     @IBOutlet weak var firstTXT: UITextField!
@@ -36,6 +37,14 @@ class PlayerEdit: UIViewController,UITextFieldDelegate {
         numberTXT.addTarget(self, action:"textChanged:", forControlEvents: UIControlEvents.EditingChanged)
         
         edgesForExtendedLayout = UIRectEdge()
+        
+        if let p = editPlayer {
+            
+            numberTXT.text = "#\(p.number)"
+            if let n = p.first_name { firstTXT.text = n }
+            if let n = p.last_name { lastTXT.text = n }
+            
+        }
         
     }
 
@@ -86,7 +95,13 @@ class PlayerEdit: UIViewController,UITextFieldDelegate {
         
         if numberTXT.text == "" { return false }
         
-        let player = Player(team: teamDetail.team, number: numberTXT.text.toInt()!)
+        var player: Player!
+        
+        if let p = editPlayer {
+            player = p
+        } else {
+            player = Player(team: teamDetail.team, number: numberTXT.text.toInt()!)
+        }
         
         if firstTXT.text != "" { player.first_name = firstTXT.text }
         if lastTXT.text != "" { player.last_name = lastTXT.text }
@@ -95,6 +110,8 @@ class PlayerEdit: UIViewController,UITextFieldDelegate {
         
         teamDetail.team.roster.insert(player, atIndex: 0)
         teamDetail.rosterTBL.reloadData()
+        teamDetail.main.gamesTBL.getData()
+        teamDetail.main.teamsTBL.getData()
         
         dismissKeyboard()
         dismissViewControllerAnimated(true, completion: nil)

@@ -31,7 +31,7 @@
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ifL-Zk-ben">
                         <rect key="frame" x="115" y="25" width="40" height="26"/>
-                        <color key="backgroundColor" red="0.49649746529775685" green="1" blue="0.60729836959760464" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.82016142955801108" green="0.82016142955801108" blue="0.82016142955801108" alpha="1" colorSpace="calibratedRGB"/>
                         <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="11"/>
                         <state key="normal" title="LHS 25">
                             <color key="titleColor" red="0.24932631890000001" green="0.24932631890000001" blue="0.24932631890000001" alpha="1" colorSpace="calibratedRGB"/>

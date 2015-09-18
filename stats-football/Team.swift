@@ -6,6 +6,7 @@
 //  Created by grobinson on 9/14/15.
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
+import UIKit
 import CoreData
 // =================================================================================
 // =================================================================================
@@ -14,6 +15,7 @@ class TeamObject: NSManagedObject {
     
     @NSManaged var name: String
     @NSManaged var short: String
+    @NSManaged var color: String
     @NSManaged var away_games: NSSet
     @NSManaged var home_games: NSSet
     @NSManaged var sequences: NSSet
@@ -28,6 +30,7 @@ class Team {
     
     var name: String!
     var short: String!
+    var color: UIColor!
     var roster: [Player] = []
     var object: TeamObject!
     
@@ -38,6 +41,7 @@ class Team {
         
         name = _name
         short = _short
+        color = UIColor.blackColor()
         object = item
         
     }
@@ -47,6 +51,35 @@ class Team {
         name = team.name
         short = team.short
         object = team
+        color = getColor(object.color)
+        
+    }
+    
+    private func getColor(s: String) -> UIColor {
+        
+        let c = split(s){$0 == ","}.map { o in
+            
+            CGFloat(String(o).toInt()!) / 100
+            
+        }
+        
+        return UIColor(red: c[0], green: c[1], blue: c[2], alpha: 1)
+        
+    }
+    private func colorText(color: UIColor) -> String {
+        
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        
+        if color.getRed(&r, green: &g, blue: &b, alpha: &a){
+            
+            return "\(Int(r*100)),\(Int(g*100)),\(Int(b*100))"
+            
+        }
+        
+        return "0,0,0"
         
     }
     
@@ -60,6 +93,7 @@ class Team {
         
         object.name = name
         object.short = short
+        object.color = colorText(color)
         
         object.managedObjectContext?.save(&error)
         

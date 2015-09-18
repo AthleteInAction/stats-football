@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate {
+class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,ColorPickerPTC {
     
     var team: Team!
     var main: MainCTRL!
@@ -24,6 +24,7 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
         super.viewDidLoad()
         
         colorBTN.layer.cornerRadius = 5
+        colorBTN.backgroundColor = team.color
         
         rosterTBL.delegate = self
         rosterTBL.dataSource = self
@@ -88,6 +89,7 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
                     team.name = nameTXT.text
                     team.save(nil)
                     main.teamsTBL.reloadData()
+                    main.gamesTBL.getData()
                     
                 }
                 
@@ -110,6 +112,8 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
                     
                     team.short = shortTXT.text
                     team.save(nil)
+                    main.teamsTBL.reloadData()
+                    main.gamesTBL.getData()
                     
                 }
                 
@@ -139,6 +143,7 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
                     team.name = nameTXT.text
                     team.save(nil)
                     main.teamsTBL.reloadData()
+                    main.gamesTBL.getData()
                     
                 }
             
@@ -158,6 +163,8 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
                     
                     team.short = shortTXT.text
                     team.save(nil)
+                    main.teamsTBL.reloadData()
+                    main.gamesTBL.getData()
                     
                 }
                 
@@ -205,6 +212,10 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
+        let player = team.roster[indexPath.row]
+        
+        editPlayer(player)
+        
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -214,6 +225,8 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
             let player = team.roster[indexPath.row]
             
             player.delete(nil)
+            main.teamsTBL.reloadData()
+            main.gamesTBL.getData()
             
             team.roster.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
@@ -224,13 +237,7 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
 
     @IBAction func newTPD(sender: UIButton) {
         
-        let vc = PlayerEdit(nibName: "PlayerEdit",bundle: nil)
-        vc.teamDetail = self
-        var nav = UINavigationController(rootViewController: vc)
-        
-        var popover = UIPopoverController(contentViewController: nav)
-        popover.popoverContentSize = CGSize(width: 283, height: 360)
-        popover.presentPopoverFromRect(sender.frame, inView: view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+        editPlayer(nil)
         
     }
     
@@ -242,23 +249,34 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
     
     @IBAction func colorTPD(sender: AnyObject) {
         
-//        let popoverVC = ColorPicker(nibName: "ColorPicker",bundle: nil)
-//        let popoverVC = main.storyboard?.instantiateViewControllerWithIdentifier("colorPickerPopover") as! ColorPicker
-//        
-//        popoverVC.modalPresentationStyle = .Popover
-//        popoverVC.preferredContentSize = CGSizeMake(284, 446)
-//        if let popoverController = popoverVC.popoverPresentationController {
-//            popoverController.sourceView = sender as! UIView
-//            popoverController.sourceRect = CGRect(x: 0, y: 0, width: 85, height: 30)
-//            popoverController.permittedArrowDirections = .Any
-//            popoverVC.delegate = self
-//        }
-//        presentViewController(popoverVC, animated: true, completion: nil)
+        let vc = ColorPicker(nibName: "ColorPicker",bundle: nil)
+        vc.delegate = self
+        
+        var popover = UIPopoverController(contentViewController: vc)
+        popover.popoverContentSize = CGSize(width: 480, height: 440)
+        popover.presentPopoverFromRect(sender.frame, inView: view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
         
     }
     
-    func setButtonColor(color: UIColor){
+    func editPlayer(player: Player?){
         
+        let vc = PlayerEdit(nibName: "PlayerEdit",bundle: nil)
+        vc.teamDetail = self
+        vc.editPlayer = player
+        var nav = UINavigationController(rootViewController: vc)
+        
+        var popover = UIPopoverController(contentViewController: nav)
+        popover.popoverContentSize = CGSize(width: 283, height: 360)
+        popover.presentPopoverFromRect(colorBTN.frame, inView: view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+        
+    }
+    
+    func colorSelected(color: UIColor) {
+        
+        team.color = color
+        team.save(nil)
+        main.teamsTBL.reloadData()
+        main.gamesTBL.getData()
         colorBTN.backgroundColor = color
         
     }

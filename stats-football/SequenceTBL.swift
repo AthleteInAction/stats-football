@@ -48,6 +48,7 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.userInteractionEnabled = true
         cell.posIndicator.setTitle(s.team.short, forState: .Normal)
+        cell.posIndicator.backgroundColor = s.team.color
         
         let t: String!
         
@@ -57,11 +58,13 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
             // -38
             t = "\(s.team.short) \(s.startX * -1)"
+            cell.ballPos.backgroundColor = s.team.color
             
         } else {
             
             // 38
             t = "\(tracker.opTeam(s.team).short) \(s.startX)"
+            cell.ballPos.backgroundColor = tracker.opTeam(s.team).color
             
         }
         

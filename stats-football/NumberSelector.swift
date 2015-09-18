@@ -24,6 +24,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
     var ksel: KeySelector!
     
     var freq: [Player] = []
+    var numbers: [Player] = []
     
     var s: Sequence!
     
@@ -52,37 +53,33 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         freqTBL.delegate = self
         freqTBL.dataSource = self
         
-//        let getRandom = randomSequenceGenerator(min: 1, max: 99)
-//        
-//        var tmp: [Player] = []
-//        
-//        for _ in 1...34 {
-//            
-//            tmp.append(Player(n: getRandom()))
-//            
-//        }
-//        
-//        tracker.numbers = tmp
+        var po = tracker.game.home.object.roster.allObjects as! [PlayerObject]
+        var home: [Player] = []
+        for p in po {
+            
+            let player = Player(object: p)
+            
+            home.append(player)
+            
+        }
+        numbers = home
+        po = tracker.game.away.object.roster.allObjects as! [PlayerObject]
+        for p in po {
+            
+            let player = Player(object: p)
+            
+            if !hasPlayer(items: home, player: player) {
+                
+                numbers.append(player)
+                
+            }
+            
+        }
+        
+        reload()
         
         edgesForExtendedLayout = UIRectEdge()
         
-        freq = tracker.numbers
-        
-        tracker.numbers.sort({ $0.number < $1.number })
-        freq.sort({ $0.used > $1.used })
-        
-    }
-    
-    func randomSequenceGenerator(#min: Int,max: Int) -> () -> Int {
-        var numbers: [Int] = []
-        return {
-            if numbers.count == 0 {
-                numbers = Array(min ... max)
-            }
-            
-            let index = Int(arc4random_uniform(UInt32(numbers.count)))
-            return numbers.removeAtIndex(index)
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -142,7 +139,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         if tableView.tag == 1 {
             
-            return tracker.numbers.count
+            return numbers.count
             
         } else {
             
@@ -160,7 +157,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         if tableView.tag == 1 {
             
-            n = tracker.numbers[indexPath.row]
+            n = numbers[indexPath.row]
             
         } else {
             
@@ -178,21 +175,21 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         var n: Player!
         
-//        if tableView.tag == 1 {
-//            
-//            n = tracker.numbers[indexPath.row]
-//            n.used++
-//            freq = tracker.numbers
-//            
-//        } else {
-//            
-//            n = freq[indexPath.row]
-//            n.used++
-//            tracker.numbers = freq
-//            
-//        }
-//        
-//        selectPlayer(n)
+        if tableView.tag == 1 {
+            
+            n = numbers[indexPath.row]
+            n.used++
+            freq = numbers
+            
+        } else {
+            
+            n = freq[indexPath.row]
+            n.used++
+            numbers = freq
+            
+        }
+        
+        selectPlayer(n)
         
     }
     
@@ -268,13 +265,26 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     func reload(){
         
-        tracker.numbers.sort({ $0.number < $1.number })
-        
-        freq = tracker.numbers
+        numbers.sort({ $0.number < $1.number })
+        freq = numbers
         freq.sort({ $0.used > $1.used })
         
         table.reloadData()
         freqTBL.reloadData()
+        
+    }
+    
+    func hasPlayer(items _items: [Player],player _player: Player) -> Bool {
+        
+        for p in _items {
+            
+            if p.number == _player.number {
+                return false
+            }
+            
+        }
+        
+        return true
         
     }
     

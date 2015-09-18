@@ -47,6 +47,7 @@
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="sequences" inverseEntity="Teams" syncable="YES"/>
     </entity>
     <entity name="Teams" representedClassName="TeamObject" syncable="YES">
+        <attribute name="color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="short" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="away_games" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Games" inverseName="away" inverseEntity="Games" syncable="YES"/>
@@ -62,6 +63,6 @@
         <element name="Players" positionX="153" positionY="236" width="128" height="133"/>
         <element name="Plays" positionX="171" positionY="-18" width="128" height="163"/>
         <element name="Sequences" positionX="-369" positionY="9" width="128" height="223"/>
-        <element name="Teams" positionX="-2" positionY="-135" width="128" height="163"/>
+        <element name="Teams" positionX="-2" positionY="-135" width="128" height="180"/>
     </elements>
 </model>

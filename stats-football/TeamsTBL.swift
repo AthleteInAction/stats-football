@@ -84,29 +84,17 @@ class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
                 
                 self.teams = items
                 
-//                if self.teams.count == 0 {
-//                    
-//                    DB.teams.local.create(name: "Willow Glen", short: "WG", completion: { (s, team) -> Void in
-//                        
-//                        let t = Team(team: team)
-//                        
-//                        self.teams.append(t)
-//                        
-//                    })
-//                    DB.teams.local.create(name: "Terra Nova", short: "TN", completion: { (s, team) -> Void in
-//                        
-//                        let t = Team(team: team)
-//                        
-//                        self.teams.append(t)
-//                        
-//                    })
-//                    DB.games.local.create(away: self.teams[1], home: self.teams[0], completion: { (s, game) -> Void in
-//                        
-//                        
-//                        
-//                    })
-//                    
-//                }
+                if self.teams.count == 0 {
+                    
+                    let home = Team(name: "Willow Glen", short: "WG")
+                    home.save(nil)
+                    let away = Team(name: "Terra Nova", short: "TN")
+                    away.save(nil)
+                    
+                    let game = Game(away: away, home: home)
+                    game.save(nil)
+                    
+                }
                 
                 self.reloadData()
                 

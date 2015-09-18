@@ -27,7 +27,7 @@ class Player {
     var number: Int!
     var first_name: String?
     var last_name: String?
-    var used: Int!
+    var used: Int = 0
     var team: Team!
     var object: PlayerObject!
     var created_at: NSDate!
@@ -39,7 +39,6 @@ class Player {
         
         team = _t
         number = _number
-        used = 0
         object = item
         created_at = NSDate()
         

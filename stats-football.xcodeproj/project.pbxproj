@@ -37,8 +37,8 @@
 		AD895B481BAC1F0500F6F638 /* TeamDetail.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD895B461BAC1F0500F6F638 /* TeamDetail.xib */; };
 		AD895B4B1BAC211B00F6F638 /* PlayerEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD895B491BAC211B00F6F638 /* PlayerEdit.swift */; };
 		AD895B4C1BAC211B00F6F638 /* PlayerEdit.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD895B4A1BAC211B00F6F638 /* PlayerEdit.xib */; };
-		AD895B5D1BAC454C00F6F638 /* ColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD895B5B1BAC454C00F6F638 /* ColorPicker.swift */; };
-		AD895B5E1BAC454C00F6F638 /* ColorPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD895B5C1BAC454C00F6F638 /* ColorPicker.xib */; };
+		AD895B6E1BAC4E9300F6F638 /* ColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD895B6C1BAC4E9300F6F638 /* ColorPicker.swift */; };
+		AD895B6F1BAC4E9300F6F638 /* ColorPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD895B6D1BAC4E9300F6F638 /* ColorPicker.xib */; };
 		ADA927AB1B8F3A1900DA4B8E /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA927AA1B8F3A1900DA4B8E /* Sequence.swift */; };
 		ADB8F9211B9D440D0049BDF0 /* PenaltyMKR.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F9201B9D440D0049BDF0 /* PenaltyMKR.swift */; };
 		ADB8F92F1B9D6D500049BDF0 /* PlayPOP.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB8F92D1B9D6D500049BDF0 /* PlayPOP.swift */; };
@@ -121,8 +121,8 @@
 		AD895B461BAC1F0500F6F638 /* TeamDetail.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamDetail.xib; sourceTree = "<group>"; };
 		AD895B491BAC211B00F6F638 /* PlayerEdit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEdit.swift; sourceTree = "<group>"; };
 		AD895B4A1BAC211B00F6F638 /* PlayerEdit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerEdit.xib; sourceTree = "<group>"; };
-		AD895B5B1BAC454C00F6F638 /* ColorPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPicker.swift; sourceTree = "<group>"; };
-		AD895B5C1BAC454C00F6F638 /* ColorPicker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColorPicker.xib; sourceTree = "<group>"; };
+		AD895B6C1BAC4E9300F6F638 /* ColorPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPicker.swift; sourceTree = "<group>"; };
+		AD895B6D1BAC4E9300F6F638 /* ColorPicker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColorPicker.xib; sourceTree = "<group>"; };
 		ADA927AA1B8F3A1900DA4B8E /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		ADB8F9201B9D440D0049BDF0 /* PenaltyMKR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenaltyMKR.swift; sourceTree = "<group>"; };
 		ADB8F92D1B9D6D500049BDF0 /* PlayPOP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayPOP.swift; sourceTree = "<group>"; };
@@ -269,8 +269,8 @@
 		AD879AFB1B8D5A63002C96CA /* NumberSelector */ = {
 			isa = PBXGroup;
 			children = (
-				ADB8F9421B9D95750049BDF0 /* NumberSelector.xib */,
 				ADB8F9411B9D95750049BDF0 /* NumberSelector.swift */,
+				ADB8F9421B9D95750049BDF0 /* NumberSelector.xib */,
 			);
 			name = NumberSelector;
 			sourceTree = "<group>";
@@ -363,11 +363,11 @@
 			name = Games;
 			sourceTree = "<group>";
 		};
-		AD895B521BAC3C6300F6F638 /* ColorPicker */ = {
+		AD895B6B1BAC4E7D00F6F638 /* ColorPicker */ = {
 			isa = PBXGroup;
 			children = (
-				AD895B5B1BAC454C00F6F638 /* ColorPicker.swift */,
-				AD895B5C1BAC454C00F6F638 /* ColorPicker.xib */,
+				AD895B6C1BAC4E9300F6F638 /* ColorPicker.swift */,
+				AD895B6D1BAC4E9300F6F638 /* ColorPicker.xib */,
 			);
 			name = ColorPicker;
 			sourceTree = "<group>";
@@ -404,7 +404,7 @@
 		ADB8F9451B9D996B0049BDF0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				AD895B521BAC3C6300F6F638 /* ColorPicker */,
+				AD895B6B1BAC4E7D00F6F638 /* ColorPicker */,
 				ADB8F9691BA3952F0049BDF0 /* Roster */,
 				ADB8F9641BA2D6F10049BDF0 /* GameEdit */,
 				ADB8F95F1BA293200049BDF0 /* TeamEdit */,
@@ -590,7 +590,7 @@
 				AD895B3E1BAC0DFB00F6F638 /* PenaltyCell.xib in Resources */,
 				AD895B4C1BAC211B00F6F638 /* PlayerEdit.xib in Resources */,
 				ADB8F9631BA2935C0049BDF0 /* TeamEdit.xib in Resources */,
-				AD895B5E1BAC454C00F6F638 /* ColorPicker.xib in Resources */,
+				AD895B6F1BAC4E9300F6F638 /* ColorPicker.xib in Resources */,
 				ADB8F9301B9D6D500049BDF0 /* PlayPOP.xib in Resources */,
 				AD879AD81B8C2979002C96CA /* LaunchScreen.xib in Resources */,
 				ADB8F9681BA2D7080049BDF0 /* GameEdit.xib in Resources */,
@@ -694,7 +694,7 @@
 				ADB8F9321B9D6EB10049BDF0 /* PlayNumberSelector.swift in Sources */,
 				ADB8F92F1B9D6D500049BDF0 /* PlayPOP.swift in Sources */,
 				ADB8F9491B9D9A720049BDF0 /* KeySelector.swift in Sources */,
-				AD895B5D1BAC454C00F6F638 /* ColorPicker.swift in Sources */,
+				AD895B6E1BAC4E9300F6F638 /* ColorPicker.swift in Sources */,
 				AD879B0E1B8F1930002C96CA /* PlaykeyTBL.swift in Sources */,
 				ADBE77511BA7F0720057FD0D /* Play.swift in Sources */,
 				AD1F8DA81B9514BD001A6C52 /* PointBTN.swift in Sources */,
