@@ -31,18 +31,21 @@ class PlayerEdit: UIViewController,UITextFieldDelegate {
         firstTXT.delegate = self
         lastTXT.delegate = self
         
-        saveBTN.alpha = 0.3
-        saveBTN.userInteractionEnabled = false
-        
         numberTXT.addTarget(self, action:"textChanged:", forControlEvents: UIControlEvents.EditingChanged)
         
         edgesForExtendedLayout = UIRectEdge()
         
         if let p = editPlayer {
             
+            title = "Edit Player"
             numberTXT.text = "#\(p.number)"
             if let n = p.first_name { firstTXT.text = n }
             if let n = p.last_name { lastTXT.text = n }
+            
+        } else {
+            
+            saveBTN.alpha = 0.3
+            saveBTN.userInteractionEnabled = false
             
         }
         

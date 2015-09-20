@@ -163,25 +163,13 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        tracker.index = indexPath.row
-        tracker.sequenceSelected()
+        tracker.sequenceSelected(indexPath.row)
         
     }
     
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         
-        println("DESELECT")
         
-        let s = tracker.game.sequences[indexPath.row]
-        
-        let cell = tableView.cellForRowAtIndexPath(indexPath)
-        let text = cell?.textLabel?.text
-        
-        cell?.textLabel?.text = "Saving..."
-        
-        s.save(nil)
-        
-        cell?.textLabel?.text = text
         
     }
     
@@ -191,43 +179,51 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
             if tracker.game.sequences.count > 1 {
                 
-                let s = tracker.game.sequences[tracker.index]
+                self.userInteractionEnabled = false
+                
+                let s = tracker.game.sequences[indexPath.row]
                 
                 s.delete(nil)
                 
-                tracker.index = 0
-                tracker.game.sequences.removeAtIndex(indexPath.row)
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+                var i = indexPath.row
                 
-                if tracker.game.sequences.count > (indexPath.row+1) {
+                if indexPath.row < tracker.index {
                     
-                    tracker.index = indexPath.row
+                    i--
                     
-                } else if tracker.game.sequences.count >= (indexPath.row+1) && indexPath.row > 0 {
+                } else if indexPath.row == tracker.index {
                     
-                    tracker.index = indexPath.row - 1
+                    if tracker.game.sequences.count > (indexPath.row+1) {
+                        
+                        i++
+                        
+                    } else {
+                        
+                        i--
+                        
+                    }
                     
                 }
                 
-                tracker.selectSequence(tracker.index)
+                tracker.game.sequences.removeAtIndex(indexPath.row)
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
+                
+                tracker.selectSequence(i)
+                
+                self.userInteractionEnabled = true
+                
+            } else {
+                
+                tableView.endEditing(true)
                 
             }
-            
+        
         }
         
     }
     
     func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath) {
         
-        tracker.selectSequence(tracker.index)
-        
-    }
-    
-    func reload(){
-        
-        reloadData()
-        tracker.playTBL.reloadData()
-        tracker.penaltyTBL.reloadData()
         tracker.selectSequence(tracker.index)
         
     }

@@ -108,4 +108,11 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
     }
     
+    func reload(){
+        
+        tracker.game.sequences[tracker.index].getPlays()
+        reloadData()
+        
+    }
+    
 }

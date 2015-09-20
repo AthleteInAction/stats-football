@@ -60,12 +60,13 @@ class Sequence {
         
         var error: NSError?
         
+        let p = object.plays.allObjects as! [PlayObject]
+        for o in p { o.managedObjectContext?.deleteObject(o) }
+        let pe = object.penalties.allObjects as! [PenaltyObject]
+        for o in pe { o.managedObjectContext?.deleteObject(o) }
+        
         object.managedObjectContext?.deleteObject(object)
         object.managedObjectContext?.save(&error)
-        
-        // DELETE CHILDREN
-        for play in plays { play.delete(nil) }
-        for penalty in penalties { penalty.delete(nil) }
         
         if let e = error {
             

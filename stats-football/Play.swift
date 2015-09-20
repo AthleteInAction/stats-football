@@ -28,7 +28,7 @@ class Play {
         var o = PlayObject(entity: entity!, insertIntoManagedObjectContext: context)
         
         object = o
-        object.sequence = s.object
+        o.sequence = s.object
         created_at = NSDate()
         
     }

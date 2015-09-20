@@ -213,8 +213,9 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         let player = team.roster[indexPath.row]
+        let cell = tableView.cellForRowAtIndexPath(indexPath)!
         
-        editPlayer(player)
+        editPlayer(player,sender: cell,v: tableView)
         
     }
     
@@ -237,7 +238,7 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
 
     @IBAction func newTPD(sender: UIButton) {
         
-        editPlayer(nil)
+        editPlayer(nil,sender: sender,v: self.view)
         
     }
     
@@ -258,7 +259,7 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
         
     }
     
-    func editPlayer(player: Player?){
+    func editPlayer(player: Player?,sender: AnyObject,v: UIView){
         
         let vc = PlayerEdit(nibName: "PlayerEdit",bundle: nil)
         vc.teamDetail = self
@@ -267,7 +268,7 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
         
         var popover = UIPopoverController(contentViewController: nav)
         popover.popoverContentSize = CGSize(width: 283, height: 360)
-        popover.presentPopoverFromRect(colorBTN.frame, inView: view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+        popover.presentPopoverFromRect(sender.frame, inView: v, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
         
     }
     

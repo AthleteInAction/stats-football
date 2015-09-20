@@ -13,6 +13,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
     @IBOutlet weak var table: UITableView!
     @IBOutlet weak var freqTBL: UITableView!
     @IBOutlet weak var nTXT: UITextField!
+    @IBOutlet weak var teamSEL: UISegmentedControl!
     
     var tracker: TrackerCTRL!
     var newPlay: Play?
@@ -28,6 +29,9 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     var s: Sequence!
     
+    var teamKey: [Team] = []
+    var selectedTeam: Team!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,6 +42,22 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
             s = tracker.game.sequences[tracker.index]
         } else {
             s = Sequence()
+        }
+        
+        if tracker.rightHome {
+            selectedTeam = tracker.game.away
+            teamSEL.setTitle(tracker.game.home.short, forSegmentAtIndex: 1)
+            teamSEL.setTitle(tracker.game.away.short, forSegmentAtIndex: 0)
+            teamKey.removeAll(keepCapacity: true)
+            teamKey.append(tracker.game.away)
+            teamKey.append(tracker.game.home)
+        } else {
+            selectedTeam = tracker.game.home
+            teamSEL.setTitle(tracker.game.home.short, forSegmentAtIndex: 0)
+            teamSEL.setTitle(tracker.game.away.short, forSegmentAtIndex: 1)
+            teamKey.removeAll(keepCapacity: true)
+            teamKey.append(tracker.game.home)
+            teamKey.append(tracker.game.away)
         }
         
         nsel = NumberSelector(nibName: "NumberSelector", bundle: nil)
@@ -54,6 +74,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         freqTBL.dataSource = self
         
         var po = tracker.game.home.object.roster.allObjects as! [PlayerObject]
+        println(po.count)
         var home: [Player] = []
         for p in po {
             
@@ -62,19 +83,21 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
             home.append(player)
             
         }
-        numbers = home
-        po = tracker.game.away.object.roster.allObjects as! [PlayerObject]
-        for p in po {
+        var pa = tracker.game.away.object.roster.allObjects as! [PlayerObject]
+        println(pa.count)
+        for p in pa {
             
             let player = Player(object: p)
             
             if !hasPlayer(items: home, player: player) {
                 
-                numbers.append(player)
+                home.append(player)
                 
             }
             
         }
+        println(home.count)
+        numbers = home
         
         reload()
         
@@ -93,29 +116,30 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         if nTXT.text != "" {
             
-//            let n = nTXT.text.toInt()
-//            
-//            let player = Player(n: n!)
-//            
-//            var foundPlayer: Player?
-//            for p in tracker.numbers {
-//                
-//                if p.number == player.number { foundPlayer = p }
-//                
-//            }
-//            
-//            if let p = foundPlayer {
-//                
-//                p.used++
-//                
-//            } else {
-//                
-//                player.used++
-//                tracker.numbers.insert(player, atIndex: 0)
-//                
-//            }
-//            
-//            selectPlayer(player)
+            let n = nTXT.text.toInt()!
+            
+            let player = Player(team: selectedTeam, number: n)
+            
+            var foundPlayer: Player?
+            for p in tracker.numbers {
+                
+                if p.number == player.number { foundPlayer = p }
+                
+            }
+            
+            if let p = foundPlayer {
+                
+                p.used++
+                
+            } else {
+                
+                player.used++
+                player.save(nil)
+                numbers.insert(player, atIndex: 0)
+                
+            }
+            
+            selectPlayer(player)
             
         }
         
@@ -179,12 +203,14 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
             
             n = numbers[indexPath.row]
             n.used++
+            n.save(nil)
             freq = numbers
             
         } else {
             
             n = freq[indexPath.row]
             n.used++
+            n.save(nil)
             numbers = freq
             
         }
@@ -237,9 +263,13 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                 
             default:
                 
-                ()
+                println("NOTHING #")
                 
             }
+            
+        } else {
+            
+            println("NO NEW PLAY!")
             
         }
         // =========================================================
@@ -252,6 +282,10 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
             ksel.type = "penalty_options"
             
             navigationController?.pushViewController(ksel, animated: false)
+            
+        } else {
+            
+            println("NO NEW PENALTY!")
             
         }
         
@@ -279,12 +313,20 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         for p in _items {
             
             if p.number == _player.number {
-                return false
+                
+                return true
+                
             }
             
         }
         
-        return true
+        return false
+        
+    }
+    
+    @IBAction func teamChanged(sender: UISegmentedControl) {
+        
+        selectedTeam = teamKey[sender.selectedSegmentIndex]
         
     }
     

@@ -35,18 +35,6 @@ class Game {
         
     }
     
-    func addSequence(s: Sequence){
-        
-        object.mutableSetValueForKey("sequences").addObject(s.object)
-        
-    }
-    
-    func removeSequence(s: Sequence){
-        
-        object.mutableSetValueForKey("sequences").removeObject(s.object)
-        
-    }
-    
     typealias Completion = (error: NSError?) -> Void
     
     func delete(completion: Completion?){
@@ -56,12 +44,15 @@ class Game {
         var error: NSError?
         
         let sequences = object.sequences.allObjects as! [SequenceObject]
-        
         for object in sequences {
             
-            let sequence = Sequence(sequence: object)
+            let p = object.plays.allObjects as! [PlayObject]
+            for o in p { o.managedObjectContext?.deleteObject(o) }
             
-            sequence.delete(nil)
+            let pe = object.penalties.allObjects as! [PenaltyObject]
+            for o in pe { o.managedObjectContext?.deleteObject(o) }
+            
+            object.managedObjectContext?.deleteObject(object)
             
         }
         

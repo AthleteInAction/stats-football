@@ -276,15 +276,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="pbc-go-nKt" customClass="TeamsTBL" customModule="stats_football" customModuleProvider="target">
-                                <rect key="frame" x="16" y="125" width="300" height="627"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="6Yx-ZF-glz"/>
-                                </constraints>
-                            </tableView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="dRe-Nh-ycv" customClass="GamesTBL" customModule="stats_football" customModuleProvider="target">
-                                <rect key="frame" x="708" y="125" width="300" height="627"/>
+                                <rect key="frame" x="708" y="137" width="300" height="615"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="DJQ-Dn-c0a"/>
@@ -297,64 +290,60 @@
                                     <color key="titleColor" red="0.30050069060000001" green="0.30050069060000001" blue="0.30050069060000001" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <action selector="teamsTPD:" destination="q8H-sP-tyb" eventType="touchUpInside" id="OyN-iw-f9a"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L9H-od-Iu8">
-                                <rect key="frame" x="847" y="84" width="55" height="33"/>
+                                <rect key="frame" x="831" y="84" width="55" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Games">
                                     <color key="titleColor" red="0.30050069060000001" green="0.30050069060000001" blue="0.30050069060000001" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <action selector="gamesTPD:" destination="q8H-sP-tyb" eventType="touchUpInside" id="GFl-nT-FHP"/>
-                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MgQ-ni-5dU">
-                                <rect key="frame" x="336" y="369" width="72" height="30"/>
-                                <state key="normal" title="New Team">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="23d-h8-tYn" customClass="TeamsTBL" customModule="stats_football" customModuleProvider="target">
+                                <rect key="frame" x="16" y="137" width="300" height="615"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="vAW-6P-uIm"/>
+                                </constraints>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Gr-UL-hkG">
+                                <rect key="frame" x="456" y="137" width="113" height="35"/>
+                                <color key="backgroundColor" red="0.2612232088" green="0.51260359119999999" blue="0.49217609309999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="2PK-UX-Ynu"/>
+                                    <constraint firstAttribute="width" constant="113" id="GkJ-Ub-OTi"/>
+                                </constraints>
+                                <state key="normal" title="Connections">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <action selector="newTeamTPD:" destination="q8H-sP-tyb" eventType="touchUpInside" id="WJ0-wJ-M7d"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F4r-R3-M4M">
-                                <rect key="frame" x="612" y="369" width="76" height="30"/>
-                                <state key="normal" title="New Game">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="newGameTPD:" destination="q8H-sP-tyb" eventType="touchUpInside" id="3ae-hB-aN4"/>
-                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="MgQ-ni-5dU" secondAttribute="centerY" id="1Vg-U8-0gv"/>
-                            <constraint firstItem="pbc-go-nKt" firstAttribute="top" secondItem="mng-cw-rHT" secondAttribute="bottom" constant="8" id="3A7-Is-6ZA"/>
-                            <constraint firstItem="pbc-go-nKt" firstAttribute="centerX" secondItem="mng-cw-rHT" secondAttribute="centerX" id="BDq-O4-CCg"/>
-                            <constraint firstItem="MgQ-ni-5dU" firstAttribute="leading" secondItem="pbc-go-nKt" secondAttribute="trailing" constant="20" id="G1H-Gf-1dR"/>
-                            <constraint firstItem="dRe-Nh-ycv" firstAttribute="top" secondItem="L9H-od-Iu8" secondAttribute="bottom" constant="8" id="K4E-x5-lAk"/>
-                            <constraint firstItem="dRe-Nh-ycv" firstAttribute="centerX" secondItem="L9H-od-Iu8" secondAttribute="centerX" constant="-16" id="LJl-Ka-dF8"/>
+                            <constraint firstItem="reB-d2-LDb" firstAttribute="top" secondItem="23d-h8-tYn" secondAttribute="bottom" constant="16" id="3d1-lV-uUP"/>
+                            <constraint firstItem="dRe-Nh-ycv" firstAttribute="top" secondItem="L9H-od-Iu8" secondAttribute="bottom" constant="20" id="K4E-x5-lAk"/>
+                            <constraint firstAttribute="centerX" secondItem="5Gr-UL-hkG" secondAttribute="centerX" id="KNQ-TT-RbL"/>
+                            <constraint firstItem="dRe-Nh-ycv" firstAttribute="centerX" secondItem="L9H-od-Iu8" secondAttribute="centerX" id="LJl-Ka-dF8"/>
                             <constraint firstItem="dRe-Nh-ycv" firstAttribute="trailing" secondItem="tLw-9h-Eij" secondAttribute="trailingMargin" id="MSE-0O-cRh"/>
-                            <constraint firstItem="reB-d2-LDb" firstAttribute="top" secondItem="pbc-go-nKt" secondAttribute="bottom" constant="16" id="Ryw-bd-DGY"/>
                             <constraint firstItem="mng-cw-rHT" firstAttribute="top" secondItem="Tu2-sQ-azJ" secondAttribute="bottom" constant="20" id="VDe-sc-TYE"/>
                             <constraint firstItem="L9H-od-Iu8" firstAttribute="top" secondItem="Tu2-sQ-azJ" secondAttribute="bottom" constant="20" id="WKc-tJ-EbM"/>
-                            <constraint firstItem="dRe-Nh-ycv" firstAttribute="leading" secondItem="F4r-R3-M4M" secondAttribute="trailing" constant="20" id="cQo-ly-Ll8"/>
+                            <constraint firstItem="5Gr-UL-hkG" firstAttribute="top" secondItem="23d-h8-tYn" secondAttribute="top" id="dEW-T6-Uhd"/>
+                            <constraint firstItem="23d-h8-tYn" firstAttribute="top" secondItem="mng-cw-rHT" secondAttribute="bottom" constant="20" id="fJ9-b9-UsV"/>
                             <constraint firstItem="reB-d2-LDb" firstAttribute="top" secondItem="dRe-Nh-ycv" secondAttribute="bottom" constant="16" id="iGw-Zr-pb3"/>
-                            <constraint firstAttribute="centerY" secondItem="F4r-R3-M4M" secondAttribute="centerY" id="nJf-R6-937"/>
-                            <constraint firstItem="pbc-go-nKt" firstAttribute="leading" secondItem="tLw-9h-Eij" secondAttribute="leadingMargin" id="rgV-as-4DV"/>
+                            <constraint firstItem="23d-h8-tYn" firstAttribute="leading" secondItem="tLw-9h-Eij" secondAttribute="leadingMargin" id="oD3-bj-UuV"/>
+                            <constraint firstItem="mng-cw-rHT" firstAttribute="centerX" secondItem="23d-h8-tYn" secondAttribute="centerX" id="zkt-1d-FpR"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Dashboard" id="D2i-hv-Piu"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
+                        <outlet property="conBTN" destination="5Gr-UL-hkG" id="JUj-gE-Cbp"/>
+                        <outlet property="gamesBTN" destination="L9H-od-Iu8" id="Cp0-Z6-vwI"/>
                         <outlet property="gamesTBL" destination="dRe-Nh-ycv" id="l1C-bS-ZhC"/>
-                        <outlet property="teamsTBL" destination="pbc-go-nKt" id="Qkl-Ap-DVF"/>
+                        <outlet property="teamsBTN" destination="mng-cw-rHT" id="ZiJ-fD-eDE"/>
+                        <outlet property="teamsTBL" destination="23d-h8-tYn" id="eTJ-wK-Heo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PMx-EH-a5S" userLabel="First Responder" sceneMemberID="firstResponder"/>

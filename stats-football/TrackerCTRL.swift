@@ -68,9 +68,12 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         disableCancelBTN()
         disableEnterBTN()
         
-        if game.sequences.count > 0 { selectSequence(0) } else { addSequence() }
-        
-        sequenceTBL.reload()
+        if game.sequences.count > 0 {
+            selectSequence(0)
+        } else {
+            addSequence()
+            sequenceTBL.reloadData()
+        }
         
     }
 
@@ -104,7 +107,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         s.save(nil)
         
-        sequenceTBL.reload()
+        sequenceTBL.reloadData()
+        
+        selectSequence(index)
         
         updateBoard()
         
@@ -186,7 +191,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         s.save(nil)
         
-        sequenceTBL.reload()
+        sequenceTBL.reloadData()
+        
+        selectSequence(index)
         
     }
     
@@ -200,7 +207,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         s.save(nil)
         
-        sequenceTBL.reload()
+        sequenceTBL.reloadData()
+        
+        selectSequence(index)
         
     }
     
@@ -216,7 +225,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         s.save(nil)
         
-        sequenceTBL.reload()
+        sequenceTBL.reloadData()
+        
+        selectSequence(index)
         
         updateBoard()
         
@@ -229,7 +240,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         rightHome = !rightHome
         
-        sequenceTBL.reload()
+        sequenceTBL.reloadData()
+        
+        selectSequence(index)
         
         updateBoard()
         
@@ -246,7 +259,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         s.save(nil)
         
-        sequenceTBL.reload()
+        sequenceTBL.reloadData()
+        
+        selectSequence(index)
         
     }
     
@@ -373,6 +388,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     func drawButtons(){
         
+        sequenceTBL.userInteractionEnabled = false
+        
         let s = game.sequences[index]
         
         for v in field.subviews {
@@ -458,6 +475,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             }
             
         }
+        
+        sequenceTBL.userInteractionEnabled = true
         
     }
     
@@ -901,7 +920,6 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         let s = game.sequences[index]
         
-//        let k = KickoffFilter.run(self, original: s)
         addSequence()
         
     }
@@ -1010,11 +1028,11 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         s.game = game
         s.save(nil)
         
-        if let prev = game.sequences.first { prev.save(nil) }
+//        if let prev = game.sequences.first { prev.save(nil) }
         
         game.sequences.insert(s,atIndex: 0)
         
-        sequenceTBL.reload()
+        sequenceTBL.reloadData()
         
         selectSequence(0)
         
@@ -1078,13 +1096,18 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     func selectSequence(i: Int){
         
-        index = i
-        sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Top)
-        sequenceSelected()
+        var ii = i
+        if ii > (game.sequences.count-1) { ii = game.sequences.count - 1 }
+        if ii < 0 { ii = 0 }
+        
+        sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: ii, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.None)
+        sequenceSelected(ii)
         
     }
     
-    func sequenceSelected(){
+    func sequenceSelected(i: Int){
+        
+        index = i
         
         let s = game.sequences[index]
         s.getPlays()
@@ -1097,12 +1120,6 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         draw()
         drawButtons()
-        
-    }
-    
-    func sequenceDeleted(){
-        
-//        log = sequenceTBL.log
         
     }
     

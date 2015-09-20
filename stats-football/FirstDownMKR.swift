@@ -84,7 +84,7 @@ class FirstDownMKR: UIView {
             
         }
         
-        field.tracker.sequenceTBL.reload()
+        field.tracker.sequenceTBL.reloadData()
         
         field.tracker.sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: field.tracker.index, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Top)
         
