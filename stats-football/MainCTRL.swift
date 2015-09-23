@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MultipeerConnectivity
 
 class MainCTRL: UIViewController {
 
@@ -14,7 +15,6 @@ class MainCTRL: UIViewController {
     @IBOutlet weak var gamesTBL: GamesTBL!
     @IBOutlet weak var teamsBTN: UIButton!
     @IBOutlet weak var gamesBTN: UIButton!
-    @IBOutlet weak var conBTN: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,6 +100,16 @@ class MainCTRL: UIViewController {
             popover.presentPopoverFromRect(b.frame, inView: view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
             
         }
+        
+    }
+    
+    @IBAction func dataTPD(sender: AnyObject) {
+        
+        var vc = DataDisplay(nibName: "DataDisplay",bundle: nil)
+        
+        var nav = UINavigationController(rootViewController: vc)
+        
+        presentViewController(nav, animated: true, completion: nil)
         
     }
     

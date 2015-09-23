@@ -22,13 +22,15 @@ class Play {
     var object: PlayObject!
     var created_at: NSDate!
     
+    private var sequence: SequenceObject!
+    
     init(s: Sequence){
         
         var entity = NSEntityDescription.entityForName("Plays", inManagedObjectContext: context)
         var o = PlayObject(entity: entity!, insertIntoManagedObjectContext: context)
         
         object = o
-        o.sequence = s.object
+        sequence = s.object
         created_at = NSDate()
         
     }
@@ -42,6 +44,7 @@ class Play {
         if let b = play.player_b { player_b = b.toInt()! }
         if let t = play.team { team = Team(team: t) }
         object = play
+        sequence = play.sequence
         created_at = play.created_at
         
     }
@@ -76,6 +79,7 @@ class Play {
         
         var error: NSError?
         
+        object.sequence = sequence
         object.created_at = created_at
         object.key = key
         if let x = endX { object.endX = "\(x)" } else { object.endX = nil }
@@ -99,6 +103,27 @@ class Play {
         }
         
         c?(error: error)
+        
+    }
+    
+}
+
+extension Play {
+    
+    func serialize() -> [String:AnyObject] {
+        
+        var final: [String:AnyObject] = [
+            "qtr": object.sequence.qtr,
+            "key": key,
+            "playtype": object.sequence.key
+        ]
+        
+        if let d = object.sequence.down { final["down"] = d }
+        if let d = object.sequence.fd { final["fd"] = d }
+        if let x = endX { final["endX"] = x }
+        if let y = endY { final["endY"] = y }
+        
+        return final
         
     }
     

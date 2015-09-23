@@ -8,18 +8,19 @@
 
 import UIKit
 import CoreData
+import MultipeerConnectivity
 
 let domain = "http://will-big.local:3000"
 //let domain = "https://wambl-stats-api-staging.herokuapp.com"
 var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
 var context: NSManagedObjectContext = appDel.managedObjectContext!
+var lastPeer: MCPeerID?
 typealias CoreDataCompletion = (error: NSError?) -> Void
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.

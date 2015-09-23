@@ -8,11 +8,14 @@
 //
 import UIKit
 import CoreData
+import Alamofire
+import SwiftyJSON
 // =================================================================================
 // =================================================================================
 @objc(TeamObject)
 class TeamObject: NSManagedObject {
     
+    @NSManaged var id: String?
     @NSManaged var name: String
     @NSManaged var short: String
     @NSManaged var color: String
@@ -28,6 +31,7 @@ class TeamObject: NSManagedObject {
 // =================================================================================
 class Team {
     
+    var id: Int?
     var name: String!
     var short: String!
     var color: UIColor!
@@ -48,6 +52,7 @@ class Team {
     
     init(team: TeamObject){
         
+        if let i = team.id { id = i.toInt()! }
         name = team.name
         short = team.short
         object = team
@@ -91,6 +96,7 @@ class Team {
         
         var error: NSError?
         
+        if let i = id { object.id = i.string() }
         object.name = name
         object.short = short
         object.color = colorText(color)
@@ -106,10 +112,81 @@ class Team {
             
             println(object)
             println("TEAM SAVED!")
+//            saveRemote(nil)
             
         }
         
         c?(error: error)
+        
+    }
+    
+    func saveRemote(completion: Completion?){
+        println("SAVE REMOTE")
+        var c = completion
+        
+        var s = "\(domain)"
+        var method = Method.PUT
+        var successCode = 200
+        
+        if let id = id {
+            
+            s += "/api/v1/teams/\(id).json"
+            method = Method.PUT
+            successCode = 200
+            
+        } else {
+            
+            s += "/api/v1/teams.json"
+            method = Method.POST
+            successCode = 201
+            
+        }
+        
+        let team = [
+            "team":[
+                "name": name,
+                "short": short,
+                "color": colorText(color)
+            ]
+        ]
+        
+        Alamofire.request(method, s, parameters: team,encoding: .JSON)
+            .responseJSON { request, response, data, error in
+                
+                if error == nil {
+                    
+                    if response?.statusCode == successCode {
+                        
+                        var json = JSON(data!)
+                        
+                        if let id = self.id {
+                            
+                        } else {
+                            
+                            self.id = json["team"]["id"].intValue
+                            self.object.id = self.id?.string()
+                            self.object.managedObjectContext?.save(nil)
+                            
+                        }
+                        
+                    } else {
+                        
+                        println("Status Code Error: \(response?.statusCode)")
+                        println(request)
+                        
+                    }
+                    
+                } else {
+                    
+                    println("Error!")
+                    println(error)
+                    println(request)
+                    
+                }
+                
+                c?(error: error)
+                
+        }
         
     }
     

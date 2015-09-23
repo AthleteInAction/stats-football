@@ -1,24 +1,23 @@
 //
-//  DownCell.swift
+//  SequenceCell.swift
 //  stats-football
 //
-//  Created by grobinson on 9/16/15.
+//  Created by grobinson on 9/22/15.
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
 
 import UIKit
 
 class SequenceCell: UITableViewCell {
-    
-    @IBOutlet weak var posIndicator: UIButton!
-    @IBOutlet weak var ballPos: UIButton!
+
+    @IBOutlet weak var leftTXT: UILabel!
     @IBOutlet weak var midTXT: UILabel!
+    @IBOutlet weak var rightTXT: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        posIndicator.layer.cornerRadius = 3
-        ballPos.layer.cornerRadius = posIndicator.layer.cornerRadius
+        
         
     }
 

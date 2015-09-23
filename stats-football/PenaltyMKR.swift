@@ -73,6 +73,7 @@ class PenaltyMKR: UIButton {
             
             p.endX = newEndX
             p.save(nil)
+            tracker.MPC.sendGame(tracker.game)
             tracker.penaltyTBL.reloadData()
             
         }

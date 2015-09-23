@@ -53,6 +53,7 @@ class BallBTN: UIButton {
         let s = field.tracker.game.sequences[field.tracker.index]
         
         s.startY = Int(round((nex / field.bounds.height) * 100))
+        if field.tracker.posRight(s) { s.startY = 100 - s.startY }
         
         if sender.state == UIGestureRecognizerState.Ended {
             

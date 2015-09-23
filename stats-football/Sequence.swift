@@ -6,11 +6,35 @@
 //  Created by grobinson on 8/27/15.
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
+import UIKit
 import CoreData
+import Alamofire
+import SwiftyJSON
+// ========================================================
+// ========================================================
+@objc(SequenceObject)
+class SequenceObject: NSManagedObject {
+    
+    @NSManaged var id: String?
+    @NSManaged var qtr: String
+    @NSManaged var key: String
+    @NSManaged var down: String?
+    @NSManaged var fd: String?
+    @NSManaged var startX: String
+    @NSManaged var startY: String
+    @NSManaged var replay: Bool
+    @NSManaged var game: GameObject
+    @NSManaged var team: TeamObject
+    @NSManaged var plays: NSSet
+    @NSManaged var penalties: NSSet
+    @NSManaged var created_at: NSDate
+    
+}
 // ========================================================
 // ========================================================
 class Sequence {
     
+    var id: Int?
     var game: Game!
     var team: Team!
     var qtr: Int!
@@ -38,6 +62,7 @@ class Sequence {
     
     init(sequence: SequenceObject){
         
+        if let i = sequence.id { id = i.toInt()! }
         created_at = sequence.created_at
         team = Team(team: sequence.team)
         game = Game(game: sequence.game)
@@ -89,6 +114,7 @@ class Sequence {
         
         var error: NSError?
         
+        if let i = id { object.id = i.string() }
         object.created_at = created_at
         object.game = game.object
         object.key = key
@@ -111,10 +137,91 @@ class Sequence {
             
             println(object)
             println("SEQUENCE SAVED!")
+//            if game.id != nil && team.id != nil { saveRemote(nil) }
             
         }
         
         c?(error: error)
+        
+    }
+    
+    func saveRemote(completion: Completion?){
+        println("SAVE REMOTE")
+        var c = completion
+        
+        var s = "\(domain)"
+        var method = Method.PUT
+        var successCode = 200
+        
+        if let id = id {
+            
+            s += "/api/v1/sequences/\(id).json"
+            method = Method.PUT
+            successCode = 200
+            
+        } else {
+            
+            s += "/api/v1/sequences.json"
+            method = Method.POST
+            successCode = 201
+            
+        }
+        
+        var inner = [
+                "game_id": game.object.id!.toInt()!,
+                "team_id": team.object.id!.toInt()!,
+                "qtr": qtr,
+                "key": key,
+                "start_x": startX,
+                "start_y": startY,
+                "replay": replay,
+                "created_at": created_at
+        ]
+    
+        if let d = down { inner["down"] = d }
+        if let d = fd { inner["fd"] = d }
+        
+        let sequence = [
+            "sequence": inner
+        ]
+        
+        Alamofire.request(method, s, parameters: sequence,encoding: .JSON)
+            .responseJSON { request, response, data, error in
+                
+                if error == nil {
+                    
+                    if response?.statusCode == successCode {
+                        
+                        var json = JSON(data!)
+                        
+                        if let id = self.id {
+                            
+                        } else {
+                            
+                            self.id = json["sequence"]["id"].intValue
+                            self.object.id = self.id?.string()
+                            self.object.managedObjectContext?.save(nil)
+                            
+                        }
+                        
+                    } else {
+                        
+                        println("Status Code Error: \(response?.statusCode)")
+                        println(request)
+                        
+                    }
+                    
+                } else {
+                    
+                    println("Error!")
+                    println(error)
+                    println(request)
+                    
+                }
+                
+                c?(error: error)
+                
+        }
         
     }
     

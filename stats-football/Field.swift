@@ -42,6 +42,7 @@ class Field: UIView {
             
             var x = toX(s.startX.yardToFull(pos_right))
             var y = toP(s.startY)
+            if tracker.posRight(s) { y = toP(100 - s.startY) }
             
             CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
             
@@ -53,6 +54,7 @@ class Field: UIView {
                     
                     x = toX(endX.yardToFull(pos_right))
                     y = toP(play.endY!)
+                    if tracker.posRight(s) { y = toP(100 - play.endY!) }
                     
                     CGContextSetLineWidth(c, 10.0)
                     CGContextSetLineDash(c, 10, [6,3], 2)

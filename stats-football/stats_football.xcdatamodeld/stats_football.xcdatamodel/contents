@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14F27" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Games" representedClassName="GameObject" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="away" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="away_games" inverseEntity="Teams" syncable="YES"/>
         <relationship name="home" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="home_games" inverseEntity="Teams" syncable="YES"/>
         <relationship name="sequences" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sequences" inverseName="game" inverseEntity="Sequences" syncable="YES"/>
@@ -36,6 +37,7 @@
         <attribute name="created_at" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="down" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fd" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="qtr" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="replay" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -48,6 +50,7 @@
     </entity>
     <entity name="Teams" representedClassName="TeamObject" syncable="YES">
         <attribute name="color" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="short" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="away_games" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Games" inverseName="away" inverseEntity="Games" syncable="YES"/>
@@ -58,11 +61,11 @@
         <relationship name="sequences" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sequences" inverseName="team" inverseEntity="Sequences" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Games" positionX="-198" positionY="-135" width="128" height="88"/>
+        <element name="Games" positionX="-198" positionY="-135" width="128" height="105"/>
         <element name="Penalties" positionX="-81" positionY="306" width="128" height="148"/>
         <element name="Players" positionX="153" positionY="236" width="128" height="133"/>
         <element name="Plays" positionX="171" positionY="-18" width="128" height="163"/>
-        <element name="Sequences" positionX="-369" positionY="9" width="128" height="223"/>
-        <element name="Teams" positionX="-2" positionY="-135" width="128" height="180"/>
+        <element name="Sequences" positionX="-369" positionY="9" width="128" height="240"/>
+        <element name="Teams" positionX="-2" positionY="-135" width="128" height="195"/>
     </elements>
 </model>

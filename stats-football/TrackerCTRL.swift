@@ -7,8 +7,9 @@
 //
 import Foundation
 import UIKit
+import MultipeerConnectivity
 
-class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
+class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiver,MPCManagerStateChanged {
     
     var game: Game!
     
@@ -20,6 +21,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     var numbers: [Player] = []
     var test: [Int] = [3,67,89,5,43,11,2,13]
+    
+    var MPC = MPCManager()
     
     @IBOutlet weak var playTypeSelector: UISegmentedControl!
     @IBOutlet weak var field: Field!
@@ -52,6 +55,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        MPC.receiver = self
+        MPC.stateMonitor = self
+        
         title = "\(game.away.name) @ \(game.home.name)"
         
         rightPTY.team = game.home
@@ -73,6 +79,55 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         } else {
             addSequence()
             sequenceTBL.reloadData()
+        }
+        
+        
+        var conSwitch = UISwitch()
+        navigationItem.titleView = conSwitch
+//        navigationItem.setCenterBarButtonItem(UIBarButtonItem(customView: conSwitch), animated: true)
+        conSwitch.addTarget(self, action: "conCHG:", forControlEvents: UIControlEvents.ValueChanged)
+        
+        var back = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Done, target: self, action: "backTPD:")
+        navigationItem.setLeftBarButtonItem(back, animated: true)
+        
+    }
+    
+    func stateChanged(state: MCSessionState) {
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            
+            if state == .Connected { self.MPC.sendGame(self.game) }
+            
+        }
+    }
+    func peersChanged() {
+        
+        
+        
+    }
+    
+    func receiveGame(game: [[String : AnyObject]]) {
+        
+        
+        
+    }
+    
+    func backTPD(sender: UIBarButtonItem){
+        
+        MPC.stopAdvertising()
+        navigationController?.popViewControllerAnimated(true)
+        
+    }
+    
+    func conCHG(sender: UISwitch){
+        
+        if sender.on {
+            
+            MPC.startAdvertising()
+            
+        } else {
+            
+            MPC.stopAdvertising()
+            
         }
         
     }
@@ -119,6 +174,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         if newPlay == nil && newPenalty == nil { return false }
         
+        let s = game.sequences[index]
         let t: UITouch = touches.first as! UITouch
         let l: CGPoint = t.locationInView(field)
         
@@ -136,6 +192,47 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         if x > max { x = max }
         if y < vmin { y = vmin }
         if y > vmax { y = vmax }
+        
+        if (s.key == "down" || s.key == "pat") && s.plays.count == 0 {
+            
+            if newPlay?.key == "run" {
+                
+                let outside: CGFloat = 0.29
+                let offTackle: CGFloat = 0.14
+                let dive: CGFloat = 0.14
+                
+                switch l.y {
+                case 0...field.bounds.height*outside:
+                    
+                    y = field.bounds.height * (outside/2)
+                    
+                case field.bounds.height*outside...field.bounds.height*(outside+offTackle):
+                    
+                    y = field.bounds.height * (outside + (offTackle/2))
+                    
+                case field.bounds.height*(outside+offTackle)...field.bounds.height*(outside+offTackle+dive):
+                    
+                    y = field.bounds.height * ((outside + offTackle + dive) - (dive / 2))
+                    
+                case field.bounds.height*(outside+offTackle+dive)...field.bounds.height*(outside+offTackle+dive+offTackle):
+                    
+                    y = field.bounds.height * ((outside + offTackle + dive + offTackle) - (offTackle / 2))
+                    
+                default:
+                    
+                    y = field.bounds.height * ((outside + offTackle + dive + offTackle) + (outside / 2))
+                    
+                }
+                
+            } else if newPlay?.key == "pass" {
+                
+                let swidth = field.bounds.height / 5
+                let section = ceil(l.y/swidth)
+                y = (swidth * section) - (swidth / 2)
+                
+            }
+            
+        }
         
         field.crossH.center.y = y
         field.crossV.center.x = x
@@ -336,6 +433,12 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             n.endX = x
             n.endY = Int(round((field.crossH.center.y / field.bounds.height) * 100))
             
+            if posRight(s) {
+                
+                n.endY = 100 - n.endY!
+                
+            }
+            
             n.save(nil)
             
             s.plays.append(n)
@@ -343,6 +446,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             playTBL.reloadData()
             
             newPlay = nil
+            
+            MPC.sendGame(game)
             
             disableCancelBTN()
             disableEnterBTN()
@@ -369,6 +474,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             playTBL.reloadData()
             
             newPenalty = nil
+            
+            MPC.sendGame(game)
             
             disableCancelBTN()
             disableEnterBTN()
@@ -435,6 +542,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
                 
                 var x = field.toX(play.endX!.yardToFull(posRight(s)))
                 var y = field.toP(play.endY!)
+                if posRight(s) { y = field.toP(100 - play.endY!) }
                 
                 button.center = CGPoint(x: x, y: CGFloat(y))
                 
@@ -612,18 +720,61 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             let vmax = field.bounds.height - (b.bounds.height / 2)
             
             var x = round((t.x + bLast.x) / field.ratio) * field.ratio
-            var y = t.y + bLast.y
+            var ly = t.y + bLast.y
+            var y = ly
             
             if x < min { x = min }
             if x > max { x = max }
             if y < vmin { y = vmin }
             if y > vmax { y = vmax }
             
+            if (s.key == "down" || s.key == "pat") && b.index == 0 {
+                
+                if play.key == "run" {
+                    
+                    let outside: CGFloat = 0.29
+                    let offTackle: CGFloat = 0.14
+                    let dive: CGFloat = 0.14
+                    
+                    switch ly {
+                    case 0...field.bounds.height*outside:
+                        
+                        y = field.bounds.height * (outside/2)
+                        
+                    case field.bounds.height*outside...field.bounds.height*(outside+offTackle):
+                        
+                        y = field.bounds.height * (outside + (offTackle/2))
+                        
+                    case field.bounds.height*(outside+offTackle)...field.bounds.height*(outside+offTackle+dive):
+                        
+                        y = field.bounds.height * ((outside + offTackle + dive) - (dive / 2))
+                        
+                    case field.bounds.height*(outside+offTackle+dive)...field.bounds.height*(outside+offTackle+dive+offTackle):
+                        
+                        y = field.bounds.height * ((outside + offTackle + dive + offTackle) - (offTackle / 2))
+                        
+                    default:
+                        
+                        y = field.bounds.height * ((outside + offTackle + dive + offTackle) + (outside / 2))
+                        
+                    }
+                    
+                } else if play.key == "pass" {
+                    
+                    let swidth = field.bounds.height / 5
+                    let section = ceil(ly/swidth)
+                    y = (swidth * section) - (swidth / 2)
+                    
+                }
+                
+            }
+            
             sender.view?.center.x = x
             sender.view?.center.y = y
             
             play.endX = field.toY(x).fullToYard(posRight(s))
             play.endY = Int(round((y / field.bounds.height) * 100))
+            if posRight(s) { play.endY = 100 - play.endY! }
             
             field.showCrosses()
             field.crossV.center.x = x
@@ -638,6 +789,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         if sender.state == UIGestureRecognizerState.Ended {
             
             play.save(nil)
+            
+            MPC.sendGame(game)
             
             field.hideCrosses()
             
@@ -777,6 +930,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
                 play.delete(nil)
                 s.plays.removeAtIndex(b.index)
                 
+                self.MPC.sendGame(self.game)
+                
                 self.playTBL.deleteRowsAtIndexPaths([NSIndexPath(forRow: b.index, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
                 
                 self.draw()
@@ -835,6 +990,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
             penalty.delete(nil)
             
             s.penalties.removeAtIndex(b.index)
+            
+            self.MPC.sendGame(self.game)
+            
             self.penaltyTBL.deleteRowsAtIndexPaths([NSIndexPath(forRow: b.index, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
             
             self.draw()
@@ -991,6 +1149,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
         
         field.ball.center.x = field.los.center.x
         field.ball.center.y = (CGFloat(s.startY) / 100) * field.bounds.height
+        if posRight(s) { field.ball.center.y = ((100 - CGFloat(s.startY)) / 100) * field.bounds.height }
         
     }
     
@@ -1107,9 +1266,12 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate {
     
     func sequenceSelected(i: Int){
         
+        MPC.sendGame(game)
+        
         index = i
         
         let s = game.sequences[index]
+        
         s.getPlays()
         s.getPenalties()
         

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MultipeerConnectivity
 
 class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
@@ -47,8 +48,9 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.userInteractionEnabled = true
-        cell.posIndicator.setTitle(s.team.short, forState: .Normal)
-        cell.posIndicator.backgroundColor = s.team.color
+        
+        cell.leftTXT.text = s.team.short
+        cell.leftTXT.textColor = s.team.color
         
         let t: String!
         
@@ -58,17 +60,17 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
             // -38
             t = "\(s.team.short) \(s.startX * -1)"
-            cell.ballPos.backgroundColor = s.team.color
+            cell.rightTXT.textColor = s.team.color
             
         } else {
             
             // 38
             t = "\(tracker.opTeam(s.team).short) \(s.startX)"
-            cell.ballPos.backgroundColor = tracker.opTeam(s.team).color
+            cell.rightTXT.textColor = tracker.opTeam(s.team).color
             
         }
         
-        cell.ballPos.setTitle(t, forState: .Normal)
+        cell.rightTXT.text = t
         
         switch s.key {
         case "kickoff":

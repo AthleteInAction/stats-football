@@ -21,6 +21,8 @@ class Penalty {
     var player: Int?
     var created_at: NSDate!
     var object: PenaltyObject!
+    
+    private var sequence: SequenceObject!
     // --------------------------------------
     // --------------------------------------
     
@@ -34,7 +36,7 @@ class Penalty {
         var o = PenaltyObject(entity: entity!, insertIntoManagedObjectContext: context)
         
         object = o
-        object.sequence = s.object
+        sequence = s.object
         created_at = NSDate()
         
     }
@@ -46,6 +48,7 @@ class Penalty {
         if let p = penalty.player { player = p.toInt()! }
         team = Team(team: penalty.team)
         created_at = penalty.created_at
+        sequence = penalty.sequence
         object = penalty
         
     }
@@ -61,6 +64,7 @@ class Penalty {
         var done = completion
         var error: NSError?
         
+        object.sequence = sequence
         object.created_at = created_at
         object.distance = distance.string()
         if let x = endX { object.endX = x.string() } else { object.endX = nil }

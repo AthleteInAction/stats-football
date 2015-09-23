@@ -306,31 +306,34 @@
                                     <constraint firstAttribute="width" constant="300" id="vAW-6P-uIm"/>
                                 </constraints>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Gr-UL-hkG">
-                                <rect key="frame" x="456" y="137" width="113" height="35"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XUH-fE-dd8">
+                                <rect key="frame" x="449" y="363" width="127" height="41"/>
                                 <color key="backgroundColor" red="0.2612232088" green="0.51260359119999999" blue="0.49217609309999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="35" id="2PK-UX-Ynu"/>
-                                    <constraint firstAttribute="width" constant="113" id="GkJ-Ub-OTi"/>
+                                    <constraint firstAttribute="width" constant="127" id="IrA-kI-eVT"/>
+                                    <constraint firstAttribute="height" constant="41" id="zgQ-Zt-Byt"/>
                                 </constraints>
-                                <state key="normal" title="Connections">
+                                <state key="normal" title="Data Stream">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="dataTPD:" destination="q8H-sP-tyb" eventType="touchUpInside" id="IyN-ri-QxZ"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="reB-d2-LDb" firstAttribute="top" secondItem="23d-h8-tYn" secondAttribute="bottom" constant="16" id="3d1-lV-uUP"/>
                             <constraint firstItem="dRe-Nh-ycv" firstAttribute="top" secondItem="L9H-od-Iu8" secondAttribute="bottom" constant="20" id="K4E-x5-lAk"/>
-                            <constraint firstAttribute="centerX" secondItem="5Gr-UL-hkG" secondAttribute="centerX" id="KNQ-TT-RbL"/>
                             <constraint firstItem="dRe-Nh-ycv" firstAttribute="centerX" secondItem="L9H-od-Iu8" secondAttribute="centerX" id="LJl-Ka-dF8"/>
                             <constraint firstItem="dRe-Nh-ycv" firstAttribute="trailing" secondItem="tLw-9h-Eij" secondAttribute="trailingMargin" id="MSE-0O-cRh"/>
                             <constraint firstItem="mng-cw-rHT" firstAttribute="top" secondItem="Tu2-sQ-azJ" secondAttribute="bottom" constant="20" id="VDe-sc-TYE"/>
                             <constraint firstItem="L9H-od-Iu8" firstAttribute="top" secondItem="Tu2-sQ-azJ" secondAttribute="bottom" constant="20" id="WKc-tJ-EbM"/>
-                            <constraint firstItem="5Gr-UL-hkG" firstAttribute="top" secondItem="23d-h8-tYn" secondAttribute="top" id="dEW-T6-Uhd"/>
                             <constraint firstItem="23d-h8-tYn" firstAttribute="top" secondItem="mng-cw-rHT" secondAttribute="bottom" constant="20" id="fJ9-b9-UsV"/>
+                            <constraint firstAttribute="centerY" secondItem="XUH-fE-dd8" secondAttribute="centerY" id="gQQ-NF-uCa"/>
                             <constraint firstItem="reB-d2-LDb" firstAttribute="top" secondItem="dRe-Nh-ycv" secondAttribute="bottom" constant="16" id="iGw-Zr-pb3"/>
+                            <constraint firstAttribute="centerX" secondItem="XUH-fE-dd8" secondAttribute="centerX" id="mls-2W-pL1"/>
                             <constraint firstItem="23d-h8-tYn" firstAttribute="leading" secondItem="tLw-9h-Eij" secondAttribute="leadingMargin" id="oD3-bj-UuV"/>
                             <constraint firstItem="mng-cw-rHT" firstAttribute="centerX" secondItem="23d-h8-tYn" secondAttribute="centerX" id="zkt-1d-FpR"/>
                         </constraints>
@@ -339,7 +342,6 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
-                        <outlet property="conBTN" destination="5Gr-UL-hkG" id="JUj-gE-Cbp"/>
                         <outlet property="gamesBTN" destination="L9H-od-Iu8" id="Cp0-Z6-vwI"/>
                         <outlet property="gamesTBL" destination="dRe-Nh-ycv" id="l1C-bS-ZhC"/>
                         <outlet property="teamsBTN" destination="mng-cw-rHT" id="ZiJ-fD-eDE"/>

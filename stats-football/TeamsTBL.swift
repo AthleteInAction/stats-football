@@ -84,18 +84,6 @@ class TeamsTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
                 
                 self.teams = items
                 
-                if self.teams.count == 0 {
-                    
-                    let home = Team(name: "Willow Glen", short: "WG")
-                    home.save(nil)
-                    let away = Team(name: "Terra Nova", short: "TN")
-                    away.save(nil)
-                    
-                    let game = Game(away: away, home: home)
-                    game.save(nil)
-                    
-                }
-                
                 self.reloadData()
                 
             }
