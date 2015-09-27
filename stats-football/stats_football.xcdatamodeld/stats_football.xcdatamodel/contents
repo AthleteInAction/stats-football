@@ -37,10 +37,11 @@
         <attribute name="created_at" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="down" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fd" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flagged" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="qtr" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="replay" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="replay" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startX" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startY" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="game" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Games" inverseName="sequences" inverseEntity="Games" syncable="YES"/>
@@ -62,10 +63,10 @@
     </entity>
     <elements>
         <element name="Games" positionX="-198" positionY="-135" width="128" height="105"/>
-        <element name="Penalties" positionX="-81" positionY="306" width="128" height="148"/>
+        <element name="Penalties" positionX="-81" positionY="306" width="128" height="150"/>
         <element name="Players" positionX="153" positionY="236" width="128" height="133"/>
         <element name="Plays" positionX="171" positionY="-18" width="128" height="163"/>
-        <element name="Sequences" positionX="-369" positionY="9" width="128" height="240"/>
+        <element name="Sequences" positionX="-369" positionY="9" width="128" height="255"/>
         <element name="Teams" positionX="-2" positionY="-135" width="128" height="195"/>
     </elements>
 </model>

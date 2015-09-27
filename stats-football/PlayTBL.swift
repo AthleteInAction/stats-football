@@ -21,6 +21,8 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         estimatedRowHeight = 44
         rowHeight = UITableViewAutomaticDimension
         
+        separatorStyle = .None
+        
         registerNib(UINib(nibName: "PlayCell", bundle: nil), forCellReuseIdentifier: "play_cell")
         
     }
@@ -30,12 +32,34 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         return 1
         
     }
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        var txt = UILabel()
+        txt.textAlignment = .Center
+        txt.text = "Log"
+        txt.font = UIFont.systemFontOfSize(12)
+        txt.textColor = UIColor.whiteColor()
+        txt.backgroundColor = UIColor(red: 147/255, green: 147/255, blue: 154/255, alpha: 1)
+        
+        return txt
+        
+    }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        let s = tracker.game.sequences[tracker.index]
-        
-        return s.plays.count
+        if tracker.game.sequences.count == 0 {
+            
+            return 0
+            
+        } else {
+            
+            let s = tracker.game.sequences[tracker.index]
+            
+            s.getPlays()
+            
+            return s.plays.count
+            
+        }
         
     }
     
@@ -44,6 +68,14 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         let cell = tableView.dequeueReusableCellWithIdentifier("play_cell") as! PlayCell
         
         let s = tracker.game.sequences[tracker.index]
+        
+        s.getPlays()
+        
+        if s.plays.count == 0 {
+            let c = UITableViewCell()
+            c.textLabel?.text = "NO DATA : \(indexPath.row)"
+            return c
+        }
         
         let p = s.plays[indexPath.row]
         

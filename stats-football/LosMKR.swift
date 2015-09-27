@@ -78,8 +78,6 @@ class LosMKR: UIView {
         
         if sender.state == UIGestureRecognizerState.Ended {
             
-            println("<<< LOS DRAG ENDED >>>")
-            
             s.save(nil)
             
         }
@@ -89,6 +87,8 @@ class LosMKR: UIView {
         
         field.tracker.draw()
         field.tracker.drawButtons()
+        
+        field.tracker.updateDown()
         
     }
     

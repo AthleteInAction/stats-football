@@ -78,8 +78,6 @@ class FirstDownMKR: UIView {
         
         if sender.state == UIGestureRecognizerState.Ended {
             
-            println("<<< FD DRAG ENDED >>>")
-            
             s.save(nil)
             
         }
@@ -87,6 +85,8 @@ class FirstDownMKR: UIView {
         field.tracker.sequenceTBL.reloadData()
         
         field.tracker.sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: field.tracker.index, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Top)
+        
+        field.tracker.updateBoard()
         
     }
     

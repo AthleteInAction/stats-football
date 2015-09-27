@@ -10,8 +10,11 @@ import CoreData
 
 class Stats {
     
-    static func compileAnalytics(game _game: [[String:AnyObject]]) -> [String:AnyObject] {
-        
+    static func compileAnalytics(game _game: [String:AnyObject],playtype: String?,downs: [Int]?,togo: Int?,threshold: Int?) -> [String:AnyObject] {
+        println("++++++")
+        println(playtype)
+        println(downs)
+        println("++++++")
         var data: [String:AnyObject] = [
             "run": 0,
             "run_pct": 50.0,
@@ -32,51 +35,99 @@ class Stats {
         var pass = 0
         var passDir: [Int] = [0,0,0,0,0]
         
-        for play in _game {
+        let plays = _game["plays"] as! [[String:AnyObject]]
+        
+        for play in plays {
+            play
+            var doit = true
             
-            println(play)
-            switch play["key"] as! String {
-            case "run":
+            if let p = playtype { if p != play["playtype"] as! String { doit = false } }
+            
+            if let ds = downs {
                 
-                if play["endY"] != nil {
+                doit = false
+                
+                for down in ds {
                     
-                    let Y = play["endY"] as! Int
-                    
-                    switch Y {
-                    case 15:
-                        runDir[0]++
-                    case 36:
-                        runDir[1]++
-                    case 50:
-                        runDir[2]++
-                    case 64:
-                        runDir[3]++
-                    case 85:
-                        runDir[4]++
-                    default:
-                        ()
+                    if play["down"] != nil {
+                        
+                        let n = play["down"] as! Int
+                        
+                        if n == down { doit = true }
+                        
                     }
                     
                 }
                 
-                run++
+            }
+            
+            if let go = togo {
                 
-            case "pass":
-                
-                if play["endY"] != nil {
+                if play["playtype"] != nil {
                     
-                    let Y = play["endY"] as! Int
-                    
-                    let section = Int(ceil(CGFloat(Y)/20))
-                    
-                    passDir[section-1]++
+                    if play["playtype"] as! String == "down" {
+                        
+                        let t = play["togo"] as! Int
+                        
+                        switch t {
+                        case (go-threshold!) ... (go+threshold!):
+                            ()
+                        default:
+                            doit = false
+                        }
+                        
+                    }
                     
                 }
                 
-                pass++
+            }
+            
+            if doit {
                 
-            default:
-                ()
+                switch play["key"] as! String {
+                case "run":
+                    
+                    if play["endY"] != nil {
+                        
+                        let Y = play["endY"] as! Int
+                        
+                        switch Y {
+                        case 15:
+                            runDir[0]++
+                        case 36:
+                            runDir[1]++
+                        case 50:
+                            runDir[2]++
+                        case 64:
+                            runDir[3]++
+                        case 85:
+                            runDir[4]++
+                        default:
+                            ()
+                        }
+                        
+                    }
+                    
+                    run++
+                    
+                case "pass":
+                    
+                    if play["endY"] != nil {
+                        
+                        let Y = play["endY"] as! Int
+                        
+                        let section = Int(ceil(CGFloat(Y)/20))
+                        
+                        passDir[section-1]++
+                        
+                    }
+                    
+                    pass++
+                    
+                default:
+                    ()
+                }
+                
             }
             
         }
@@ -96,6 +147,30 @@ class Stats {
         data["pass"] = pass
         
         return data
+        
+    }
+    
+    static func compileScore(game _game: Game) -> [Int] {
+        
+        var homeScore = 0
+        var awayScore = 0
+        
+        _game.getSequences()
+        
+        for sequence in _game.sequences {
+            
+            if !sequence.replay {
+                
+                let score = Filters.score(sequence)
+                
+                homeScore += score[1].value
+                awayScore += score[0].value
+                
+            }
+            
+        }
+        
+        return [awayScore,homeScore]
         
     }
     

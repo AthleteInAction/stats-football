@@ -9,6 +9,21 @@
 import CoreData
 // ========================================================
 // ========================================================
+@objc(PlayObject)
+class PlayObject: NSManagedObject {
+    
+    @NSManaged var key: String
+    @NSManaged var endX: String?
+    @NSManaged var endY: String?
+    @NSManaged var player_a: String
+    @NSManaged var player_b: String?
+    @NSManaged var team: TeamObject?
+    @NSManaged var sequence: SequenceObject
+    @NSManaged var created_at: NSDate
+    
+}
+// ========================================================
+// ========================================================
 class Play {
     
     var key: String!
@@ -118,8 +133,28 @@ extension Play {
             "playtype": object.sequence.key
         ]
         
-        if let d = object.sequence.down { final["down"] = d }
-        if let d = object.sequence.fd { final["fd"] = d }
+        if let d = object.sequence.down { final["down"] = d.toInt()! }
+        if let d = object.sequence.fd {
+            
+            final["fd"] = d.toInt()!
+            
+            var los = object.sequence.startX.toInt()!
+            var fd2 = d.toInt()!
+            
+            if los < 0 {
+                los = los * -1
+            } else {
+                los = 100 - los
+            }
+            if fd2 < 0 {
+                fd2 = fd2 * -1
+            } else {
+                fd2 = 100 - fd2
+            }
+            
+            final["togo"] = fd2 - los
+            
+        }
         if let x = endX { final["endX"] = x }
         if let y = endY { final["endY"] = y }
         

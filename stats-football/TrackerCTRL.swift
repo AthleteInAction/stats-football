@@ -28,12 +28,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
     @IBOutlet weak var field: Field!
     @IBOutlet weak var qtrSelector: UIStepper!
     @IBOutlet weak var qtrTXT: UILabel!
-    @IBOutlet weak var downSelector: UIStepper!
     @IBOutlet weak var downTXT: UILabel!
-    @IBOutlet weak var posSelector: UISegmentedControl!
-    @IBOutlet weak var sideSwitch: UIButton!
+    @IBOutlet weak var downSelector: UISegmentedControl!
     @IBOutlet weak var cancelBTN: UIButton!
-    @IBOutlet weak var enterBTN: UIButton!
     @IBOutlet weak var sequenceTBL: SequenceTBL!
     @IBOutlet weak var playTBL: PlayTBL!
     @IBOutlet weak var penaltyTBL: PenaltyTBL!
@@ -41,6 +38,68 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
     @IBOutlet weak var rightPTY: PenaltyBTN!
     @IBOutlet weak var leftPTY: PenaltyBTN!
     @IBOutlet weak var replaySwitch: UISwitch!
+    @IBOutlet weak var scoreboard: UIView!
+    @IBOutlet weak var leftBall: UIButton!
+    @IBOutlet weak var rightBall: UIButton!
+    @IBOutlet weak var leftTEAM: UIButton!
+    @IBOutlet weak var rightTEAM: UIButton!
+    @IBOutlet weak var leftSCORE: UILabel!
+    @IBOutlet weak var rightSCORE: UILabel!
+    @IBOutlet weak var prevBTN: UIButton!
+    @IBOutlet weak var nextBTN: UIButton!
+    
+    @IBAction func seekTPD(sender: UIButton) {
+        
+        if sender.tag == 1 {
+            
+            if index > 0 { index-- }
+            
+        } else {
+            
+            if index < game.sequences.count { index++ }
+            
+        }
+        
+        switch index {
+        case 0 ... (game.sequences.count - 1):
+            
+            selectSequence(index)
+            
+        case _ where index < 0, _ where index > (game.sequences.count - 1):
+            
+            index = 0
+            
+            selectSequence(index)
+            
+        default:
+            
+            ()
+            
+        }
+        
+        setSeeks()
+        
+    }
+    
+    func setSeeks(){
+        
+        if index >= (game.sequences.count - 1) {
+            prevBTN.alpha = 0.3
+            prevBTN.userInteractionEnabled = false
+        } else {
+            prevBTN.alpha = 1
+            prevBTN.userInteractionEnabled = true
+        }
+        
+        if index <= 0 {
+            nextBTN.alpha = 0.3
+            nextBTN.userInteractionEnabled = false
+        } else {
+            nextBTN.alpha = 1
+            nextBTN.userInteractionEnabled = true
+        }
+        
+    }
     
     let playTypes: [String] = ["kickoff","freekick","down","pat"]
     let playTypesRev: [String:Int] = ["kickoff":0,"freekick":1,"down":2,"pat":3]
@@ -54,6 +113,13 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        leftTEAM.layer.cornerRadius = 4
+        rightTEAM.layer.cornerRadius = 4
+        
+        cancelBTN.layer.cornerRadius = 6
+        leftPTY.layer.cornerRadius = 3
+        rightPTY.layer.cornerRadius = 3
         
         MPC.receiver = self
         MPC.stateMonitor = self
@@ -71,8 +137,35 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
         field.fd.hidden = true
         
-        disableCancelBTN()
-        disableEnterBTN()
+        var conSwitch = UISwitch()
+        navigationItem.titleView = conSwitch
+        conSwitch.addTarget(self, action: "conCHG:", forControlEvents: UIControlEvents.ValueChanged)
+        
+        var back = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Done, target: self, action: "backTPD:")
+        navigationItem.setLeftBarButtonItem(back, animated: true)
+        
+        var add = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "newTPD:")
+        navigationItem.setRightBarButtonItem(add, animated: true)
+        
+        var tblView =  UIView(frame: CGRectZero)
+        sequenceTBL.tableFooterView = tblView
+        sequenceTBL.tableFooterView?.hidden = true
+        sequenceTBL.backgroundColor = UIColor.clearColor()
+        playTBL.tableFooterView = tblView
+        playTBL.tableFooterView?.hidden = true
+        playTBL.backgroundColor = UIColor.clearColor()
+        penaltyTBL.tableFooterView = tblView
+        penaltyTBL.tableFooterView?.hidden = true
+        penaltyTBL.backgroundColor = UIColor.clearColor()
+        
+        edgesForExtendedLayout = UIRectEdge()
+        
+    }
+    
+    var fieldReady = false
+    func it() -> Bool {
+        
+        if fieldReady { return false }
         
         if game.sequences.count > 0 {
             selectSequence(0)
@@ -81,15 +174,12 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
             sequenceTBL.reloadData()
         }
         
+        fieldReady = true
         
-        var conSwitch = UISwitch()
-        navigationItem.titleView = conSwitch
-//        navigationItem.setCenterBarButtonItem(UIBarButtonItem(customView: conSwitch), animated: true)
-        conSwitch.addTarget(self, action: "conCHG:", forControlEvents: UIControlEvents.ValueChanged)
+        setSeeks()
         
-        var back = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Done, target: self, action: "backTPD:")
-        navigationItem.setLeftBarButtonItem(back, animated: true)
-        
+        return true
+    
     }
     
     func stateChanged(state: MCSessionState) {
@@ -105,7 +195,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
     }
     
-    func receiveGame(game: [[String : AnyObject]]) {
+    func receiveGame(game: [String : AnyObject]) {
         
         
         
@@ -150,7 +240,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         switch p {
         case "down":
             
-            s.down = Int(downSelector.value)
+            s.down = downSelector.selectedSegmentIndex+1
             s.fd = s.startX.plus(10)
             
         default:
@@ -175,6 +265,8 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         if newPlay == nil && newPenalty == nil { return false }
         
         let s = game.sequences[index]
+        s.getPlays()
+        
         let t: UITouch = touches.first as! UITouch
         let l: CGPoint = t.locationInView(field)
         
@@ -241,11 +333,12 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
     }
     
+    var enterON = false
     func fieldTOuchesEnded(touches: Set<NSObject>) -> Bool {
         
         if newPlay != nil || newPenalty != nil {
             
-            enableEnterBTN()
+            enterON = true
             
         }
         
@@ -298,9 +391,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
         let s = game.sequences[index]
         
-        s.down = Int(downSelector.value)
+        s.down = downSelector.selectedSegmentIndex+1
         
-        downTXT.text = "\(Int(downSelector.value))"
+        downTXT.text = (downSelector.selectedSegmentIndex+1).string()
         
         s.save(nil)
         
@@ -310,14 +403,42 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
     }
     
-    @IBAction func posChanged(sender: AnyObject) {
+    @IBAction func posChanged(sender: UIButton) {
         
         let s = game.sequences[index]
         
-        if s.team.object!.isEqual(game.home.object) {
-            s.team = game.away
+        if rightHome {
+            
+            if sender.tag == 1 {
+                
+                s.team = game.home
+                leftBall.hidden = true
+                rightBall.hidden = false
+                
+            } else {
+                
+                s.team = game.away
+                leftBall.hidden = false
+                rightBall.hidden = true
+                
+            }
+            
         } else {
-            s.team = game.home
+            
+            if sender.tag == 1 {
+                
+                s.team = game.away
+                leftBall.hidden = false
+                rightBall.hidden = true
+                
+            } else {
+                
+                s.team = game.home
+                leftBall.hidden = true
+                rightBall.hidden = false
+                
+            }
+            
         }
         
         s.save(nil)
@@ -364,11 +485,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
     
     @IBAction func cancelTPD(sender: AnyObject) {
         
-        enableButtons()
         enableField()
-        disableCancelBTN()
-        disableEnterBTN()
         enableTables()
+        enableScoreboard()
         field.hideCrosses()
         
         newPlay = nil
@@ -399,7 +518,19 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         popover = UIPopoverController(contentViewController: nav)
         popover.delegate = self
         popover.popoverContentSize = CGSize(width: 283, height: view.bounds.height * 0.6)
-        popover.presentPopoverFromRect(field.frame, inView: field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+        popover.presentPopoverFromRect(sender.frame, inView: scoreboard, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+        
+    }
+    
+    @IBAction func statsTPD(sender: AnyObject) {
+        
+        var vc = StatsDisplay(nibName: "StatsDisplay",bundle: nil)
+        vc.tracker = self
+        vc.team = game.home
+        
+        var nav = UINavigationController(rootViewController: vc)
+        
+        presentViewController(nav, animated: true, completion: nil)
         
     }
     
@@ -410,12 +541,6 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         cancelTPD(1)
         
         return true
-        
-    }
-    
-    @IBAction func enterTPD(sender: AnyObject) {
-        
-        go()
         
     }
     
@@ -449,15 +574,15 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
             
             MPC.sendGame(game)
             
-            disableCancelBTN()
-            disableEnterBTN()
-            enableButtons()
             enableField()
             enableTables()
+            enableScoreboard()
+            enterON = false
             field.hideCrosses()
             
             draw()
             drawButtons()
+            updateBoard()
             
         }
         
@@ -469,6 +594,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
             penalty.save(nil)
             
             s.penalties.append(penalty)
+            s.save(nil)
             
             penaltyTBL.reloadData()
             playTBL.reloadData()
@@ -477,15 +603,15 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
             
             MPC.sendGame(game)
             
-            disableCancelBTN()
-            disableEnterBTN()
-            enableButtons()
             enableField()
             enableTables()
+            enableScoreboard()
+            enterON = false
             field.hideCrosses()
             
             draw()
             drawButtons()
+            updateBoard()
             
         }
         
@@ -505,6 +631,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
             
         }
         
+        s.getPenalties()
         for (i,penalty) in enumerate(s.penalties) {
             
             if let x = penalty.endX {
@@ -529,6 +656,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
             
         }
         
+        s.getPlays()
         for (i,play) in enumerate(s.plays) {
             
             if let endX = play.endX {
@@ -594,6 +722,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
         let pos_right = posRight(s)
         
+        s.getPlays()
         for play in s.plays {
             
             if play.key != "penalty" {
@@ -704,6 +833,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         let b: PointBTN = sender.view as! PointBTN
         
         let s = game.sequences[index]
+        
         let play = s.plays[b.index]
         
         if sender.state == UIGestureRecognizerState.Began {
@@ -714,6 +844,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
         if sender.state == UIGestureRecognizerState.Changed {
             
+            JP("CHANGED")
             let min = field.ratio
             let max = 119 * field.ratio
             let vmin = b.bounds.height / 2
@@ -926,6 +1057,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
             
             var delete2 = UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive) { action -> Void in
                 
+                s.getPlays()
                 let play = s.plays[b.index]
                 play.delete(nil)
                 s.plays.removeAtIndex(b.index)
@@ -980,6 +1112,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         let b: PenaltyMKR = sender.view as! PenaltyMKR
         
         let s = game.sequences[index]
+        s.getPenalties()
         
         var alert = UIAlertController(title: "Delete this penalty?", message: nil, preferredStyle: .ActionSheet)
         
@@ -1058,9 +1191,9 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
         let location = sender.locationInView(field)
         
-        if enterBTN.userInteractionEnabled {
+        if enterON {
             
-            enterTPD(1)
+            go()
             
         } else {
             
@@ -1074,11 +1207,68 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
     }
     
-    @IBAction func newTPD(sender: AnyObject) {
+    func newTPD(sender: AnyObject) {
         
         let s = game.sequences[index]
         
+        if enterON { go() }
+        
         addSequence()
+        
+    }
+    
+    func updateDown(){
+        
+        let s = game.sequences[index]
+        
+        let pos_right = posRight(s)
+        
+        var down = ""
+        if let d = s.down {
+            
+            switch d {
+            case 2:
+                down += "2nd and "
+            case 3:
+                down += "3rd and "
+            case 4:
+                down += "4th and "
+            default:
+                down += "1st and "
+            }
+            
+            downSelector.selectedSegmentIndex = d-1
+            
+        }
+        
+        if let first = s.fd {
+            
+            let a = s.startX.yardToFull(pos_right)
+            let b = first.yardToFull(pos_right)
+            
+            var togo: String!
+            
+            if pos_right {
+                
+                togo = "\(a - b)"
+                
+            } else {
+                
+                togo = "\(b - a)"
+                
+            }
+            
+            if first == 100 { togo = "G" }
+            
+            down += togo
+            
+        }
+        
+        if s.key == "down" {
+            
+            downTXT.text = down
+            
+        }
         
     }
     
@@ -1087,11 +1277,12 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         let s = game.sequences[index]
         
         qtrSelector.value = Double(s.qtr)
-        qtrTXT.text = "\(s.qtr)"
         
-        if let d = s.down {
-            downSelector.value = Double(d)
-            downTXT.text = "\(d)"
+        switch s.qtr {
+        case 1...4:
+            qtrTXT.text = "QTR \(s.qtr)"
+        default:
+            qtrTXT.text = "OT \(s.qtr-4)"
         }
         
         field.fd.hidden = (s.fd == nil)
@@ -1113,35 +1304,55 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
         if pos_right {
             
-            posSelector.selectedSegmentIndex = 1
+            rightBall.hidden = false
+            leftBall.hidden = true
             
         } else {
             
-            posSelector.selectedSegmentIndex = 0
+            rightBall.hidden = true
+            leftBall.hidden = false
             
         }
         
         field.los.moveTo(s.startX,pos_right: pos_right)
         
-        if let fd = s.fd {
+        if let first = s.fd {
             
-            field.fd.moveTo(fd, pos_right: pos_right)
+            field.fd.moveTo(first, pos_right: pos_right)
             
         }
         
+        updateDown()
+        
+        let score = Stats.compileScore(game: game)
+        
         if rightHome {
             
+            leftSCORE.text = score[0].string()
+            rightSCORE.text = score[1].string()
+            
+            rightTEAM.setTitle(game.home.short, forState: UIControlState.Normal)
+            rightTEAM.backgroundColor = game.home.color
+            leftTEAM.setTitle(game.away.short, forState: UIControlState.Normal)
+            leftTEAM.backgroundColor = game.away.color
             rightPTY.team = game.home
-            rightPTY.setTitle(String(game.home.short), forState: UIControlState.Normal)
+            rightPTY.setTitle(game.home.short+" Penalty", forState: UIControlState.Normal)
             leftPTY.team = game.away
-            leftPTY.setTitle(String(game.away.short), forState: UIControlState.Normal)
+            leftPTY.setTitle(game.away.short+" Penalty", forState: UIControlState.Normal)
             
         } else {
             
+            leftSCORE.text = score[1].string()
+            rightSCORE.text = score[0].string()
+            
+            rightTEAM.setTitle(game.away.short, forState: UIControlState.Normal)
+            rightTEAM.backgroundColor = game.away.color
+            leftTEAM.setTitle(game.home.short, forState: UIControlState.Normal)
+            leftTEAM.backgroundColor = game.home.color
             rightPTY.team = game.away
-            rightPTY.setTitle(String(game.away.short), forState: UIControlState.Normal)
+            rightPTY.setTitle(game.away.short+" Penalty", forState: UIControlState.Normal)
             leftPTY.team = game.home
-            leftPTY.setTitle(String(game.home.short), forState: UIControlState.Normal)
+            leftPTY.setTitle(game.home.short+" Penalty", forState: UIControlState.Normal)
             
         }
         
@@ -1149,7 +1360,7 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
         field.ball.center.x = field.los.center.x
         field.ball.center.y = (CGFloat(s.startY) / 100) * field.bounds.height
-        if posRight(s) { field.ball.center.y = ((100 - CGFloat(s.startY)) / 100) * field.bounds.height }
+        if posRight(s) { field.ball.center.y = (CGFloat(100 - s.startY) / 100) * field.bounds.height }
         
     }
     
@@ -1187,8 +1398,6 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         s.game = game
         s.save(nil)
         
-//        if let prev = game.sequences.first { prev.save(nil) }
-        
         game.sequences.insert(s,atIndex: 0)
         
         sequenceTBL.reloadData()
@@ -1211,7 +1420,6 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
                 
                 game.sequences[index].plays[t].tackles.append(n)
                 
-                disableCancelBTN()
                 enableField()
                 
                 tn = nil
@@ -1223,7 +1431,6 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
                 
                 game.sequences[index].plays[s].sacks.append(n)
                 
-                disableCancelBTN()
                 enableField()
                 
                 tn = nil
@@ -1236,20 +1443,12 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
                 newPlay = Play(s: game.sequences[index])
                 newPlay?.player_a = n
                 
-                enableCancelBTN()
-                disableButtons()
                 disableField()
                 disableTables()
                 
             }
             
         }
-        
-    }
-    
-    func updateSequence(){
-        
-        
         
     }
     
@@ -1283,12 +1482,15 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         draw()
         drawButtons()
         
+        setSeeks()
+        
     }
     
     var keys: [String] = []
     func draw(){
         
         let s = game.sequences[index]
+        s.getPlays()
         
         switch playTypes[playTypeSelector.selectedSegmentIndex] {
         case "kickoff":
@@ -1344,38 +1546,6 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
     // SWITCHES
     // ===============================================================
     // ===============================================================
-    func disableButtons(){
-        
-        posSelector.alpha = 0.3
-        sideSwitch.alpha = 0.3
-        qtrSelector.alpha = 0.3
-        qtrTXT.alpha = 0.3
-        playTypeSelector.alpha = 0.3
-        downSelector.alpha = 0.3
-        downTXT.alpha = 0.3
-        posSelector.userInteractionEnabled = false
-        sideSwitch.userInteractionEnabled = false
-        qtrSelector.userInteractionEnabled = false
-        playTypeSelector.userInteractionEnabled = false
-        downSelector.userInteractionEnabled = false
-        
-    }
-    func enableButtons(){
-        
-        posSelector.alpha = 1
-        sideSwitch.alpha = 1
-        qtrSelector.alpha = 1
-        qtrTXT.alpha = 1
-        playTypeSelector.alpha = 1
-        downSelector.alpha = 1
-        downTXT.alpha = 1
-        posSelector.userInteractionEnabled = true
-        sideSwitch.userInteractionEnabled = true
-        qtrSelector.userInteractionEnabled = true
-        playTypeSelector.userInteractionEnabled = true
-        downSelector.userInteractionEnabled = true
-        
-    }
     func disablePlayLog(){
         
         sequenceTBL.alpha = 0.3
@@ -1386,18 +1556,6 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         
         sequenceTBL.alpha = 1
         sequenceTBL.userInteractionEnabled = true
-        
-    }
-    func disableCancelBTN(){
-        
-        cancelBTN.alpha = 0.3
-        cancelBTN.userInteractionEnabled = false
-        
-    }
-    func enableCancelBTN(){
-        
-        cancelBTN.alpha = 1
-        cancelBTN.userInteractionEnabled = true
         
     }
     func disableField(){
@@ -1412,18 +1570,6 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
         field.alpha = 1
         fimg.alpha = 1
         field.userInteractionEnabled = true
-        
-    }
-    func disableEnterBTN(){
-        
-        enterBTN.alpha = 0.3
-        enterBTN.userInteractionEnabled = false
-        
-    }
-    func enableEnterBTN(){
-        
-        enterBTN.alpha = 1
-        enterBTN.userInteractionEnabled = true
         
     }
     func disableTables(){
@@ -1465,10 +1611,18 @@ class TrackerCTRL: UIViewController,UIPopoverControllerDelegate,MPCManagerReceiv
     func spot(){
         
         enableField()
-        disableButtons()
         disableTables()
-        enableEnterBTN()
-        enableCancelBTN()
+        hideScoreboard()
+        
+    }
+    func hideScoreboard(){
+        
+        scoreboard.hidden = true
+        
+    }
+    func enableScoreboard(){
+        
+        scoreboard.hidden = false
         
     }
     // ===============================================================

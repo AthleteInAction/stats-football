@@ -19,8 +19,9 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         delegate = self
         dataSource = self
         
-        rowHeight = UITableViewAutomaticDimension
-        estimatedRowHeight = 90
+        rowHeight = 34
+        
+        separatorStyle = .None
         
         registerNib(UINib(nibName: "SequenceCell", bundle: nil), forCellReuseIdentifier: "sequence_cell")
         
@@ -29,6 +30,18 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         return 1
+        
+    }
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        var txt = UILabel()
+        txt.textAlignment = .Center
+        txt.text = "Plays"
+        txt.font = UIFont.systemFontOfSize(12)
+        txt.textColor = UIColor.whiteColor()
+        txt.backgroundColor = UIColor(red: 147/255, green: 147/255, blue: 154/255, alpha: 1)
+        
+        return txt
         
     }
     
@@ -44,13 +57,18 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let s = tracker.game.sequences[indexPath.row]
         
+        cell.sequence = s
+        
         let pos_right: Bool = tracker.posRight(s)
         
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.userInteractionEnabled = true
         
+        cell.team.backgroundColor = s.team.color
+        cell.flag.hidden = !s.flagged
+        
         cell.leftTXT.text = s.team.short
-        cell.leftTXT.textColor = s.team.color
+//        cell.leftTXT.textColor = s.team.color
         
         let t: String!
         
@@ -60,13 +78,13 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
             // -38
             t = "\(s.team.short) \(s.startX * -1)"
-            cell.rightTXT.textColor = s.team.color
+//            cell.rightTXT.textColor = s.team.color
             
         } else {
             
             // 38
             t = "\(tracker.opTeam(s.team).short) \(s.startX)"
-            cell.rightTXT.textColor = tracker.opTeam(s.team).color
+//            cell.rightTXT.textColor = tracker.opTeam(s.team).color
             
         }
         
@@ -165,6 +183,8 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
+        Stats.player(sequence: tracker.game.sequences[indexPath.row])
+        
         tracker.sequenceSelected(indexPath.row)
         
     }
@@ -177,25 +197,44 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
-        if editingStyle == UITableViewCellEditingStyle.Delete {
+        
+        
+    }
+    
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+        
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! SequenceCell
+        
+        let s = tracker.game.sequences[indexPath.row]
+        
+        var flag = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "Flag") { (action, indexPath) -> Void in
             
-            if tracker.game.sequences.count > 1 {
+            s.flagged = !s.flagged
+            s.save(nil)
+            
+            cell.flag.hidden = !s.flagged
+            
+            tableView.setEditing(false, animated: true)
+            
+        }
+        
+        var delete = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "Delete") { (action, indexPath) -> Void in
+            
+            if self.tracker.game.sequences.count > 1 {
                 
                 self.userInteractionEnabled = false
-                
-                let s = tracker.game.sequences[indexPath.row]
                 
                 s.delete(nil)
                 
                 var i = indexPath.row
                 
-                if indexPath.row < tracker.index {
+                if indexPath.row < self.tracker.index {
                     
                     i--
                     
-                } else if indexPath.row == tracker.index {
+                } else if indexPath.row == self.tracker.index {
                     
-                    if tracker.game.sequences.count > (indexPath.row+1) {
+                    if self.tracker.game.sequences.count > (indexPath.row+1) {
                         
                         i++
                         
@@ -207,20 +246,21 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
                     
                 }
                 
-                tracker.game.sequences.removeAtIndex(indexPath.row)
+                self.tracker.game.sequences.removeAtIndex(indexPath.row)
                 tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
                 
-                tracker.selectSequence(i)
+                self.tracker.selectSequence(i)
                 
                 self.userInteractionEnabled = true
                 
-            } else {
-                
-                tableView.endEditing(true)
-                
             }
-        
+            
         }
+        
+        flag.backgroundColor = UIColor(red: 254/255, green: 242/255, blue: 58/255, alpha: 1)
+        delete.backgroundColor = UIColor.redColor()
+        
+        return [flag,delete]
         
     }
     

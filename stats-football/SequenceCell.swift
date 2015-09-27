@@ -9,10 +9,14 @@
 import UIKit
 
 class SequenceCell: UITableViewCell {
+    
+    var sequence: Sequence!
 
+    @IBOutlet weak var flag: UIView!
     @IBOutlet weak var leftTXT: UILabel!
     @IBOutlet weak var midTXT: UILabel!
     @IBOutlet weak var rightTXT: UILabel!
+    @IBOutlet weak var team: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,7 +30,7 @@ class SequenceCell: UITableViewCell {
         
         if selected {
             
-            backgroundColor = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1)
+            backgroundColor = UIColor(red: 235/255, green: 235/255, blue: 241/255, alpha: 1)
             
         } else {
             

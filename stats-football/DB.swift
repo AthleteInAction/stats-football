@@ -265,7 +265,6 @@ class DB {
                     
                     for game in results {
                         
-                        println(game.home.name)
                         let t = game as! GameObject
                         
                         let final = Game(game: t)

@@ -22,11 +22,12 @@ class SequenceObject: NSManagedObject {
     @NSManaged var fd: String?
     @NSManaged var startX: String
     @NSManaged var startY: String
-    @NSManaged var replay: Bool
+    @NSManaged var replay: String
     @NSManaged var game: GameObject
     @NSManaged var team: TeamObject
     @NSManaged var plays: NSSet
     @NSManaged var penalties: NSSet
+    @NSManaged var flagged: String
     @NSManaged var created_at: NSDate
     
 }
@@ -46,6 +47,7 @@ class Sequence {
     var replay: Bool = false
     var plays: [Play] = []
     var penalties: [Penalty] = []
+    var flagged: Bool = false
     var created_at: NSDate!
     var object: SequenceObject!
     
@@ -72,7 +74,8 @@ class Sequence {
         if let f = sequence.fd { fd = f.toInt()! }
         startX = sequence.startX.toInt()!
         startY = sequence.startY.toInt()!
-        replay = sequence.replay
+        replay = sequence.replay.toBool()
+        flagged = sequence.flagged.toBool()
         object = sequence
         
     }
@@ -124,7 +127,8 @@ class Sequence {
         if let f = fd { object.fd = "\(f)" } else { object.fd = nil }
         object.startX = "\(startX)"
         object.startY = "\(startY)"
-        object.replay = replay
+        object.flagged = flagged.description
+        object.replay = replay.description
         
         object.managedObjectContext?.save(&error)
         
@@ -137,7 +141,6 @@ class Sequence {
             
             println(object)
             println("SEQUENCE SAVED!")
-//            if game.id != nil && team.id != nil { saveRemote(nil) }
             
         }
         
@@ -256,5 +259,11 @@ class Sequence {
         penalties.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedAscending })
         
     }
+    
+}
+
+extension String {
+    
+    func toBool() -> Bool { return self == "true" }
     
 }

@@ -30,6 +30,13 @@ class Field: UIView {
     
     override func drawRect(rect: CGRect) {
         
+        JP("DRAW")
+        
+        ratio = CGFloat(bounds.width) / 120
+        vratio = CGFloat(bounds.height) / 53.33
+        
+        if !tracker.fieldReady { tracker.it() }
+        
         for v in subviews { if v.tag == -2 { v.removeFromSuperview() } }
         
         if tracker.game.sequences.count > 0 {
@@ -47,10 +54,11 @@ class Field: UIView {
             CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
             
             var prev: Play?
-            
             for (i,play) in enumerate(s.plays) {
                 
                 if let endX = play.endX {
+                    
+                    JP("PLAY: \(endX)")
                     
                     x = toX(endX.yardToFull(pos_right))
                     y = toP(play.endY!)
@@ -83,6 +91,9 @@ class Field: UIView {
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        
+        println("CODER")
+        println(bounds.width)
         
         ball = BallBTN(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
         ball.setImage(UIImage(named: "icon-football.png"), forState: .Normal)

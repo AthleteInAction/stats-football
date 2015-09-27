@@ -21,6 +21,8 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         estimatedRowHeight = 44
         rowHeight = UITableViewAutomaticDimension
         
+        separatorStyle = .None
+        
         registerNib(UINib(nibName: "PenaltyCell", bundle: nil), forCellReuseIdentifier: "penalty_cell")
         
     }
@@ -30,12 +32,34 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         return 1
         
     }
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        var txt = UILabel()
+        txt.textAlignment = .Center
+        txt.text = "Penalties"
+        txt.font = UIFont.systemFontOfSize(12)
+        txt.textColor = UIColor.whiteColor()
+        txt.backgroundColor = UIColor(red: 147/255, green: 147/255, blue: 154/255, alpha: 1)
+        
+        return txt
+        
+    }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        let s = tracker.game.sequences[tracker.index]
-        
-        return s.penalties.count
+        if tracker.game.sequences.count == 0 {
+            
+            return 0
+            
+        } else {
+            
+            let s = tracker.game.sequences[tracker.index]
+            
+            s.getPenalties()
+            
+            return s.penalties.count
+            
+        }
         
     }
     
@@ -43,6 +67,14 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let s = tracker.game.sequences[tracker.index]
         
+        s.getPenalties()
+        
+        if s.penalties.count == 0 {
+            let c = UITableViewCell()
+            c.textLabel?.text = "NO DATA : \(indexPath.row)"
+            return c
+        }
+        JP("PENALTIES 2: \(s.penalties.count)")
         let penalty = s.penalties[indexPath.row]
         
         let cell = tableView.dequeueReusableCellWithIdentifier("penalty_cell") as! PenaltyCell
@@ -112,6 +144,8 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
             let s = tracker.game.sequences[tracker.index]
+            
+            s.getPenalties()
             
             let penalty = s.penalties[indexPath.row]
             

@@ -27,6 +27,8 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         super.viewDidLoad()
         
         s = tracker.game.sequences[tracker.index]
+        s.getPlays()
+        s.getPenalties()
         
         keys = Filters.keys(s,type: type)
         
@@ -64,7 +66,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell")
+        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell") as UITableViewCell
         
         let key = keys[indexPath.row]
         
@@ -72,6 +74,10 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         case "penalty_distance":
             
             cell.textLabel?.text = "\(key) yards"
+            
+        case "penalty_occurence":
+            
+            cell.textLabel?.text = "\(key) the play"
             
         default:
             
@@ -140,6 +146,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         if let penalty = newPenalty {
             
             switch type {
+                
             // ++++++++++++++++++++++++++++++++++++++++++++++++
             case "penalty_distance":
             // ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -155,7 +162,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             // ++++++++++++++++++++++++++++++++++++++++++++++++
                 
                 switch key {
-                case "offset","declined":
+                case "kick":
                     
                     penalty.enforcement = key
                     
@@ -165,23 +172,96 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     
                     tracker.penaltyTBL.reloadData()
                     
-                case "kick":
+                    tracker.updateBoard()
                     
-                    penalty.enforcement = "kick"
-
+                case "offset","declined":
+                    
+                    penalty.enforcement = key
+                    
+                    penalty.save(nil)
+                    
+                    tracker.penaltyTBL.reloadData()
+                    
+                    tracker.updateBoard()
+                    
+                case "previous spot":
+                    
+                    let yard = Yardline(yardline: s.startX)
+                    
+                    if s.team.object.isEqual(penalty.team.object) {
+                        
+                        penalty.endX = yard.penaltyMinus(penalty.distance)
+                        
+                    } else {
+                        
+                        penalty.endX = yard.penaltyPlus(penalty.distance)
+                        
+                    }
+                    
+                    penalty.enforcement = key
+                    
+                    penalty.save(nil)
+                    
+                    s.penalties.append(penalty)
+                    
+                    s.replay = true
+                    
+                    s.save(nil)
+                    
+                    tracker.penaltyTBL.reloadData()
+                    tracker.draw()
+                    tracker.drawButtons()
+                    tracker.updateBoard()
+                    
+                case "dead ball spot":
+                    
+                    var yard = Yardline(yardline: s.startX)
+                    
+                    s.getPlays()
+                    for play in reverse(s.plays) {
+                        
+                        if let x = play.endX {
+                            
+                            yard = Yardline(yardline: x)
+                            
+                            break
+                            
+                        }
+                        
+                    }
+                    
+                    if s.team.object.isEqual(penalty.team.object) {
+                        
+                        penalty.endX = yard.penaltyMinus(penalty.distance)
+                        
+                    } else {
+                        
+                        penalty.endX = yard.penaltyPlus(penalty.distance)
+                        
+                    }
+                    
+                    penalty.enforcement = key
+                    
                     penalty.save(nil)
                     
                     s.penalties.append(penalty)
                     
                     tracker.penaltyTBL.reloadData()
+                    tracker.draw()
+                    tracker.drawButtons()
+                    tracker.updateBoard()
                     
-                default:
+                case "spot of foul":
                     
-                    penalty.enforcement = "spot"
+                    penalty.enforcement = key
                     
                     tracker.newPenalty = penalty
                     
                     tracker.spot()
+                    
+                default:
+                    
+                    ()
                     
                 }
                 
@@ -204,4 +284,68 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         
     }
 
+}
+
+class Yardline {
+    
+    var spot: Int!
+    
+    func full() -> Int {
+        
+        switch spot {
+        case 1 ... 49:
+            return 100 - spot
+        case -49 ... -1:
+            return spot * -1
+        case -110 ... -100:
+            return 100 + spot
+        default:
+            return spot
+        }
+        
+    }
+    
+    func split(n: Int) -> Int {
+        
+        var final = n
+        
+        switch n {
+        case 51 ... 99:
+            return 100 - final
+        case 100 ... 110,1 ... 49:
+            return final * -1
+        default:
+            return final
+        }
+        
+    }
+    
+    func penaltyMinus(n: Int) -> Int {
+        
+        var full = self.full()
+        var final = full
+        
+        if final <= (n * 2) { final %= 2 } else { final -= n }
+        
+        return split(final)
+        
+    }
+    
+    func penaltyPlus(n: Int) -> Int {
+        
+        var full = self.full()
+        var final = full
+        
+        if final >= (100 - (n * 2)) { final = 100 - (final % 2) } else { final += n }
+        
+        return split(final)
+        
+    }
+    
+    init(yardline: Int){
+        
+        spot = yardline
+        
+    }
+    
 }

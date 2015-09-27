@@ -9,10 +9,11 @@
 import Foundation
 import MultipeerConnectivity
 import CoreData
+import SwiftyJSON
 
 protocol MPCManagerReceiver {
     
-    func receiveGame(game: [[String:AnyObject]])
+    func receiveGame(game: [String:AnyObject])
     
 }
 
@@ -68,28 +69,104 @@ class MPCManager : NSObject {
     func sendGame(game: Game){
         
         var homePlays: [[String:AnyObject]] = []
+        var awayPlays: [[String:AnyObject]] = []
+        var homeCurrent: [String:AnyObject]?
+        var awayCurrent: [String:AnyObject]?
         
         var d: [[String:AnyObject]] = []
         
-        let sequences = game.object.sequences.allObjects as! [SequenceObject]
+        var sequences = game.object.sequences.allObjects as! [SequenceObject]
+        
+        sequences.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedDescending })
         
         for sequence in sequences {
             
-            let plays = sequence.plays.allObjects as! [PlayObject]
-            
-            for play in plays {
-                
-                let p = Play(play: play)
-                let final = p.serialize()
-                d.append(final)
+            if sequence.key == "down" || sequence.key == "pat" || true {
                 
                 if sequence.team.isEqual(game.home.object) {
                     
-                    homePlays.append(final)
+                    homeCurrent = [
+                        "playtype": sequence.key,
+                        "qtr": sequence.qtr.toInt()!,
+                        "key": sequence.key
+                    ]
+                    
+                    if let d = sequence.down { homeCurrent!["down"] = d.toInt()! }
+                    if let d = sequence.fd {
+                        
+                        homeCurrent!["fd"] = d.toInt()!
+                        
+                        var los = sequence.startX.toInt()!
+                        var fd2 = d.toInt()!
+                        
+                        if los < 0 {
+                            los = los * -1
+                        } else {
+                            los = 100 - los
+                        }
+                        if fd2 < 0 {
+                            fd2 = fd2 * -1
+                        } else {
+                            fd2 = 100 - fd2
+                        }
+                        
+                        homeCurrent!["togo"] = fd2 - los
+                        
+                    }
                     
                 } else if sequence.team.isEqual(game.away.object) {
                     
+                    awayCurrent = [
+                        "playtype": sequence.key,
+                        "qtr": sequence.qtr.toInt()!,
+                        "key": sequence.key
+                    ]
                     
+                    if let d = sequence.down { awayCurrent!["down"] = d.toInt()! }
+                    if let d = sequence.fd {
+                        
+                        awayCurrent!["fd"] = d.toInt()!
+                        
+                        var los = sequence.startX.toInt()!
+                        var fd2 = d.toInt()!
+                        
+                        if los < 0 {
+                            los = los * -1
+                        } else {
+                            los = 100 - los
+                        }
+                        if fd2 < 0 {
+                            fd2 = fd2 * -1
+                        } else {
+                            fd2 = 100 - fd2
+                        }
+                        
+                        awayCurrent!["togo"] = fd2 - los
+                        
+                    }
+                    
+                }
+                
+                var plays = sequence.plays.allObjects as! [PlayObject]
+                
+                plays.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedAscending })
+                
+                for (i,play) in enumerate(plays) {
+                    
+                    let p = Play(play: play)
+                    let final = p.serialize()
+                    
+                    if sequence.team.isEqual(game.home.object) {
+                        
+                        homePlays.append(final)
+                        
+                    } else if sequence.team.isEqual(game.away.object) {
+                        
+                        awayPlays.append(final)
+                        
+                    }
+                    
+                    break
                     
                 }
                 
@@ -97,21 +174,26 @@ class MPCManager : NSObject {
             
         }
         
+        var home: [String:AnyObject] = [
+            "name": game.home.name,
+            "short": game.home.short,
+            "plays": homePlays
+        ]
+        if let c = homeCurrent { home["current"] = c }
+        
+        var away: [String:AnyObject] = [
+            "name": game.away.name,
+            "short": game.away.short,
+            "plays": awayPlays
+        ]
+        if let c = awayCurrent { away["current"] = c }
+        
         var f: [String:AnyObject] = [
-            "home": [
-                "name": game.home.name,
-                "short": game.home.short,
-                "plays": homePlays
-            ],
-            "away": [
-                "name": game.away.name,
-                "short": game.away.short
-            ]
+            "home": home,
+            "away": away
         ]
         
-        println(f)
-        
-        let data = NSKeyedArchiver.archivedDataWithRootObject(d)
+        let data = NSKeyedArchiver.archivedDataWithRootObject(f)
         
         if session.connectedPeers.count > 0 {
             
@@ -155,8 +237,6 @@ extension MPCManager : MCNearbyServiceBrowserDelegate {
     
     func browser(browser: MCNearbyServiceBrowser!, foundPeer peerID: MCPeerID!, withDiscoveryInfo info: [NSObject : AnyObject]!) {
         
-        println("\(myPeerId) FOUND PEER \(peerID)")
-        
         var found = false
         for device in devices {
             
@@ -169,15 +249,8 @@ extension MPCManager : MCNearbyServiceBrowserDelegate {
             stateMonitor?.peersChanged()
         }
         
-        println("+++++++++")
-        println(lastPeer)
-        println(peerID)
-        println("+++++++++")
         if lastPeer?.displayName == peerID.displayName {
             
-            println("IS LAST PEER")
-            println(lastPeer!)
-            println("------------")
             browser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 10)
             
         }
@@ -220,8 +293,6 @@ extension MCSessionState {
 extension MPCManager : MCSessionDelegate {
     
     func session(session: MCSession!, peer peerID: MCPeerID!, didChangeState state: MCSessionState) {
-       
-        NSLog("%@", "peer \(peerID) didChangeState: \(state.stringValue())")
         
         stateMonitor?.stateChanged(state)
         
@@ -229,11 +300,11 @@ extension MPCManager : MCSessionDelegate {
     
     func session(session: MCSession!, didReceiveData data: NSData!, fromPeer peerID: MCPeerID!) {
         
-        NSLog("%@", "didReceiveData: \(data.length) bytes")
+        println("DID RECEIVE DATA: \(data.length) bytes")
         
         lastPeer = peerID
         
-        let game = NSKeyedUnarchiver.unarchiveObjectWithData(data) as! [[String:AnyObject]]
+        let game = NSKeyedUnarchiver.unarchiveObjectWithData(data) as! [String:AnyObject]
         
         receiver?.receiveGame(game)
         

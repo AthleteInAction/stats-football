@@ -109,11 +109,7 @@ class DownFilter {
                 
             case "fumble":
                 
-                if let player = play.player_b {
-                    
-                    pos_right = tracker.posRightPlay(play)
-                    
-                }
+                if let team = play.team { pos_right = tracker.posRight2(team.object) }
                 
             case "interception","recovery":
                 
@@ -135,7 +131,7 @@ class DownFilter {
             }
             // ++++++++++++++++++++++++++++++++
             
-            if let x = play.endX { lastSpot = play.endX }
+            if let x = play.endX { lastSpot = x }
             
             if pos_right != pos_right_original { possessionChanged = true }
             
@@ -208,11 +204,12 @@ class DownFilter {
                 // ------------------------------------
                 if pos_right_original == pos_right {
                     
-                    println("TOUCHDOWN")
+                    println("DOWN TOUCHDOWN A")
                     s.team = original.team
                     s.key = "pat"
                     s.startX = 3
                     s.fd = nil
+                    s.down = nil
                     
                 } else {
                     
@@ -222,40 +219,32 @@ class DownFilter {
                         
                         if l == pos_right {
                             
-                            println("SAFETY")
-                            if tracker.game.home.object!.isEqual(original.team.object!) {
-                                s.team = tracker.game.away
-                            } else {
-                                s.team = tracker.game.home
-                            }
+                            println("DOWN SAFETY A")
+                            s.team = tracker.opTeam(original.team)
                             s.key = "freekick"
-                            s.startX = 3
+                            s.startX = -40
+                            s.fd = nil
+                            s.down = nil
                             
                         } else {
                             
-                            println("TOUCHBACK A")
-                            if tracker.game.home.object!.isEqual(original.team.object!) {
-                                s.team = tracker.game.away
-                            } else {
-                                s.team = tracker.game.home
-                            }
+                            println("DOWN TOUCHBACK A")
+                            s.team = tracker.opTeam(original.team)
                             s.key = "down"
                             s.startX = -20
                             s.fd = -30
+                            s.down = 1
                             
                         }
                         
                     } else {
                         
-                        println("TOUCHBACK B")
-                        if tracker.game.home.object!.isEqual(original.team.object!) {
-                            s.team = tracker.game.away
-                        } else {
-                            s.team = tracker.game.home
-                        }
+                        println("DOWN TOUCHBACK B")
+                        s.team = tracker.opTeam(original.team)
                         s.key = "down"
                         s.startX = -20
                         s.fd = -30
+                        s.down = 1
                         
                     }
                     // ====================================
@@ -269,19 +258,20 @@ class DownFilter {
             // ++++++++++++++++++++++++++++++++
             
             
-            // RETURN TEAM ENDZONE
+            // START TEAM ENDZONE
             // ++++++++++++++++++++++++++++++++
             if x <= -100 {
                 
-                // IF KICKING TEAM HAS BALL
+                // IF OPPOSITE TEAM HAS BALL
                 // ------------------------------------
                 if pos_right_original != pos_right {
                     
-                    println("TOUCHDOWN")
-                    s.team = original.team
+                    println("DOWN TOUCHDOWN B")
+                    s.team = tracker.opTeam(original.team)
                     s.key = "pat"
                     s.startX = 3
                     s.fd = nil
+                    s.down = nil
                     
                 } else {
                     
@@ -291,40 +281,32 @@ class DownFilter {
                         
                         if l == pos_right {
                             
-                            println("SAFETY")
-                            if tracker.game.home.object!.isEqual(original.team.object!) {
-                                s.team = tracker.game.away
-                            } else {
-                                s.team = tracker.game.home
-                            }
+                            println("DOWN SAFETY B")
+                            s.team = original.team
                             s.key = "freekick"
-                            s.startX = 3
+                            s.startX = -40
+                            s.fd = nil
+                            s.down = nil
                             
                         } else {
                             
-                            println("TOUCHBACK A")
-                            if tracker.game.home.object!.isEqual(original.team.object!) {
-                                s.team = tracker.game.away
-                            } else {
-                                s.team = tracker.game.home
-                            }
+                            println("DOWN TOUCHBACK A")
+                            s.team = original.team
                             s.key = "down"
                             s.startX = -20
                             s.fd = -30
+                            s.down = 1
                             
                         }
                         
                     } else {
                         
-                        println("TOUCHBACK B")
-                        if tracker.game.home.object!.isEqual(original.team.object!) {
-                            s.team = tracker.game.away
-                        } else {
-                            s.team = tracker.game.home
-                        }
+                        println("DOWN TOUCHBACK B")
+                        s.team = original.team
                         s.key = "down"
                         s.startX = -20
                         s.fd = -30
+                        s.down = 1
                         
                     }
                     // ====================================

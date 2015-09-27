@@ -69,6 +69,10 @@ class Filters {
         // ============================================================
         // ============================================================
         switch type {
+        case "penalty_occurence":
+            
+            return ["before","during","after"]
+            
         case "penalty_type":
             
             return ["holding","facemask","offside","personal foul"]
@@ -78,6 +82,10 @@ class Filters {
             return ["5","10","15"]
             
         case "penalty_options":
+            
+            return ["previous spot","spot of foul","dead ball spot"]
+            
+        case "penalty_enforcement":
             
             return ["spot","declined","offset","kick"]
             
