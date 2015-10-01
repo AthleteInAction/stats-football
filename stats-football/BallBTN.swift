@@ -19,7 +19,7 @@ class BallBTN: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        pan = UIPanGestureRecognizer(target: self, action: "dDrag:")
+        pan = UIPanGestureRecognizer(target: self, action: "dragged:")
         addGestureRecognizer(pan)
         
         userInteractionEnabled = true
@@ -36,35 +36,9 @@ class BallBTN: UIButton {
         
     }
     
-    func dDrag(sender: UIPanGestureRecognizer){
+    func dragged(sender: UIPanGestureRecognizer){
         
         var translation  = sender.translationInView(superview!)
-        
-        var nex = lastLocation.y + translation.y
-        
-        let min: CGFloat = 10
-        let max: CGFloat = field.bounds.height - 10
-        
-        if nex > max { nex = max }
-        if nex < min { nex = min }
-        
-        center.y = nex
-        
-        let s = field.tracker.game.sequences[field.tracker.index]
-        
-        s.startY = Int(round((nex / field.bounds.height) * 100))
-        if field.tracker.posRight(s) { s.startY = 100 - s.startY }
-        
-        if sender.state == UIGestureRecognizerState.Ended {
-            
-            println("<<< BALL DRAG ENDED >>>")
-            
-            s.save(nil)
-            
-        }
-        
-        field.tracker.draw()
-        field.tracker.drawButtons()
         
     }
 

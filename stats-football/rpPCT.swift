@@ -27,7 +27,7 @@ class rpPCT: UIView {
     override func drawRect(rect: CGRect) {
         
         run = UIView(frame: CGRect(x: 0, y: 0, width: bounds.width/2, height: bounds.height))
-        run.backgroundColor = Filters.colors("run", alpha: 1)
+        run.backgroundColor = Filters.colors(.Run, alpha: 1)
         addSubview(run)
         
         runTXT = UILabel(frame: run.frame)
@@ -38,7 +38,7 @@ class rpPCT: UIView {
         addSubview(runTXT)
         
         pass = UIView(frame: CGRect(x: run.bounds.width, y: 0, width: bounds.width/2, height: bounds.height))
-        pass.backgroundColor = Filters.colors("pass", alpha: 1)
+        pass.backgroundColor = Filters.colors(.Run, alpha: 1)
         addSubview(pass)
         
         passTXT = UILabel(frame: pass.frame)

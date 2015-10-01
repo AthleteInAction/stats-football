@@ -13,8 +13,6 @@ class SubBTN: UIButton {
     var field: Field!
     var index: Int!
     var play: Play!
-    
-    var log: [Sequence]!
     var sequenceIndex: Int!
     var playIndex: Int!
     var buttonIndex: Int!

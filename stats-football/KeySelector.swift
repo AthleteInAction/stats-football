@@ -10,10 +10,10 @@ import UIKit
 
 class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UIPopoverControllerDelegate {
 
-    var tracker: TrackerCTRL!
+    var tracker: Tracker!
     var newPlay: Play?
     var newPenalty: Penalty?
-    private var keys: [String] = []
+    private var keys: [Key] = []
     var type: String!
     
     var nsel: NumberSelector!
@@ -27,8 +27,6 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         super.viewDidLoad()
         
         s = tracker.game.sequences[tracker.index]
-        s.getPlays()
-        s.getPenalties()
         
         keys = Filters.keys(s,type: type)
         
@@ -42,6 +40,22 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         table.dataSource = self
         
         edgesForExtendedLayout = UIRectEdge()
+        
+        if type == "play_key_select" {
+            
+            if let play = newPlay {
+                
+                title = "#\(play.player_a)"
+                
+            }
+            
+            if let penalty = newPenalty {
+                
+                title = "#\(penalty.player)"
+                
+            }
+            
+        }
         
     }
 
@@ -70,20 +84,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         
         let key = keys[indexPath.row]
         
-        switch type {
-        case "penalty_distance":
-            
-            cell.textLabel?.text = "\(key) yards"
-            
-        case "penalty_occurence":
-            
-            cell.textLabel?.text = "\(key) the play"
-            
-        default:
-            
-            cell.textLabel?.text = key
-            
-        }
+        cell.textLabel?.text = key.displayKey
         
         return cell
         
@@ -105,26 +106,28 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                 tracker.newPlay = play
                 
                 switch key {
-                case "pass","interception":
+                case .Pass,.Interception:
                     
                     nsel.type = "player_b"
                     nsel.newPlay = play
                     
                     navigationController?.pushViewController(nsel, animated: false)
                     
-                case "incomplete":
+                case .Incomplete:
                     
                     play.save(nil)
                     
                     s.plays.append(play)
                     
-                    tracker.playTBL.reloadData()
+                    tracker.playTBL.plays.append(play)
                     
                     tracker.newPlay = nil
                     
                     dismissViewControllerAnimated(false, completion: nil)
                     
                 default:
+                    
+                    tracker.newPlay = play
                     
                     tracker.spot()
                     
@@ -151,7 +154,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             case "penalty_distance":
             // ++++++++++++++++++++++++++++++++++++++++++++++++
                 
-                penalty.distance = key.toInt()!
+                penalty.distance = key.int
                 nsel.newPenalty = penalty
                 nsel.type = "penalty_player"
                 
@@ -162,39 +165,38 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             // ++++++++++++++++++++++++++++++++++++++++++++++++
                 
                 switch key {
-                case "kick":
+                case .Kick:
                     
                     penalty.enforcement = key
                     
                     penalty.save(nil)
                     
                     s.penalties.append(penalty)
+                    tracker.penaltyTBL.penalties.append(penalty)
+                    let ip = NSIndexPath(forRow: tracker.penaltyTBL.penalties.count-1, inSection: 0)
+                    tracker.penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
                     
-                    tracker.penaltyTBL.reloadData()
                     
-                    tracker.updateBoard()
-                    
-                case "offset","declined":
+                case .Offset,.Declined:
                     
                     penalty.enforcement = key
                     
                     penalty.save(nil)
                     
-                    tracker.penaltyTBL.reloadData()
+                    s.penalties.append(penalty)
+                    tracker.penaltyTBL.penalties.append(penalty)
+                    let ip = NSIndexPath(forRow: tracker.penaltyTBL.penalties.count-1, inSection: 0)
+                    tracker.penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
                     
-                    tracker.updateBoard()
-                    
-                case "previous spot":
-                    
-                    let yard = Yardline(yardline: s.startX)
+                case .PreviousSpot:
                     
                     if s.team.object.isEqual(penalty.team.object) {
                         
-                        penalty.endX = yard.penaltyMinus(penalty.distance)
+                        penalty.endX = s.startX.penaltyMinus(penalty.distance)
                         
                     } else {
                         
-                        penalty.endX = yard.penaltyPlus(penalty.distance)
+                        penalty.endX = s.startX.penaltyPlus(penalty.distance)
                         
                     }
                     
@@ -203,26 +205,27 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     penalty.save(nil)
                     
                     s.penalties.append(penalty)
+                    tracker.penaltyTBL.penalties.append(penalty)
+                    let ip = NSIndexPath(forRow: tracker.penaltyTBL.penalties.count-1, inSection: 0)
+                    tracker.penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
                     
                     s.replay = true
                     
                     s.save(nil)
                     
-                    tracker.penaltyTBL.reloadData()
-                    tracker.draw()
+                    tracker.replaySWI.setOn(true, animated: true)
+                    tracker.field.setNeedsDisplay()
                     tracker.drawButtons()
-                    tracker.updateBoard()
                     
-                case "dead ball spot":
+                case .DeadBallSpot:
                     
-                    var yard = Yardline(yardline: s.startX)
+                    var yard = Yardline(spot: s.startX.spot)
                     
-                    s.getPlays()
                     for play in reverse(s.plays) {
                         
                         if let x = play.endX {
                             
-                            yard = Yardline(yardline: x)
+                            yard = Yardline(spot: x.spot)
                             
                             break
                             
@@ -232,11 +235,11 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     
                     if s.team.object.isEqual(penalty.team.object) {
                         
-                        penalty.endX = yard.penaltyMinus(penalty.distance)
+                        penalty.endX = yard.increment(penalty.distance * -1)
                         
                     } else {
                         
-                        penalty.endX = yard.penaltyPlus(penalty.distance)
+                        penalty.endX = yard.increment(penalty.distance)
                         
                     }
                     
@@ -245,13 +248,14 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     penalty.save(nil)
                     
                     s.penalties.append(penalty)
+                    tracker.penaltyTBL.penalties.append(penalty)
+                    let ip = NSIndexPath(forRow: tracker.penaltyTBL.penalties.count-1, inSection: 0)
+                    tracker.penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
                     
-                    tracker.penaltyTBL.reloadData()
-                    tracker.draw()
+                    tracker.field.setNeedsDisplay()
                     tracker.drawButtons()
-                    tracker.updateBoard()
                     
-                case "spot of foul":
+                case .SpotOfFoul:
                     
                     penalty.enforcement = key
                     
@@ -284,68 +288,4 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         
     }
 
-}
-
-class Yardline {
-    
-    var spot: Int!
-    
-    func full() -> Int {
-        
-        switch spot {
-        case 1 ... 49:
-            return 100 - spot
-        case -49 ... -1:
-            return spot * -1
-        case -110 ... -100:
-            return 100 + spot
-        default:
-            return spot
-        }
-        
-    }
-    
-    func split(n: Int) -> Int {
-        
-        var final = n
-        
-        switch n {
-        case 51 ... 99:
-            return 100 - final
-        case 100 ... 110,1 ... 49:
-            return final * -1
-        default:
-            return final
-        }
-        
-    }
-    
-    func penaltyMinus(n: Int) -> Int {
-        
-        var full = self.full()
-        var final = full
-        
-        if final <= (n * 2) { final %= 2 } else { final -= n }
-        
-        return split(final)
-        
-    }
-    
-    func penaltyPlus(n: Int) -> Int {
-        
-        var full = self.full()
-        var final = full
-        
-        if final >= (100 - (n * 2)) { final = 100 - (final % 2) } else { final += n }
-        
-        return split(final)
-        
-    }
-    
-    init(yardline: Int){
-        
-        spot = yardline
-        
-    }
-    
 }

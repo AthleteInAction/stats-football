@@ -10,7 +10,8 @@ import UIKit
 
 class PassingTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
     
-    var passing = [String:PassingTotal]()
+    var team: Team!
+    var passing: [PassingTotal] = []
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -32,7 +33,7 @@ class PassingTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        return 1
+        return 2
         
     }
     
@@ -40,10 +41,19 @@ class PassingTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
         
         var txt = UILabel()
         txt.textAlignment = .Center
-        txt.text = "Passing"
         txt.font = UIFont.systemFontOfSize(12)
-        txt.textColor = UIColor.whiteColor()
-        txt.backgroundColor = UIColor(red: 147/255, green: 147/255, blue: 154/255, alpha: 1)
+        txt.textColor = UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
+        txt.backgroundColor = Filters.colors(.Pass, alpha: 1)
+        
+        if section == 0 {
+            
+            txt.text = "Team Passing"
+            
+        } else {
+            
+            txt.text = "Individual Passing"
+            
+        }
         
         return txt
         
@@ -51,7 +61,15 @@ class PassingTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return passing.count
+        if section == 0 {
+            
+            return 1
+            
+        } else {
+            
+            return passing.count
+            
+        }
         
     }
     
@@ -59,17 +77,29 @@ class PassingTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("cell") as! PassingCell
         
-        let key = Array(passing.keys)[indexPath.row]
+        var item: PassingTotal!
         
-        if let item = passing[key] {
+        if indexPath.section == 0 {
             
-            cell.playerTXT.text = "#"+key
-            cell.compTXT.text = "\(item.comp) / \(item.att)"
-            cell.ydsTXT.text = item.yds.string()
-            cell.tdTXT.text = item.td.string()
-            cell.intTD.text = item.int.string()
+            item = team.teamPassing
+            cell.playerTXT.text = ""
+            cell.backTXT.text = team.short
+            
+        } else {
+            
+            item = passing[indexPath.row]
+            cell.playerTXT.text = "#"+item.player.string()
+            cell.backTXT.text = "#"+item.player.string()
             
         }
+        
+        cell.compTXT.text = "\(item.comp) / \(item.att)"
+        cell.ydsTXT.text = item.yds.string()
+        cell.tdTXT.text = item.td.string()
+        cell.intTXT.text = item.int.string()
+        cell.ratTXT.text = "\(item.passerRating())"
+        cell.perTXT.text = "\(item.completionPercentage())%"
+        cell.ypaTXT.text = "\(item.yardsPerAttempt())"
         
         return cell
         

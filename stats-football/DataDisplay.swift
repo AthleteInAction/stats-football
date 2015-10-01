@@ -317,28 +317,26 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
             
         }
         
-        data = Stats.compileAnalytics(game: pre, playtype: pt, downs: downs,togo: togo,threshold: threshold)
-        
-        rpVIEW.setViews()
-        field.setViews()
-        
-        awayBTN.setTitle(away["short"] as? String, forState: UIControlState.Normal)
-        homeBTN.setTitle(home["short"] as? String, forState: UIControlState.Normal)
-        
-        awayBTN.hidden = false
-        homeBTN.hidden = false
-        
-        awayBTN.backgroundColor = UIColor.whiteColor()
-        homeBTN.backgroundColor = UIColor.whiteColor()
-        if homeSel {
-            homeBTN.backgroundColor = highlight
-        } else {
-            awayBTN.backgroundColor = highlight
-        }
-        
-        togoTXT.text = Int(togoSLDR.value).string()
-        
-        setVisible()
+//        rpVIEW.setViews()
+//        field.setViews()
+//        
+//        awayBTN.setTitle(away["short"] as? String, forState: UIControlState.Normal)
+//        homeBTN.setTitle(home["short"] as? String, forState: UIControlState.Normal)
+//        
+//        awayBTN.hidden = false
+//        homeBTN.hidden = false
+//        
+//        awayBTN.backgroundColor = UIColor.whiteColor()
+//        homeBTN.backgroundColor = UIColor.whiteColor()
+//        if homeSel {
+//            homeBTN.backgroundColor = highlight
+//        } else {
+//            awayBTN.backgroundColor = highlight
+//        }
+//        
+//        togoTXT.text = Int(togoSLDR.value).string()
+//        
+//        setVisible()
         
     }
     

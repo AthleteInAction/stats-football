@@ -30,8 +30,8 @@ class Penalty {
     // --------------------------------------
     var team: Team!
     var distance: Int!
-    var endX: Int?
-    var enforcement: String!
+    var endX: Yardline?
+    var enforcement: Key!
     var player: Int?
     var created_at: NSDate!
     var object: PenaltyObject!
@@ -57,8 +57,8 @@ class Penalty {
     init(penalty: PenaltyObject){
         
         distance = penalty.distance.toInt()!
-        if let x = penalty.endX { endX = x.toInt()! }
-        enforcement = penalty.enforcement
+        if let x = penalty.endX { endX = Yardline(spot: x.toInt()!) }
+        enforcement = penalty.enforcement.toKey()
         if let p = penalty.player { player = p.toInt()! }
         team = Team(team: penalty.team)
         created_at = penalty.created_at
@@ -81,8 +81,8 @@ class Penalty {
         object.sequence = sequence
         object.created_at = created_at
         object.distance = distance.string()
-        if let x = endX { object.endX = x.string() } else { object.endX = nil }
-        object.enforcement = enforcement
+        if let x = endX { object.endX = x.spot.string() } else { object.endX = nil }
+        object.enforcement = enforcement.string
         if let p = player { object.player = p.string() } else { object.player = nil }
         object.team = team.object
         

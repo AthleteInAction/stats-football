@@ -18,7 +18,8 @@ class TeamObject: NSManagedObject {
     @NSManaged var id: String?
     @NSManaged var name: String
     @NSManaged var short: String
-    @NSManaged var color: String
+    @NSManaged var primary: String
+    @NSManaged var secondary: String
     @NSManaged var away_games: NSSet
     @NSManaged var home_games: NSSet
     @NSManaged var sequences: NSSet
@@ -34,9 +35,21 @@ class Team {
     var id: Int?
     var name: String!
     var short: String!
-    var color: UIColor!
+    var primary: UIColor!
+    var secondary: UIColor!
     var roster: [Player] = []
     var object: TeamObject!
+    var score: Int = 0
+    var passing: [PassingTotal] = []
+    var teamPassing: PassingTotal = PassingTotal()
+    var rushing: [RushingTotal] = []
+    var teamRushing: RushingTotal = RushingTotal()
+    var receiving: [ReceivingTotal] = []
+    var teamReceiving = ReceivingTotal()
+    var puntReturns: [ReturnTotal] = []
+    var teamPuntReturns: ReturnTotal = ReturnTotal()
+    var kickReturns: [ReturnTotal] = []
+    var teamKickReturns: ReturnTotal = ReturnTotal()
     
     init(name _name: String,short _short: String){
         
@@ -45,7 +58,8 @@ class Team {
         
         name = _name
         short = _short
-        color = UIColor.blackColor()
+        primary = UIColor.blackColor()
+        secondary = UIColor.whiteColor()
         object = item
         
     }
@@ -56,7 +70,8 @@ class Team {
         name = team.name
         short = team.short
         object = team
-        color = getColor(object.color)
+        primary = getColor(object.primary)
+        secondary = getColor(object.secondary)
         
     }
     
@@ -99,7 +114,8 @@ class Team {
         if let i = id { object.id = i.string() }
         object.name = name
         object.short = short
-        object.color = colorText(color)
+        object.primary = colorText(primary)
+        object.secondary = colorText(secondary)
         
         object.managedObjectContext?.save(&error)
         
@@ -112,81 +128,10 @@ class Team {
             
             println(object)
             println("TEAM SAVED!")
-//            saveRemote(nil)
             
         }
         
         c?(error: error)
-        
-    }
-    
-    func saveRemote(completion: Completion?){
-        println("SAVE REMOTE")
-        var c = completion
-        
-        var s = "\(domain)"
-        var method = Method.PUT
-        var successCode = 200
-        
-        if let id = id {
-            
-            s += "/api/v1/teams/\(id).json"
-            method = Method.PUT
-            successCode = 200
-            
-        } else {
-            
-            s += "/api/v1/teams.json"
-            method = Method.POST
-            successCode = 201
-            
-        }
-        
-        let team = [
-            "team":[
-                "name": name,
-                "short": short,
-                "color": colorText(color)
-            ]
-        ]
-        
-        Alamofire.request(method, s, parameters: team,encoding: .JSON)
-            .responseJSON { request, response, data, error in
-                
-                if error == nil {
-                    
-                    if response?.statusCode == successCode {
-                        
-                        var json = JSON(data!)
-                        
-                        if let id = self.id {
-                            
-                        } else {
-                            
-                            self.id = json["team"]["id"].intValue
-                            self.object.id = self.id?.string()
-                            self.object.managedObjectContext?.save(nil)
-                            
-                        }
-                        
-                    } else {
-                        
-                        println("Status Code Error: \(response?.statusCode)")
-                        println(request)
-                        
-                    }
-                    
-                } else {
-                    
-                    println("Error!")
-                    println(error)
-                    println(request)
-                    
-                }
-                
-                c?(error: error)
-                
-        }
         
     }
     
@@ -221,24 +166,6 @@ class Team {
         }
         
         c?(error: error)
-        
-    }
-    
-    func getRoster(){
-        
-        let playerObjects = object.roster.allObjects as! [PlayerObject]
-        
-        var tmp: [Player] = []
-        
-        for o in playerObjects {
-            
-            let player = Player(object: o)
-            
-            tmp.append(player)
-            
-        }
-        
-        roster = tmp
         
     }
     

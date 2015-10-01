@@ -10,32 +10,27 @@ import UIKit
 
 class Field: UIView {
     
-    var ball: BallBTN!
-    
-    var tracker: TrackerCTRL!
-    
-    var ratio: CGFloat!
-    var vratio: CGFloat!
+    var tracker: Tracker!
     
     var crossH: UIView!
     var crossV: UIView!
     
-    var los: LosMKR!
+    var line: LineMKR!
     var fd: FirstDownMKR!
-    var cr: CGFloat?
     
-    var buttons: [PointBTN] = []
-    
-    var tap = UITapGestureRecognizer()
+    var ready: Bool = false
     
     override func drawRect(rect: CGRect) {
-        
-        JP("DRAW")
         
         ratio = CGFloat(bounds.width) / 120
         vratio = CGFloat(bounds.height) / 53.33
         
-        if !tracker.fieldReady { tracker.it() }
+        if !ready {
+            
+            setData()
+            tracker.setData()
+            
+        }
         
         for v in subviews { if v.tag == -2 { v.removeFromSuperview() } }
         
@@ -47,9 +42,9 @@ class Field: UIView {
             
             let pos_right: Bool = tracker.posRight(s)
             
-            var x = toX(s.startX.yardToFull(pos_right))
-            var y = toP(s.startY)
-            if tracker.posRight(s) { y = toP(100 - s.startY) }
+            var x = s.startX.toX(pos_right)
+            var y = s.startY.toP() * bounds.height
+            if tracker.posRight(s) { y = (100 - s.startY).toP() * bounds.height }
             
             CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
             
@@ -58,11 +53,9 @@ class Field: UIView {
                 
                 if let endX = play.endX {
                     
-                    JP("PLAY: \(endX)")
-                    
-                    x = toX(endX.yardToFull(pos_right))
-                    y = toP(play.endY!)
-                    if tracker.posRight(s) { y = toP(100 - play.endY!) }
+                    x = endX.toX(pos_right)
+                    y = play.endY!.toP() * bounds.height
+                    if tracker.posRight(s) { y = (100 - play.endY!).toP() * bounds.height }
                     
                     CGContextSetLineWidth(c, 10.0)
                     CGContextSetLineDash(c, 10, [6,3], 2)
@@ -79,40 +72,31 @@ class Field: UIView {
                     
                     prev = play
                     
-                    tracker.drawSubButtons(i)
-                    
                 }
                 
             }
             
         }
         
+        ready = true
+        
     }
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        println("CODER")
-        println(bounds.width)
         
-        ball = BallBTN(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
-        ball.setImage(UIImage(named: "icon-football.png"), forState: .Normal)
-        ball.field = self
         
-        tap.addTarget(self, action: "fieldTPD:")
-        tap.numberOfTapsRequired = 2
+    }
+    
+    func setData(){
         
-        addGestureRecognizer(tap)
+        line = LineMKR(frame: CGRect(x: -100, y: 0, width: ratio, height: bounds.height))
+        line.field = self
+        line.backgroundColor = UIColor.blueColor()
+        addSubview(line)
         
-        ratio = CGFloat(bounds.width) / 120
-        vratio = CGFloat(bounds.height) / 53.33
-        
-        los = LosMKR(frame: CGRect(x: 20/*yarline*/ * ratio-(ratio/2), y: 0, width: ratio, height: bounds.height))
-        los.field = self
-        los.backgroundColor = UIColor.blueColor()
-        addSubview(los)
-        
-        fd = FirstDownMKR(frame: CGRect(x: 30/*yarline*/ * ratio-(ratio/2), y: 0, width: ratio, height: bounds.height))
+        fd = FirstDownMKR(frame: CGRect(x: -100, y: 0, width: ratio, height: bounds.height))
         fd.field = self
         fd.backgroundColor = UIColor.yellowColor()
         addSubview(fd)
@@ -128,60 +112,19 @@ class Field: UIView {
         crossV.alpha = 0.5
         addSubview(crossV)
         
-        ball.center = los.center
-        addSubview(ball)
-        
-        cr = los.center.x
-        
         hideCrosses()
         
     }
     
-    func button2Tapped(sender: UITapGestureRecognizer){
+    func lineDragged(touches: Set<NSObject>) -> Bool {
         
-        tracker.button2Tapped(sender)
+        let s = tracker.game.sequences[tracker.index]
+        let cell = tracker.sequenceTBL.cellForRowAtIndexPath(NSIndexPath(forRow: tracker.index, inSection: 0)) as! SequenceCell
         
-    }
-    
-    func toX(y: Int) -> CGFloat {
+        let t: UITouch = touches.first as! UITouch
+        let l: CGPoint = t.locationInView(self)
         
-        let ney = (CGFloat(y)+10) * ratio
-        
-        return ney
-        
-    }
-    
-    func toY(x: CGFloat) -> Int {
-        
-        let ney = round(x / ratio) - 10
-        
-        return Int(ney)
-        
-    }
-    
-    func toP(p: Int) -> Int{
-        
-        let n = Int(round((CGFloat(p) / 100) * bounds.height))
-        
-        return n
-        
-    }
-    
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        
-        
-        
-    }
-    
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-        
-        tracker.fieldTOuchesMoved(touches)
-        
-    }
-    
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
-        
-        tracker.fieldTOuchesEnded(touches)
+        return true
         
     }
     
@@ -199,172 +142,15 @@ class Field: UIView {
         
     }
     
-    func markerMoved(){
+    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
         
-//        d.markerMoved()
-        
-    }
-    
-    func draw(){
-        
-        self.setNeedsDisplay()
+        tracker.fieldTOuchesMoved(touches)
         
     }
     
-    func fieldTPD(sender: UITapGestureRecognizer){
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         
-        tracker.fieldTPD(sender)
-        
-    }
-    
-    func buttonDragged(sender: UIPanGestureRecognizer){
-        
-        var t = sender.translationInView(superview!)
-        
-    }
-    
-    func mirrorLOS(){
-        
-        ball.center.x = los.center.x
-        
-    }
-
-}
-
-extension Int {
-    
-    // CONVERT -40/40 to 40/60
-    func yardToFull(pos_right: Bool) -> Int {
-        
-        var nex = self
-        
-        if pos_right {
-        // RIGHT TO LEFT
-            
-            // RIGHT SIDE OF FIELD
-            if self > -50 && self < 0 {
-                
-                nex = 100 - (self * -1)
-                
-            }
-            
-            // LEFT ENDZONE
-            if self > 99 {
-                
-                nex = (self - 100) * -1
-                
-            }
-            
-            // RIGHT ENDZONE
-            if self < -99 {
-                
-                nex = self * -1
-                
-            }
-            
-        } else {
-        // LEFT TO RIGHT
-            
-            // RIGHT SIDE OF FIELD
-            if self > 0 && self < 50 {
-                
-                nex = 100 - self
-                
-            }
-            
-            // LEFT SIDE OF FIELD
-            if self > -50 && self < 0 {
-                
-                nex = self * -1
-                
-            }
-            
-            // LEFT ENDZONE
-            if self < -99 {
-                
-                nex = self + 100
-                
-            }
-            
-        }
-        
-        return nex
-        
-    } // CONVERT 40/60 to -40/40
-    
-    func fullToYard(pos_right: Bool) -> Int {
-        
-        var nex = self
-        
-        if pos_right {
-            // RIGHT TO LEFT
-            
-            // RIGHT SIDE OF FIELD
-            if self > 50 && self < 100 {
-                
-                nex = self - 100
-                
-            }
-            
-            // RIGHT ENDZONE
-            if self > 99 {
-                
-                nex = self * -1
-                
-            }
-            
-            // LEFT ENDZONE
-            if self < 1 {
-                
-                nex = 100 + abs(self)
-                
-            }
-            
-        } else {
-            // LEFT TO RIGHT
-            
-            // RIGHT SIDE OF FIELD
-            if self > 50 && self < 100 {
-                
-                nex = 100 - self
-                
-            }
-            
-            // LEFT SIDE OF FIELD
-            if self < 50 && self > 0 {
-                
-                nex = self * -1
-                
-            }
-            
-            // LEFT ENDZONE
-            if self < 1 {
-                
-                nex = -100 + self
-                
-            }
-            
-            // RIGHT ENDZONE
-            if self > 99 {
-                
-                nex = self
-                
-            }
-            
-        }
-        
-        return nex
-        
-    } // CONVERT 40/60 to -40/40
-    
-    // FLIP SPOT
-    func flipSpot() -> Int {
-        
-        var spot = self
-        
-        if self != 50 { spot *= -1 }
-        
-        return spot
+        tracker.fieldTOuchesEnded(touches)
         
     }
     

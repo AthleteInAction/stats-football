@@ -10,7 +10,7 @@ import UIKit
 
 class PenaltyMKR: UIButton {
     
-    var tracker: TrackerCTRL!
+    var tracker: Tracker!
     
     var index: Int!
     
@@ -21,7 +21,7 @@ class PenaltyMKR: UIButton {
     var dir: Bool = true
     
     var img: UIImageView!
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -61,70 +61,90 @@ class PenaltyMKR: UIButton {
         
         var translation  = sender.translationInView(superview!)
         
-        var nex = round((lastLocation.x + translation.x) / tracker.field.ratio) * tracker.field.ratio
+        var nex = round((lastLocation.x + translation.x) / ratio) * ratio
         
-        var yard_inc: Int = Int(round(translation.x / tracker.field.ratio))
+        var yard_inc: Int = Int(round(translation.x / ratio))
         
-        let newEndX = (p.endX!.yardToFull(pos_right) + yard_inc).fullToYard(pos_right)
+        var x = p.endX!.spot + yard_inc
+        
+        if pos_right {
+            x = p.endX!.spot - yard_inc
+        }
+        
+        if x < 1 { x = 1 }
+        if x > 99 { x = 99 }
+        
+        let newEndX = Yardline(spot: x)
         
         setMKR(newEndX)
         
         if sender.state == UIGestureRecognizerState.Ended {
             
             p.endX = newEndX
+            
             p.save(nil)
-            tracker.MPC.sendGame(tracker.game)
-            tracker.penaltyTBL.reloadData()
+            
+            s.getPenalties()
+            
+            tracker.penaltyTBL.penalties = s.penalties
+            
+            tracker.updateScore()
             
         }
+        
+        let ip = NSIndexPath(forRow: index, inSection: 0)
+        tracker.penaltyTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
         
     }
     
-    func setMKR(spot: Int) -> Bool {
-        
-        if (spot <= 50 && spot > 0) || (spot <= -1 && spot >= -49) {
-            
-        } else {
-            return false
-        }
+    func setMKR(spot: Yardline) -> Bool {
         
         let s = tracker.game.sequences[tracker.index]
-        let p = s.penalties[index]
         
-        let pos_right: Bool = tracker.posRight(s)
+        let penalty = s.penalties[index]
         
-        var newEndFull = spot.yardToFull(pos_right)
+        let pos_right = tracker.posRight(s)
         
-        var w = CGFloat(p.distance) * tracker.field.ratio
+        var w = CGFloat(penalty.distance) * ratio
+        var x = spot.toX(pos_right)
         
-        if pos_right && dir {
+        var _frame: CGRect!
+        
+        // If the penalty is on the original team
+        if s.team.object.isEqual(penalty.team.object) {
             
-            if (100 - newEndFull) < p.distance {
+            let half = penalty.distance
+            
+            if spot.spot < half {
                 
-                w = (100 - CGFloat(newEndFull)) * tracker.field.ratio
+                w = CGFloat(spot.spot) * ratio
                 
             }
+            
+            if pos_right { x = x - w }
             
         } else {
             
-            if newEndFull < p.distance {
+            let half = 100 - penalty.distance
+            
+            if spot.spot > half {
                 
-                w = CGFloat(newEndFull) * tracker.field.ratio
+                w = CGFloat((100 - spot.spot)) * ratio
                 
             }
             
+            if !pos_right { x = x - w }
+            
         }
         
-        var x = tracker.field.toX(newEndFull)
+        _frame = CGRect(x: x, y: 0, width: w, height: tracker.field.bounds.height)
         
-        if dir { x -= w }
-        
-        frame = CGRect(x: x, y: 0, width: w, height: tracker.field.bounds.height)
+        frame = _frame
         
         setArrow(dir)
         
         return true
-    
+        
     }
     
     func setArrow(right: Bool){
@@ -142,7 +162,7 @@ class PenaltyMKR: UIButton {
         img.contentMode = UIViewContentMode.ScaleAspectFit
         
         if right {
-        
+            
             img.image = UIImage(named: "arrow_r.png")
             
         } else {
@@ -152,5 +172,5 @@ class PenaltyMKR: UIButton {
         }
         
     }
-
+    
 }

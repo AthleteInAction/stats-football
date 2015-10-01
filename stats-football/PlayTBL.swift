@@ -10,7 +10,9 @@ import UIKit
 
 class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
-    var tracker: TrackerCTRL!
+    var tracker: Tracker!
+    
+    var plays: [Play] = []
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -18,8 +20,7 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         delegate = self
         dataSource = self
         
-        estimatedRowHeight = 44
-        rowHeight = UITableViewAutomaticDimension
+        rowHeight = 34
         
         separatorStyle = .None
         
@@ -47,19 +48,7 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if tracker.game.sequences.count == 0 {
-            
-            return 0
-            
-        } else {
-            
-            let s = tracker.game.sequences[tracker.index]
-            
-            s.getPlays()
-            
-            return s.plays.count
-            
-        }
+        return plays.count
         
     }
     
@@ -69,15 +58,7 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let s = tracker.game.sequences[tracker.index]
         
-        s.getPlays()
-        
-        if s.plays.count == 0 {
-            let c = UITableViewCell()
-            c.textLabel?.text = "NO DATA : \(indexPath.row)"
-            return c
-        }
-        
-        let p = s.plays[indexPath.row]
+        let p = plays[indexPath.row]
         
         cell.userInteractionEnabled = false
         
@@ -85,17 +66,26 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         if let endX = p.endX {
             
-            if p.endX == 50 {
+            switch endX.spot {
+            case 50:
+                
                 t = 50.string()
-            } else if p.endX < 0 {
                 
-                // -38
-                t = "\(s.team.short) \(p.endX! * -1)"
+            case 1...49:
                 
-            } else {
+                t = "\(s.team.short) \(endX.toShort())"
                 
-                // 38
-                t = "\(tracker.opTeam(s.team).short) \(p.endX!)"
+            case 51...99:
+                
+                t = "\(tracker.opTeam(s.team).short) \(endX.toShort())"
+                
+            default:
+                
+                if endX.spot < 50 {
+                    t = "\(s.team.short) ENDZONE"
+                } else {
+                    t = "\(tracker.opTeam(s.team).short) ENDZONE"
+                }
                 
             }
             
@@ -106,25 +96,25 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         var txt = "#\(p.player_a) "
         
-        switch p.key {
-        case "run":
+        switch p.key as Key {
+        case .Run:
             txt += "runs"
             txt += " to \(t)"
-        case "return":
+        case .Return:
             txt += "returns"
             txt += " to \(t)"
-        case "kick":
+        case .Kick:
             txt += "kicks"
             txt += " to \(t)"
-        case "pass":
+        case .Pass:
             txt += "passes to #"
             txt += p.player_b!.string()
             txt += ", down at \(t)"
             cell.TXT.textColor = UIColor(red: 64/155, green: 64/155, blue: 64/155, alpha: 1)
-        case "incomplete":
+        case .Incomplete:
             txt += " Incomplete"
         default:
-            txt += p.key
+            txt += p.key.displayKey
             txt += " to \(t)"
         }
         
@@ -142,7 +132,9 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func reload(){
         
-        tracker.game.sequences[tracker.index].getPlays()
+        let s = tracker.game.sequences[tracker.index]
+        s.getPlays()
+        plays = s.plays
         reloadData()
         
     }

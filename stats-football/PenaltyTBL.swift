@@ -10,7 +10,9 @@ import UIKit
 
 class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
-    var tracker: TrackerCTRL!
+    var tracker: Tracker!
+    
+    var penalties: [Penalty] = []
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -18,8 +20,7 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         delegate = self
         dataSource = self
         
-        estimatedRowHeight = 44
-        rowHeight = UITableViewAutomaticDimension
+        rowHeight = 46
         
         separatorStyle = .None
         
@@ -47,19 +48,7 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if tracker.game.sequences.count == 0 {
-            
-            return 0
-            
-        } else {
-            
-            let s = tracker.game.sequences[tracker.index]
-            
-            s.getPenalties()
-            
-            return s.penalties.count
-            
-        }
+        return penalties.count
         
     }
     
@@ -67,41 +56,25 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let s = tracker.game.sequences[tracker.index]
         
-        s.getPenalties()
-        
-        if s.penalties.count == 0 {
+        if penalties.count == 0 {
             let c = UITableViewCell()
             c.textLabel?.text = "NO DATA : \(indexPath.row)"
             return c
         }
-        JP("PENALTIES 2: \(s.penalties.count)")
-        let penalty = s.penalties[indexPath.row]
+        
+        let penalty = penalties[indexPath.row]
         
         let cell = tableView.dequeueReusableCellWithIdentifier("penalty_cell") as! PenaltyCell
         cell.backgroundColor = UIColor.yellowColor()
         
-        var top = "\(penalty.distance) yard penalty on \(penalty.team.short)"
-        
-        if let p = penalty.player {
-            
-            top += " #\(p)"
-            
-        }
+        var top = "\(penalty.distance) yard penalty"
         
         cell.topTXT.text = top
         
-        switch penalty.enforcement {
-        case "declined":
+        switch penalty.enforcement as Key {
+        case .Declined,.Offset,.Kick:
             
-            cell.btmTXT.text = "Declined"
-            
-        case "offset":
-            
-            cell.btmTXT.text = "Offset"
-            
-        case "kick":
-            
-            cell.btmTXT.text = "Enforced on Kickoff"
+            cell.btmTXT.text = penalty.enforcement.displayKey
             
         default:
             
@@ -109,17 +82,26 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
             if let endX = penalty.endX {
                 
-                if endX == 50 {
+                switch endX.spot {
+                case 50:
+                    
                     t = 50.string()
-                } else if endX < 0 {
                     
-                    // -38
-                    t = "\(s.team.short) \(endX * -1)"
+                case 1...49:
                     
-                } else {
+                    t = "\(s.team.short) \(endX.toShort())"
                     
-                    // 38
-                    t = "\(tracker.opTeam(penalty.team).short) \(endX)"
+                case 51...99:
+                    
+                    t = "\(tracker.opTeam(s.team).short) \(endX.toShort())"
+                    
+                default:
+                    
+                    if endX.spot < 50 {
+                        t = "\(s.team.short) ENDZONE"
+                    } else {
+                        t = "\(tracker.opTeam(s.team).short) ENDZONE"
+                    }
                     
                 }
                 
@@ -145,19 +127,29 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
             let s = tracker.game.sequences[tracker.index]
             
-            s.getPenalties()
-            
-            let penalty = s.penalties[indexPath.row]
+            let penalty = penalties[indexPath.row]
             
             penalty.delete(nil)
             
-            s.penalties.removeAtIndex(indexPath.row)
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
+            s.getPenalties()
             
-            tracker.draw()
+            penalties = s.penalties
+            
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
+            
+            tracker.field.setNeedsDisplay()
             tracker.drawButtons()
             
         }
+        
+    }
+    
+    func reload(){
+        
+        let s = tracker.game.sequences[tracker.index]
+        s.getPenalties()
+        penalties = s.penalties
+        reloadData()
         
     }
 

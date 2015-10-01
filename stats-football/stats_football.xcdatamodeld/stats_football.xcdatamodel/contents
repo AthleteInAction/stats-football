@@ -2,8 +2,10 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14F27" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Games" representedClassName="GameObject" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="right_home" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="away" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="away_games" inverseEntity="Teams" syncable="YES"/>
         <relationship name="home" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="home_games" inverseEntity="Teams" syncable="YES"/>
+        <relationship name="players" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Players" inverseName="game" inverseEntity="Players" syncable="YES"/>
         <relationship name="sequences" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sequences" inverseName="game" inverseEntity="Sequences" syncable="YES"/>
     </entity>
     <entity name="Penalties" representedClassName="PenaltyObject" syncable="YES">
@@ -21,6 +23,7 @@
         <attribute name="last_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="number" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="used" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="game" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Games" inverseName="players" inverseEntity="Games" syncable="YES"/>
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="roster" inverseEntity="Teams" syncable="YES"/>
     </entity>
     <entity name="Plays" representedClassName="PlayObject" syncable="YES">
@@ -50,9 +53,10 @@
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="sequences" inverseEntity="Teams" syncable="YES"/>
     </entity>
     <entity name="Teams" representedClassName="TeamObject" syncable="YES">
-        <attribute name="color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="primary" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="secondary" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="short" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="away_games" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Games" inverseName="away" inverseEntity="Games" syncable="YES"/>
         <relationship name="home_games" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Games" inverseName="home" inverseEntity="Games" syncable="YES"/>
@@ -62,11 +66,11 @@
         <relationship name="sequences" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sequences" inverseName="team" inverseEntity="Sequences" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Games" positionX="-198" positionY="-135" width="128" height="105"/>
+        <element name="Games" positionX="-198" positionY="-135" width="128" height="133"/>
         <element name="Penalties" positionX="-81" positionY="306" width="128" height="150"/>
-        <element name="Players" positionX="153" positionY="236" width="128" height="133"/>
+        <element name="Players" positionX="153" positionY="236" width="128" height="148"/>
         <element name="Plays" positionX="171" positionY="-18" width="128" height="163"/>
         <element name="Sequences" positionX="-369" positionY="9" width="128" height="255"/>
-        <element name="Teams" positionX="-2" positionY="-135" width="128" height="195"/>
+        <element name="Teams" positionX="-2" positionY="-135" width="128" height="210"/>
     </elements>
 </model>

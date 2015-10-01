@@ -5,12 +5,6 @@
 //  Created by grobinson on 9/23/15.
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
-
-func JP(item: AnyObject){
-    
-    println(item)
-    
-}
 extension Bool {
     
     func toInt() -> Int {
@@ -45,29 +39,26 @@ extension Stats {
         // LOOP THROUGH PENALTIES
         // ========================================================
         // ========================================================
-        var infractionPoint = 100
+        var infractionPoint = Yardline(spot: 100)
         var hasPenaltyWithSpot = false
-        sequence.getPenalties()
         for penalty in reverse(sequence.penalties) {
             JP("DISTANCE: \(penalty.distance)")
             if let x = penalty.endX {
                 
                 hasPenaltyWithSpot = true
                 
-                JP("ENFORCEMENT: \(penalty.enforcement)")
+                JP("ENFORCEMENT: \(penalty.enforcement.displayKey)")
                 
-                if penalty.enforcement == "spot of foul" {
+                if penalty.enforcement == Key.SpotOfFoul {
                     
-                    let spot = Yardline(yardline: x)
-                    
-                    JP("PENALTY SPOT: \(spot.spot)")
+                    JP("PENALTY SPOT: \(x.spot)")
                     
                     if penalty.team.object.isEqual(sequence.team.object) {
-                        infractionPoint = spot.penaltyPlus(penalty.distance)
+                        infractionPoint = x.penaltyPlus(penalty.distance)
                     } else {
-                        infractionPoint = spot.penaltyMinus(penalty.distance)
+                        infractionPoint = x.penaltyMinus(penalty.distance)
                     }
-                    JP("INFRACTION POINT: \(infractionPoint)")
+                    JP("INFRACTION POINT: \(infractionPoint.spot)")
                     break
                     
                 }
@@ -82,13 +73,12 @@ extension Stats {
                 
                 let score = Filters.score(sequence)
                 
-                var cx = sequence.startX.yardToFull(false)
+                var cx = sequence.startX
                 
                 // FIND LAST SPOT
                 // ========================================================
                 // ========================================================
                 var lastPlayWithSpot: Int?
-                sequence.getPlays()
                 for (i,play) in enumerate(reverse(sequence.plays)) {
                     
                     if let spot = play.endX {
@@ -100,6 +90,79 @@ extension Stats {
                     }
                     
                 }
+                // ========================================================
+                // ========================================================
+                
+                
+                // PRE PLAYS
+                // ========================================================
+                // ========================================================
+                var noRushes = false
+                var rushAttempt: Int = 0
+                var endedBehindLine = false
+                var rushPlay = true
+                var passPlay = false
+                var endOfPassPlay: Int?
+                var fumbleI: Int?
+                var prePrev: Play?
+                var vx = Yardline(spot: sequence.startX.spot)
+                for (i,play) in enumerate(sequence.plays) {
+                    
+                    switch play.key as Key {
+                    case .Pass:
+                        
+                        passPlay = true
+                        
+                    case .Pass,.Punt,.FGA,.FGM,.Incomplete,.Interception:
+                        
+                        rushPlay = false
+                        if vx.spot <= sequence.startX.spot { noRushes = true }
+                        
+                    case .Run:
+                        
+                        if let fi = fumbleI {
+                            if i >= fi { break }
+                        }
+                        
+                        if vx.spot <= sequence.startX.spot || play.endX?.spot <= sequence.startX.spot { rushAttempt = i }
+                        
+                    case .Lateral:
+                        
+                        if passPlay { endOfPassPlay = i }
+                        
+                        if rushPlay {
+                            
+                            if let fi = fumbleI {
+                                if i >= fi { break }
+                            }
+                            
+                            if vx.spot <= sequence.startX.spot || play.endX?.spot <= sequence.startX.spot { rushAttempt = i }
+                            
+                        }
+                        
+                    case .Fumble:
+                        
+                        if passPlay { endOfPassPlay = i }
+                        
+                        if let f = fumbleI {} else { fumbleI = i }
+                        
+                        if let p = prePrev {
+                            
+                            if vx.spot <= sequence.startX.spot { endedBehindLine = true }
+                            
+                        }
+                        
+                    default: ()
+                    }
+                    
+                    if let x = play.endX { vx = x }
+                    prePrev = play
+                    
+                }
+                if vx.spot <= sequence.startX.spot {
+                    if let f = fumbleI {  } else { endedBehindLine = true }
+                }
+                JP("RUSH ATTEMPT: \(rushAttempt) : RUSH-PLAY: \(rushPlay) : BEHIND LINE: \(endedBehindLine) : NORUSHES: \(noRushes) : FUMBLE-I: \(fumbleI)")
                 // ========================================================
                 // ========================================================
                 
@@ -117,23 +180,24 @@ extension Stats {
                     // SPOTS -----------------------------
                     if let x = play.endX {
                         
-                        var endX = x.yardToFull(false)
-                        if endX >= 100 { endX = 100 }
-                        if endX <= 0 { endX = 0 }
+                        var endX = x
+                        if endX.spot >= 100 { endX.spot = 100 }
+                        if endX.spot <= 0 { endX.spot = 0 }
                         
-                        switch play.key {
-                        case "pass":
+                        switch play.key as Key {
+                        case .Pass:
                         // PASS ++++++++++++++++++++++++++++++++++++++++++
                             
-                            if cx < infractionPoint {
+                            if cx.spot < infractionPoint.spot {
                                 
-                                if endX > infractionPoint { endX = infractionPoint }
+                                if endX.spot > infractionPoint.spot { endX = infractionPoint }
                                 
                                 var stat: Stat = Stat()
-                                stat.playtype = sequence.key
+                                stat.attempt = true
+                                stat.playtype = sequence.key.string
                                 stat.key = "completion"
                                 stat.player = play.player_a
-                                stat.value = (endX - cx)
+                                stat.value = (endX.spot - cx.spot)
                                 if pos {
                                     stat.team = sequence.game.home
                                 } else {
@@ -146,211 +210,424 @@ extension Stats {
                                 
                                 stats.append(stat)
                                 
-//                                stat = Stat()
-//                                stat.playtype = sequence.key
-//                                stat.key = "reception"
-//                                stat.player = play.player_b!
-//                                stat.value = (endX - cx)
-//                                if !pos {
-//                                    stat.team = sequence.game.home
-//                                } else {
-//                                    stat.team = sequence.game.away
-//                                }
-//                                
-//                                if let lp = lastPlayWithSpot {
-//                                    if lp == i { stat.score = score[pos.toInt()] }
-//                                }
-//                                
-//                                stats.append(stat)
-                                
-                            }
-                            
-                        // PASS ++++++++++++++++++++++++++++++++++++++++++
-                        case "interception":
-                        // INTERCEPTION ++++++++++++++++++++++++++++++++++
-                            
-                            if cx < infractionPoint {
-                                
-                                if endX > infractionPoint { endX = infractionPoint }
-                                
-                                var stat: Stat = Stat()
-                                stat.playtype = sequence.key
-                                stat.key = "int_thrown"
-                                stat.player = play.player_a
+                                stat = Stat()
+                                stat.attempt = true
+                                stat.playtype = sequence.key.string
+                                stat.key = "reception"
+                                stat.player = play.player_b!
+                                stat.value = (endX.spot - cx.spot)
                                 if pos {
                                     stat.team = sequence.game.home
                                 } else {
                                     stat.team = sequence.game.away
                                 }
                                 
+                                if let lp = lastPlayWithSpot {
+                                    if lp == i { stat.score = score[pos.toInt()] }
+                                }
+                                
                                 stats.append(stat)
-//                                stat = [
-//                                    "playtype": sequence.key,
-//                                    "player": play.player_a,
-//                                    "key": "int_thrown"
-//                                ]
-//                                
-//                                stats[team]?.append(stat)
-//                                
-//                                stat = [
-//                                    "playtype": sequence.key,
-//                                    "player": play.player_b!,
-//                                    "key": play.key
-//                                ]
-//                                
-//                                if let lp = lastPlayWithSpot {
-//                                    let opp = !pos
-//                                    stat["score"] = score[opp.toInt()].string
-//                                }
-//                                
-//                                stats[teamSide(!pos)]?.append(stat)
-                                
-                            }
-                        
-                        // INTERCEPTION ++++++++++++++++++++++++++++++++++
-                        case "return":
-                        // RETURN ++++++++++++++++++++++++++++++++++++++++
-                            
-                            if cx < infractionPoint {
-                                
-                                if endX > infractionPoint { endX = infractionPoint }
-                                
-//                                if let previous = prev {
-//                                    
-//                                    stat = [
-//                                        "playtype": sequence.key,
-//                                        "player": play.player_a,
-//                                        "value": ((endX - cx) * -1),
-//                                        "key": previous.key+"_return"
-//                                    ]
-//                                    
-//                                }
-//                                
-//                                if let lp = lastPlayWithSpot {
-//                                    if lp == i { stat["score"] = score[pos.toInt()].string }
-//                                }
-//                                
-//                                stats[team]?.append(stat)
-                                
-                            }
-                        
-                        // RETURN ++++++++++++++++++++++++++++++++++++++++
-                        case "fumble":
-                        // FUBMLE ++++++++++++++++++++++++++++++++++++++++
-                            
-                            if cx < infractionPoint {
-                                
-                                if endX > infractionPoint { endX = infractionPoint }
-                                
-//                                stat = [
-//                                    "playtype": sequence.key,
-//                                    "player": play.player_a,
-//                                    "key": play.key,
-//                                    "value": (endX - cx)
-//                                ]
-//                                
-//                                if let lp = lastPlayWithSpot {
-//                                    if lp == i { stat["score"] = score[pos.toInt()].string }
-//                                }
-//                                
-//                                stats[team]?.append(stat)
-//                                
-//                                if let b = play.player_b {
-//                                    
-//                                    stat = [
-//                                        "playtype": sequence.key,
-//                                        "player": b,
-//                                        "key": play.key+"_recovery",
-//                                        "value": (endX - cx)
-//                                    ]
-//                                    
-//                                    let tmp_pos = sequence.game.home.object.isEqual(play.team!.object)
-//                                    
-//                                    if let lp = lastPlayWithSpot {
-//                                        if lp == i { stat["score"] = score[tmp_pos.toInt()].string }
-//                                    }
-//                                    
-//                                    stats[teamSide(tmp_pos)]?.append(stat)
-//                                    
-//                                }
                                 
                             }
                             
-                        // FUBMLE ++++++++++++++++++++++++++++++++++++++++
-                        case "field goal made":
-                        // FIELD GOAL MADE +++++++++++++++++++++++++++++++
+                        // PASS ++++++++++++++++++++++++++++++++++++++++++
+                        case .Return:
+                        // RETURNS +++++++++++++++++++++++++++++++++++++++
                             
-                            if cx < infractionPoint {
+                            if let p = prev {
                                 
-                                if endX > infractionPoint { endX = infractionPoint }
+                                if p.key == .Punt {
+                                    JP("PUNT RETURN: \(pos)")
+                                    var stat = Stat()
+                                    stat.attempt = true
+                                    stat.playtype = sequence.key.string
+                                    stat.key = "punt_return"
+                                    stat.player = play.player_a
+                                    stat.value = (endX.opposite().spot - cx.opposite().spot)
+                                    
+                                    if pos {
+                                        stat.team = sequence.game.home
+                                    } else {
+                                        stat.team = sequence.game.away
+                                    }
+                                    
+                                    if let lp = lastPlayWithSpot {
+                                        if lp == i { stat.score = score[pos.toInt()] }
+                                    }
+                                    
+                                    stats.append(stat)
+                                    
+                                }
                                 
-//                                stat = [
-//                                    "playtype": sequence.key,
-//                                    "player": play.player_a,
-//                                    "key": play.key,
-//                                    "value": (100 - endX)
-//                                ]
-//                                
-//                                if let lp = lastPlayWithSpot {
-//                                    if lp == i { stat["score"] = score[pos.toInt()].string }
-//                                }
-//                                
-//                                stats[team]?.append(stat)
+                                if p.key == .Kick {
+                                    JP("KICK RETURN: \(pos)")
+                                    var stat = Stat()
+                                    stat.attempt = true
+                                    stat.playtype = sequence.key.string
+                                    stat.key = "kick_return"
+                                    stat.player = play.player_a
+                                    stat.value = (endX.opposite().spot - cx.opposite().spot)
+                                    
+                                    if pos {
+                                        stat.team = sequence.game.home
+                                    } else {
+                                        stat.team = sequence.game.away
+                                    }
+                                    
+                                    if let lp = lastPlayWithSpot {
+                                        if lp == i { stat.score = score[pos.toInt()] }
+                                    }
+                                    
+                                    stats.append(stat)
+                                    
+                                }
                                 
                             }
                             
-                        // FIELD GOAL MADE +++++++++++++++++++++++++++++++
-                        case "field goal attempted":
-                        // FIELD GOAL ATTEMPTED ++++++++++++++++++++++++++
-                            
-                            if cx < infractionPoint {
-                                
-                                if endX > infractionPoint { endX = infractionPoint }
-                                
-//                                stat = [
-//                                    "playtype": sequence.key,
-//                                    "player": play.player_a,
-//                                    "key": play.key,
-//                                    "value": (100 - endX)
-//                                ]
-//                                
-//                                stats[team]?.append(stat)
-                                
-                            }
-                            
-                        // FIELD GOAL ATTEMPTED ++++++++++++++++++++++++++
-                        case "punt","kick":
-                            
-                            ()
-                        // KICKS +++++++++++++++++++++++++++++++++++++++++
-                            
-//                            stat = [
-//                                "playtype": sequence.key,
-//                                "player": play.player_a,
-//                                "key": play.key,
-//                                "value": (endX - cx)
-//                            ]
+                        // RETURNS +++++++++++++++++++++++++++++++++++++++
+//                        case "interception":
+//                        // INTERCEPTION ++++++++++++++++++++++++++++++++++
 //                            
-//                            stats[team]?.append(stat)
+//                            if cx < infractionPoint {
+//                                
+//                                if endX > infractionPoint { endX = infractionPoint }
+//                                
+//                                var stat: Stat = Stat()
+//                                stat.playtype = sequence.key
+//                                stat.key = "int_thrown"
+//                                stat.player = play.player_a
+//                                if pos {
+//                                    stat.team = sequence.game.home
+//                                } else {
+//                                    stat.team = sequence.game.away
+//                                }
+//                                
+//                                stats.append(stat)
+////                                stat = [
+////                                    "playtype": sequence.key,
+////                                    "player": play.player_a,
+////                                    "key": "int_thrown"
+////                                ]
+////                                
+////                                stats[team]?.append(stat)
+////                                
+////                                stat = [
+////                                    "playtype": sequence.key,
+////                                    "player": play.player_b!,
+////                                    "key": play.key
+////                                ]
+////                                
+////                                if let lp = lastPlayWithSpot {
+////                                    let opp = !pos
+////                                    stat["score"] = score[opp.toInt()].string
+////                                }
+////                                
+////                                stats[teamSide(!pos)]?.append(stat)
+//                                
+//                            }
+//                        
+//                        // INTERCEPTION ++++++++++++++++++++++++++++++++++
+//                        case "return":
+//                        // RETURN ++++++++++++++++++++++++++++++++++++++++
+//                            
+//                            if cx < infractionPoint {
+//                                
+//                                if endX > infractionPoint { endX = infractionPoint }
+//                                
+////                                if let previous = prev {
+////                                    
+////                                    stat = [
+////                                        "playtype": sequence.key,
+////                                        "player": play.player_a,
+////                                        "value": ((endX - cx) * -1),
+////                                        "key": previous.key+"_return"
+////                                    ]
+////                                    
+////                                }
+////                                
+////                                if let lp = lastPlayWithSpot {
+////                                    if lp == i { stat["score"] = score[pos.toInt()].string }
+////                                }
+////                                
+////                                stats[team]?.append(stat)
+//                                
+//                            }
+//                        
+//                        // RETURN ++++++++++++++++++++++++++++++++++++++++
+//                        case "fumble":
+//                        // FUBMLE ++++++++++++++++++++++++++++++++++++++++
+//                            
+//                            if cx < infractionPoint {
+//                                
+//                                if endX > infractionPoint { endX = infractionPoint }
+//                                
+////                                stat = [
+////                                    "playtype": sequence.key,
+////                                    "player": play.player_a,
+////                                    "key": play.key,
+////                                    "value": (endX - cx)
+////                                ]
+////                                
+////                                if let lp = lastPlayWithSpot {
+////                                    if lp == i { stat["score"] = score[pos.toInt()].string }
+////                                }
+////                                
+////                                stats[team]?.append(stat)
+////                                
+////                                if let b = play.player_b {
+////                                    
+////                                    stat = [
+////                                        "playtype": sequence.key,
+////                                        "player": b,
+////                                        "key": play.key+"_recovery",
+////                                        "value": (endX - cx)
+////                                    ]
+////                                    
+////                                    let tmp_pos = sequence.game.home.object.isEqual(play.team!.object)
+////                                    
+////                                    if let lp = lastPlayWithSpot {
+////                                        if lp == i { stat["score"] = score[tmp_pos.toInt()].string }
+////                                    }
+////                                    
+////                                    stats[teamSide(tmp_pos)]?.append(stat)
+////                                    
+////                                }
+//                                
+//                            }
+//                            
+//                        // FUBMLE ++++++++++++++++++++++++++++++++++++++++
+//                        case "field goal made":
+//                        // FIELD GOAL MADE +++++++++++++++++++++++++++++++
+//                            
+//                            if cx < infractionPoint {
+//                                
+//                                if endX > infractionPoint { endX = infractionPoint }
+//                                
+////                                stat = [
+////                                    "playtype": sequence.key,
+////                                    "player": play.player_a,
+////                                    "key": play.key,
+////                                    "value": (100 - endX)
+////                                ]
+////                                
+////                                if let lp = lastPlayWithSpot {
+////                                    if lp == i { stat["score"] = score[pos.toInt()].string }
+////                                }
+////                                
+////                                stats[team]?.append(stat)
+//                                
+//                            }
+//                            
+//                        // FIELD GOAL MADE +++++++++++++++++++++++++++++++
+//                        case "field goal attempted":
+//                        // FIELD GOAL ATTEMPTED ++++++++++++++++++++++++++
+//                            
+//                            if cx < infractionPoint {
+//                                
+//                                if endX > infractionPoint { endX = infractionPoint }
+//                                
+////                                stat = [
+////                                    "playtype": sequence.key,
+////                                    "player": play.player_a,
+////                                    "key": play.key,
+////                                    "value": (100 - endX)
+////                                ]
+////                                
+////                                stats[team]?.append(stat)
+//                                
+//                            }
+//                            
+//                        // FIELD GOAL ATTEMPTED ++++++++++++++++++++++++++
+//                        case "punt","kick":
+//                            
+//                            ()
+//                        // KICKS +++++++++++++++++++++++++++++++++++++++++
+//                            
+////                            stat = [
+////                                "playtype": sequence.key,
+////                                "player": play.player_a,
+////                                "key": play.key,
+////                                "value": (endX - cx)
+////                            ]
+////                            
+////                            stats[team]?.append(stat)
+//                            
+//                        // KICKS +++++++++++++++++++++++++++++++++++++++++
+                        case .Run:
+                        // RUN +++++++++++++++++++++++++++++++++++++++
                             
-                        // KICKS +++++++++++++++++++++++++++++++++++++++++
+                            if let f = fumbleI {
+                                if i >= f { break }
+                            }
+                            
+                            if passPlay {
+                                
+                                
+                                
+                            } else {
+                                
+                                if noRushes { break }
+                                
+                                if cx.spot < infractionPoint.spot {
+                                    
+                                    if endX.spot > infractionPoint.spot { endX = infractionPoint }
+                                    
+                                    if endedBehindLine {
+                                        
+                                        if rushAttempt == i {
+                                            
+                                            var stat: Stat = Stat()
+                                            stat.attempt = true
+                                            stat.value = (endX.spot - sequence.startX.spot)
+                                            if sequence.plays.count > i+1 {
+                                                
+                                                let next = sequence.plays[i+1]
+                                                if next.key == .Lateral {
+                                                    
+                                                    stat.value = (next.endX!.spot - sequence.startX.spot)
+                                                    
+                                                }
+                                                
+                                            }
+                                            stat.playtype = sequence.key.string
+                                            stat.key = play.key.string
+                                            stat.player = play.player_a
+                                            
+                                            if pos {
+                                                stat.team = sequence.game.home
+                                            } else {
+                                                stat.team = sequence.game.away
+                                            }
+                                            
+                                            if let lp = lastPlayWithSpot {
+                                                if lp == i { stat.score = score[pos.toInt()] }
+                                            }
+                                            
+                                            stats.append(stat)
+                                            
+                                        }
+                                        
+                                    } else {
+                                        
+                                        if i < rushAttempt { break }
+                                        
+                                        var stat: Stat = Stat()
+                                        stat.attempt = rushAttempt == i
+                                        JP("\(play.player_a) : CX: \(cx.spot) : [\(i)]")
+                                        if cx.spot <= sequence.startX.spot {
+                                            
+                                            stat.value = (endX.spot - sequence.startX.spot)
+                                            
+                                            if sequence.plays.count > i+1 {
+                                                
+                                                let next = sequence.plays[i+1]
+                                                if next.key == .Lateral {
+                                                    
+                                                    stat.value = (next.endX!.spot - sequence.startX.spot)
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        } else {
+                                            
+                                            stat.value = (endX.spot - cx.spot)
+                                            
+                                            if sequence.plays.count > i+1 {
+                                                
+                                                let next = sequence.plays[i+1]
+                                                if next.key == .Lateral {
+                                                    
+                                                    stat.value = (next.endX!.spot - cx.spot)
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        }
+                                        stat.playtype = sequence.key.string
+                                        stat.key = play.key.string
+                                        stat.player = play.player_a
+                                        
+                                        if pos {
+                                            stat.team = sequence.game.home
+                                        } else {
+                                            stat.team = sequence.game.away
+                                        }
+                                        
+                                        if let lp = lastPlayWithSpot {
+                                            if lp == i { stat.score = score[pos.toInt()] }
+                                        }
+                                        
+                                        stats.append(stat)
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        
+                        // RUN +++++++++++++++++++++++++++++++++++++++++++
+                        case .Lateral:
+                        // LATERAL +++++++++++++++++++++++++++++++++++++++
+                            
+                            if rushPlay {
+                                
+                                if let f = fumbleI {
+                                    if i >= f { break }
+                                }
+                                if noRushes { break }
+                                
+                                if cx.spot < infractionPoint.spot {
+                                    
+                                    if endX.spot > infractionPoint.spot { endX = infractionPoint }
+                                    
+                                    if endedBehindLine {
+                                        
+                                        if rushAttempt == i {
+                                            
+                                            var stat: Stat = Stat()
+                                            stat.attempt = true
+                                            stat.value = (endX.spot - sequence.startX.spot)
+                                            if sequence.plays.count > i+1 {
+                                                
+                                                let next = sequence.plays[i+1]
+                                                if next.key == .Lateral {
+                                                    
+                                                    stat.value = (next.endX!.spot - sequence.startX.spot)
+                                                    
+                                                }
+                                                
+                                            }
+                                            stat.playtype = sequence.key.string
+                                            stat.key = Key.Run.string
+                                            stat.player = play.player_a
+                                            
+                                            if pos {
+                                                stat.team = sequence.game.home
+                                            } else {
+                                                stat.team = sequence.game.away
+                                            }
+                                            
+                                            if let lp = lastPlayWithSpot {
+                                                if lp == i { stat.score = score[pos.toInt()] }
+                                            }
+                                            
+                                            stats.append(stat)
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        // LATERAL +++++++++++++++++++++++++++++++++++++++
                         default:
                         // DEFAULT +++++++++++++++++++++++++++++++++++++++
                             
-                            if cx < infractionPoint {
-                                
-                                if endX > infractionPoint { endX = infractionPoint }
-                                
-//                                stat = [
-//                                    "playtype": sequence.key,
-//                                    "player": play.player_a,
-//                                    "key": play.key,
-//                                    "value": (endX - cx)
-//                                ]
-//                                
-//                                stats[team]?.append(stat)
-                                
-                            }
+                            ()
                         
                         // DEFAULT ++++++++++++++++++++++++++++++++++++++
                         }
@@ -359,11 +636,11 @@ extension Stats {
                         
                     } else {
                         
-                        switch play.key {
-                        case "incomplete":
+                        switch play.key as Key {
+                        case .Incomplete:
                             
                             var stat: Stat = Stat()
-                            stat.playtype = sequence.key
+                            stat.playtype = sequence.key.string
                             stat.key = "incompletion"
                             stat.player = play.player_a
                             if pos {
@@ -384,19 +661,15 @@ extension Stats {
                     
                     // CHECK FOR CHANGE IN POSSESSION
                     // ++++++++++++++++++++++++++++++++
-                    switch play.key {
-                    case "punt","kick":
+                    switch play.key as Key {
+                    case .Punt,.Kick,.Interception,.Recovery:
                         
                         pos = !pos
                         
-                    case "fumble":
+                    case .Fumble:
                         
                         //                        if let team = play.team { pos = team.object.isEqual(sequence.team.object) }
                         ()
-                        
-                    case "interception","recovery":
-                        
-                        pos = !pos
                         
                     default:
                         

@@ -12,7 +12,7 @@ class PlayPOP: UIViewController,UIPopoverControllerDelegate {
 
     var pop: UIPopoverController!
     
-    var tracker: TrackerCTRL!
+    var tracker: Tracker!
     
     @IBOutlet weak var leftTable: PlayNumberSelector!
     @IBOutlet weak var keyTable: PlayKeySelectorOLD!

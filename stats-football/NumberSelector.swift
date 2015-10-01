@@ -12,10 +12,9 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
 
     @IBOutlet weak var table: UITableView!
     @IBOutlet weak var freqTBL: UITableView!
-    @IBOutlet weak var nTXT: UITextField!
-    @IBOutlet weak var teamSEL: UISegmentedControl!
+    var nTXT: UITextField!
     
-    var tracker: TrackerCTRL!
+    var tracker: Tracker!
     var newPlay: Play?
     var newPenalty: Penalty?
     var type: String!
@@ -38,23 +37,15 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         table.tag = 1
         freqTBL.tag = 2
         
-        if tracker.game.sequences.count > 0 {
-            s = tracker.game.sequences[tracker.index]
-        } else {
-            s = Sequence()
-        }
+        s = tracker.game.sequences[tracker.index]
         
         if tracker.rightHome {
             selectedTeam = tracker.game.away
-            teamSEL.setTitle(tracker.game.home.short, forSegmentAtIndex: 1)
-            teamSEL.setTitle(tracker.game.away.short, forSegmentAtIndex: 0)
             teamKey.removeAll(keepCapacity: true)
             teamKey.append(tracker.game.away)
             teamKey.append(tracker.game.home)
         } else {
             selectedTeam = tracker.game.home
-            teamSEL.setTitle(tracker.game.home.short, forSegmentAtIndex: 0)
-            teamSEL.setTitle(tracker.game.away.short, forSegmentAtIndex: 1)
             teamKey.removeAll(keepCapacity: true)
             teamKey.append(tracker.game.home)
             teamKey.append(tracker.game.away)
@@ -66,42 +57,28 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         ksel = KeySelector(nibName: "KeySelector", bundle: nil)
         ksel.tracker = tracker
         
-        nTXT.delegate = self
-        
         table.delegate = self
         table.dataSource = self
         freqTBL.delegate = self
         freqTBL.dataSource = self
         
-        var po = tracker.game.home.object.roster.allObjects as! [PlayerObject]
-        println(po.count)
-        var home: [Player] = []
-        for p in po {
-            
-            let player = Player(object: p)
-            
-            home.append(player)
-            
-        }
-        var pa = tracker.game.away.object.roster.allObjects as! [PlayerObject]
-        println(pa.count)
-        for p in pa {
-            
-            let player = Player(object: p)
-            
-            if !hasPlayer(items: home, player: player) {
-                
-                home.append(player)
-                
-            }
-            
-        }
-        println(home.count)
-        numbers = home
+        tracker.game.getPlayers()
+        numbers = tracker.game.players
         
         reload()
         
         edgesForExtendedLayout = UIRectEdge()
+        
+        nTXT = UITextField(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
+        nTXT.placeholder = "New #"
+        nTXT.font = UIFont.systemFontOfSize(14)
+        nTXT.textColor = UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
+        nTXT.backgroundColor = UIColor.whiteColor()
+        nTXT.textAlignment = .Center
+        nTXT.layer.cornerRadius = 4
+        nTXT.delegate = self
+        
+        navigationItem.titleView = nTXT
         
     }
 
@@ -118,28 +95,29 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
             
             let n = nTXT.text.toInt()!
             
-            let player = Player(team: selectedTeam, number: n)
+            let newPlayer = Player(game: tracker.game, number: n)
             
             var foundPlayer: Player?
-            for p in tracker.numbers {
+            for player in tracker.game.players {
                 
-                if p.number == player.number { foundPlayer = p }
+                if player.number == newPlayer.number { foundPlayer = player }
                 
             }
             
             if let p = foundPlayer {
                 
                 p.used++
+                p.save(nil)
                 
             } else {
                 
-                player.used++
-                player.save(nil)
-                numbers.insert(player, atIndex: 0)
+                newPlayer.used++
+                newPlayer.save(nil)
+                numbers.insert(newPlayer, atIndex: 0)
                 
             }
             
-            selectPlayer(player)
+            selectPlayer(newPlayer)
             
         }
         
@@ -168,6 +146,30 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         } else {
             
             return freq.count
+            
+        }
+        
+    }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        var txt = UILabel()
+        txt.textAlignment = .Center
+        txt.font = UIFont.systemFontOfSize(12)
+        txt.textColor = UIColor.whiteColor()
+        txt.backgroundColor = UIColor(red: 147/255, green: 147/255, blue: 154/255, alpha: 1)
+        
+        if tableView.tag == 1 {
+            
+            txt.text = "Ordered"
+            
+            return txt
+            
+        } else {
+            
+            txt.text = "Most Used"
+            
+            return txt
             
         }
         
@@ -249,15 +251,11 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                 
                 s.plays[i].tackles.append(n.number)
                 
-                tracker.draw()
-                
                 close()
                 
             case "sack":
                 
                 s.plays[i].sacks.append(n.number)
-                
-                tracker.draw()
                 
                 close()
                 
@@ -321,12 +319,6 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         }
         
         return false
-        
-    }
-    
-    @IBAction func teamChanged(sender: UISegmentedControl) {
-        
-        selectedTeam = teamKey[sender.selectedSegmentIndex]
         
     }
     

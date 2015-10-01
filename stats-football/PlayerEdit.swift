@@ -96,28 +96,28 @@ class PlayerEdit: UIViewController,UITextFieldDelegate {
     
     func save() -> Bool {
         
-        if numberTXT.text == "" { return false }
-        
-        var player: Player!
-        
-        if let p = editPlayer {
-            player = p
-        } else {
-            player = Player(team: teamDetail.team, number: numberTXT.text.toInt()!)
-        }
-        
-        if firstTXT.text != "" { player.first_name = firstTXT.text }
-        if lastTXT.text != "" { player.last_name = lastTXT.text }
-        
-        player.save(nil)
-        
-        teamDetail.team.roster.insert(player, atIndex: 0)
-        teamDetail.rosterTBL.reloadData()
-        teamDetail.main.gamesTBL.getData()
-        teamDetail.main.teamsTBL.getData()
-        
-        dismissKeyboard()
-        dismissViewControllerAnimated(true, completion: nil)
+//        if numberTXT.text == "" { return false }
+//        
+//        var player: Player!
+//        
+//        if let p = editPlayer {
+//            player = p
+//        } else {
+//            player = Player(game: tracker.game, number: numberTXT.text.toInt()!)
+//        }
+//        
+//        if firstTXT.text != "" { player.first_name = firstTXT.text }
+//        if lastTXT.text != "" { player.last_name = lastTXT.text }
+//        
+//        player.save(nil)
+//        
+//        teamDetail.team.roster.insert(player, atIndex: 0)
+//        teamDetail.rosterTBL.reloadData()
+//        teamDetail.main.gamesTBL.getData()
+//        teamDetail.main.teamsTBL.getData()
+//        
+//        dismissKeyboard()
+//        dismissViewControllerAnimated(true, completion: nil)
         
         return true
         

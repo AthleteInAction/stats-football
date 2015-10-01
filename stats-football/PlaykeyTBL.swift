@@ -10,7 +10,7 @@ import UIKit
 
 class PlaykeyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
-    var d: TrackerCTRL!
+    var d: Tracker!
     
     var keys = [
         "kick",

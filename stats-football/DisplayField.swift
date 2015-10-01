@@ -63,11 +63,11 @@ class DisplayField: UIView {
         ]
         
         for view in runs {
-            view.backgroundColor = Filters.colors("run", alpha: 0.9)
+            view.backgroundColor = Filters.colors(.Run, alpha: 0.9)
             addSubview(view)
         }
         for view in runTXTs {
-            view.backgroundColor = Filters.colors("run", alpha: 0.9)
+            view.backgroundColor = Filters.colors(.Run, alpha: 0.9)
             var txt = UILabel()
             txt.textColor = UIColor.whiteColor()
             txt.font = UIFont.systemFontOfSize(9, weight: 3)
@@ -76,11 +76,11 @@ class DisplayField: UIView {
         }
         
         for view in passes {
-            view.backgroundColor = Filters.colors("pass", alpha: 0.9)
+            view.backgroundColor = Filters.colors(.Pass, alpha: 0.9)
             addSubview(view)
         }
         for view in passTXTs {
-            view.backgroundColor = Filters.colors("pass", alpha: 0.9)
+            view.backgroundColor = Filters.colors(.Pass, alpha: 0.9)
             var txt = UILabel()
             txt.textColor = UIColor.whiteColor()
             txt.font = UIFont.systemFontOfSize(9, weight: 3)

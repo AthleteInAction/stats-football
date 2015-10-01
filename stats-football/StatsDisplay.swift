@@ -11,21 +11,46 @@ import UIKit
 class StatsDisplay: UIViewController {
 
     @IBOutlet weak var passingTBL: PassingTBL!
+    @IBOutlet weak var rushingTBL: RushingTBL!
+    @IBOutlet weak var receivingTBL: ReceivingTBL!
+    @IBOutlet weak var puntReturnsTBL: PuntReturnTBL!
+    @IBOutlet weak var kickReturnsTBL: PuntReturnTBL!
     
+    var game: Game!
     var team: Team!
-    var tracker: TrackerCTRL!
-    var t = "home"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if tracker.game.away.object.isEqual(team.object) { t = "away" }
+        title = "\(team.name) Stats"
         
-        title = "Stats"
-        
-        var close = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "closeTPD:")
+        var close = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Plain, target: self, action: "closeTPD:")
         
         navigationItem.setLeftBarButtonItem(close, animated: true)
+        
+        var tblView =  UIView(frame: CGRectZero)
+        passingTBL.tableFooterView = tblView
+        passingTBL.tableFooterView?.hidden = true
+        passingTBL.backgroundColor = UIColor.clearColor()
+        
+        receivingTBL.tableFooterView = tblView
+        receivingTBL.tableFooterView?.hidden = true
+        receivingTBL.backgroundColor = UIColor.clearColor()
+        
+        rushingTBL.tableFooterView = tblView
+        rushingTBL.tableFooterView?.hidden = true
+        rushingTBL.backgroundColor = UIColor.clearColor()
+        
+        puntReturnsTBL.tableFooterView = tblView
+        puntReturnsTBL.tableFooterView?.hidden = true
+        puntReturnsTBL.backgroundColor = UIColor.clearColor()
+        
+        kickReturnsTBL.tableFooterView = tblView
+        kickReturnsTBL.tableFooterView?.hidden = true
+        kickReturnsTBL.backgroundColor = UIColor.clearColor()
+        
+        puntReturnsTBL.type = "Punt"
+        kickReturnsTBL.type = "Kick"
         
         edgesForExtendedLayout = UIRectEdge()
         
@@ -48,41 +73,36 @@ class StatsDisplay: UIViewController {
     
     func doStats(){
         
-        var passing = [String:PassingTotal]()
+        game.getTotals()
         
-        tracker.game.getSequences()
-        for sequence in tracker.game.sequences {
-            
-            let stats: [Stat] = Stats.player(sequence: sequence)
-            
-            for stat in stats {
-                
-                if passing[stat.player.string()] == nil {
-                    
-                    passing[stat.player.string()] = PassingTotal()
-                    
-                } else {
-                    
-                    
-                    
-                }
-                
-                switch stat.key {
-                case "completion","incompletion","int_thrown":
-                    
-                    passing[stat.player.string()]!.add(stat: stat)
-                    
-                default:
-                    ()
-                }
-                
-            }
-            
+        var _team: Team!
+        
+        if game.home.object.isEqual(team.object) {
+            _team = game.home
+        } else {
+            _team = game.away
         }
-        JP(passing)
-        passingTBL.passing = passing
+        
+        passingTBL.team = _team
+        passingTBL.passing = _team.passing
+        
+        receivingTBL.team = _team
+        receivingTBL.receiving = _team.receiving
+        
+        rushingTBL.team = _team
+        rushingTBL.rushing = _team.rushing
+        
+        puntReturnsTBL.team = _team
+        puntReturnsTBL.returns = _team.puntReturns
+        
+        kickReturnsTBL.team = _team
+        kickReturnsTBL.returns = _team.kickReturns
         
         passingTBL.reloadData()
+        receivingTBL.reloadData()
+        rushingTBL.reloadData()
+        puntReturnsTBL.reloadData()
+        kickReturnsTBL.reloadData()
         
     }
 

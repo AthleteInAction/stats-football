@@ -72,7 +72,7 @@ class GamesTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
         let game = games[indexPath.row]
         game.getSequences()
         
-        var vc = TrackerCTRL(nibName: "Tracker",bundle: nil)
+        var vc = Tracker(nibName: "Tracker",bundle: nil)
         vc.game = game
         
         main.navigationController?.pushViewController(vc, animated: true)

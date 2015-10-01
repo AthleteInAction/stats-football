@@ -39,10 +39,10 @@ class Sequence {
     var game: Game!
     var team: Team!
     var qtr: Int!
-    var key: String!
+    var key: Playtype!
     var down: Int?
-    var fd: Int?
-    var startX: Int!
+    var fd: Yardline?
+    var startX: Yardline!
     var startY: Int!
     var replay: Bool = false
     var plays: [Play] = []
@@ -51,12 +51,13 @@ class Sequence {
     var created_at: NSDate!
     var object: SequenceObject!
     
-    init(){
+    init(game _game: Game){
         
         var entity = NSEntityDescription.entityForName("Sequences", inManagedObjectContext: context)
         var o = SequenceObject(entity: entity!, insertIntoManagedObjectContext: context)
         
         object = o
+        game = _game
         startY = 50
         created_at = NSDate()
         
@@ -69,10 +70,10 @@ class Sequence {
         team = Team(team: sequence.team)
         game = Game(game: sequence.game)
         qtr = sequence.qtr.toInt()!
-        key = sequence.key
+        key = sequence.key.toPlaytype
         if let d = sequence.down { down = d.toInt()! }
-        if let f = sequence.fd { fd = f.toInt()! }
-        startX = sequence.startX.toInt()!
+        if let f = sequence.fd { fd = Yardline(spot: f.toInt()!) }
+        startX = Yardline(spot: sequence.startX.toInt()!)
         startY = sequence.startY.toInt()!
         replay = sequence.replay.toBool()
         flagged = sequence.flagged.toBool()
@@ -89,9 +90,15 @@ class Sequence {
         var error: NSError?
         
         let p = object.plays.allObjects as! [PlayObject]
-        for o in p { o.managedObjectContext?.deleteObject(o) }
+        for o in p {
+            o.managedObjectContext?.deleteObject(o)
+            o.managedObjectContext?.save(nil)
+        }
         let pe = object.penalties.allObjects as! [PenaltyObject]
-        for o in pe { o.managedObjectContext?.deleteObject(o) }
+        for o in pe {
+            o.managedObjectContext?.deleteObject(o)
+            o.managedObjectContext?.save(nil)
+        }
         
         object.managedObjectContext?.deleteObject(object)
         object.managedObjectContext?.save(&error)
@@ -120,13 +127,13 @@ class Sequence {
         if let i = id { object.id = i.string() }
         object.created_at = created_at
         object.game = game.object
-        object.key = key
+        object.key = key.string
         object.team = team.object
         object.qtr = "\(qtr)"
-        if let d = down { object.down = "\(d)" } else { object.down = nil }
-        if let f = fd { object.fd = "\(f)" } else { object.fd = nil }
-        object.startX = "\(startX)"
-        object.startY = "\(startY)"
+        if let d = down { object.down = d.string() } else { object.down = nil }
+        if let f = fd { object.fd = f.spot.string() } else { object.fd = nil }
+        object.startX = startX.spot.string()
+        object.startY = startY.string()
         object.flagged = flagged.description
         object.replay = replay.description
         
@@ -145,86 +152,6 @@ class Sequence {
         }
         
         c?(error: error)
-        
-    }
-    
-    func saveRemote(completion: Completion?){
-        println("SAVE REMOTE")
-        var c = completion
-        
-        var s = "\(domain)"
-        var method = Method.PUT
-        var successCode = 200
-        
-        if let id = id {
-            
-            s += "/api/v1/sequences/\(id).json"
-            method = Method.PUT
-            successCode = 200
-            
-        } else {
-            
-            s += "/api/v1/sequences.json"
-            method = Method.POST
-            successCode = 201
-            
-        }
-        
-        var inner = [
-                "game_id": game.object.id!.toInt()!,
-                "team_id": team.object.id!.toInt()!,
-                "qtr": qtr,
-                "key": key,
-                "start_x": startX,
-                "start_y": startY,
-                "replay": replay,
-                "created_at": created_at
-        ]
-    
-        if let d = down { inner["down"] = d }
-        if let d = fd { inner["fd"] = d }
-        
-        let sequence = [
-            "sequence": inner
-        ]
-        
-        Alamofire.request(method, s, parameters: sequence,encoding: .JSON)
-            .responseJSON { request, response, data, error in
-                
-                if error == nil {
-                    
-                    if response?.statusCode == successCode {
-                        
-                        var json = JSON(data!)
-                        
-                        if let id = self.id {
-                            
-                        } else {
-                            
-                            self.id = json["sequence"]["id"].intValue
-                            self.object.id = self.id?.string()
-                            self.object.managedObjectContext?.save(nil)
-                            
-                        }
-                        
-                    } else {
-                        
-                        println("Status Code Error: \(response?.statusCode)")
-                        println(request)
-                        
-                    }
-                    
-                } else {
-                    
-                    println("Error!")
-                    println(error)
-                    println(request)
-                    
-                }
-                
-                c?(error: error)
-                
-        }
         
     }
     

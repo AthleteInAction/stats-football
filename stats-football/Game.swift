@@ -17,6 +17,7 @@ class GameObject: NSManagedObject {
     @NSManaged var id: String?
     @NSManaged var away: TeamObject
     @NSManaged var home: TeamObject
+    @NSManaged var players: NSSet
     @NSManaged var sequences: NSSet
     
 }
@@ -27,7 +28,9 @@ class Game {
     var id: Int?
     var away: Team!
     var home: Team!
+    var players: [Player] = []
     var sequences: [Sequence] = []
+    var playerStats: [Stat] = []
     var object: GameObject!
     
     init(away _away: Team,home _home: Team){
@@ -110,7 +113,6 @@ class Game {
             
             println(object)
             println("GAME SAVED!")
-//            if home.id != nil && away.id != nil { saveRemote(nil) }
             
         }
         
@@ -118,72 +120,19 @@ class Game {
         
     }
     
-    func saveRemote(completion: Completion?){
+    func getPlayers(){
         
-        var c = completion
+        var objects = object.players.allObjects as! [PlayerObject]
         
-        var s = "\(domain)"
-        var method = Method.PUT
-        var successCode = 200
-        
-        if let id = id {
+        players = objects.map { o in
             
-            s += "/api/v1/games/\(id).json"
-            method = Method.PUT
-            successCode = 200
+            let player = Player(object: o)
             
-        } else {
-            
-            s += "/api/v1/games.json"
-            method = Method.POST
-            successCode = 201
+            return player
             
         }
         
-        let game = [
-            "game":[
-                "home_id": home.id!,
-                "away_id": away.id!
-            ]
-        ]
-        
-        Alamofire.request(method, s, parameters: game,encoding: .JSON)
-            .responseJSON { request, response, data, error in
-                
-                if error == nil {
-                    
-                    if response?.statusCode == successCode {
-                        
-                        var json = JSON(data!)
-                        
-                        if let id = self.id {
-                            
-                        } else {
-                            
-                            self.id = json["game"]["id"].intValue
-                            self.object.id = self.id?.string()
-                            self.object.managedObjectContext?.save(nil)
-                            
-                        }
-                        
-                    } else {
-                        
-                        println("Status Code Error: \(response?.statusCode)")
-                        println(request)
-                        
-                    }
-                    
-                } else {
-                    
-                    println("Error!")
-                    println(error)
-                    println(request)
-                    
-                }
-                
-                c?(error: error)
-                
-        }
+        players.sort({ $0.number < $1.number })
         
     }
     
@@ -200,6 +149,19 @@ class Game {
         }
         
         sequences.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedDescending })
+        
+    }
+    
+    func oppositeTeam(team _team: Team) -> Team {
+        
+        if _team.object.isEqual(home.object) {
+            
+            return away
+            
+        } else {
+            
+            return home
+        }
         
     }
     

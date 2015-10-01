@@ -14,7 +14,11 @@ class PassingCell: UITableViewCell {
     @IBOutlet weak var compTXT: UILabel!
     @IBOutlet weak var ydsTXT: UILabel!
     @IBOutlet weak var tdTXT: UILabel!
-    @IBOutlet weak var intTD: UILabel!
+    @IBOutlet weak var intTXT: UILabel!
+    @IBOutlet weak var ratTXT: UILabel!
+    @IBOutlet weak var perTXT: UILabel!
+    @IBOutlet weak var ypaTXT: UILabel!
+    @IBOutlet weak var backTXT: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

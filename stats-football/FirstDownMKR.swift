@@ -42,23 +42,13 @@ class FirstDownMKR: UIView {
         
         var translation  = sender.translationInView(superview!)
         
-        var nex = round((lastLocation.x + translation.x) / field.ratio) * field.ratio
+        var nex = round((lastLocation.x + translation.x) / ratio) * ratio
         
-        let min = 10 * field.ratio
-        let max = 110 * field.ratio
+        let min = 10 * ratio
+        let max = 110 * ratio
         
         if nex > max { nex = max }
         if nex < min { nex = min }
-        
-        if nex <= min || nex >= max {
-            
-            backgroundColor = UIColor.redColor()
-            
-        } else {
-            
-            backgroundColor = UIColor.yellowColor()
-            
-        }
         
         let s = field.tracker.game.sequences[field.tracker.index]
         
@@ -66,15 +56,45 @@ class FirstDownMKR: UIView {
         
         if pos_right {
             
-            if nex < field.los.center.x { center.x = nex }
+            if nex < field.line.center.x {
+                
+                if nex <= min || nex >= max {
+                    
+                    backgroundColor = UIColor.redColor()
+                    
+                } else {
+                    
+                    backgroundColor = UIColor.yellowColor()
+                    
+                }
+                
+                center.x = nex
+                
+                s.fd = Yardline(x: nex, pos_right: pos_right)
+                
+            }
             
         } else {
             
-            if nex > field.los.center.x { center.x = nex }
+            if nex > field.line.center.x {
+                
+                if nex <= min || nex >= max {
+                    
+                    backgroundColor = UIColor.redColor()
+                    
+                } else {
+                    
+                    backgroundColor = UIColor.yellowColor()
+                    
+                }
+                
+                center.x = nex
+                
+                s.fd = Yardline(x: nex, pos_right: pos_right)
+                
+            }
             
         }
-        
-        s.fd = field.toY(center.x).fullToYard(pos_right)
         
         if sender.state == UIGestureRecognizerState.Ended {
             
@@ -82,39 +102,10 @@ class FirstDownMKR: UIView {
             
         }
         
-        field.tracker.sequenceTBL.reloadData()
+        let ip = NSIndexPath(forRow: field.tracker.index, inSection: 0)
+        field.tracker.sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
         
-        field.tracker.sequenceTBL.selectRowAtIndexPath(NSIndexPath(forRow: field.tracker.index, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Top)
-        
-        field.tracker.updateBoard()
-        
-    }
-    
-    func moveTo(yardline: Int,pos_right: Bool){
-        
-        var y: CGFloat = 0
-        
-        let full = yardline.yardToFull(pos_right)
-        
-        if yardline == 100 {
-            
-            backgroundColor = UIColor.redColor()
-            
-        } else {
-            
-            backgroundColor = UIColor.yellowColor()
-            
-        }
-        
-        center.x = field.toX(full)
-        
-    }
-    
-    func getY() -> Int {
-        
-        let y = Int(round(center.x / field.ratio)) - 10
-        
-        return y
+        field.tracker.updateDown()
         
     }
     

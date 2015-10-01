@@ -15,6 +15,9 @@ let domain = "http://will-big.local:3000"
 var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
 var context: NSManagedObjectContext = appDel.managedObjectContext!
 var lastPeer: MCPeerID?
+var ratio: CGFloat = 1
+var vratio: CGFloat = 1
+
 typealias CoreDataCompletion = (error: NSError?) -> Void
 
 @UIApplicationMain
@@ -23,8 +26,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        
+//        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+//        
+//        var tracker = Tracker(nibName: "Tracker",bundle: nil)
+//        window?.rootViewController = tracker
+//        window?.makeKeyAndVisible()
+        
         return true
+        
     }
 
     func applicationWillResignActive(application: UIApplication) {

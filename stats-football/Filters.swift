@@ -10,34 +10,34 @@ import UIKit
 
 class Filters {
     
-    static func colors(key: String,alpha: CGFloat) -> UIColor {
+    static func colors(key: Key,alpha: CGFloat) -> UIColor {
         
-        switch key {
-        case "run","return":
+        switch key as Key {
+        case .Run,.Return:
             
             return UIColor(red: 57/255, green: 140/255, blue: 183/255, alpha: alpha)
             
-        case "pass":
+        case .Pass:
             
             return UIColor(red: 127/255, green: 255/255, blue: 155/255, alpha: alpha)
             
-        case "kick","punt":
+        case .Kick,.Punt:
             
             return UIColor(red: 255/255, green: 120/255, blue: 0, alpha: alpha)
             
-        case "penalty":
+        case .Penalty:
             
             return UIColor(red: 255/255, green: 228/255, blue: 0, alpha: alpha)
             
-        case "interception":
+        case .Interception:
             
             return UIColor(red: 255/255, green: 47/255, blue: 47/255, alpha: alpha)
             
-        case "lateral":
+        case .Lateral:
             
             return UIColor(red: 170/255, green: 170/255, blue: 170/255, alpha: alpha)
             
-        case "fumble":
+        case .Fumble:
             
             return UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: alpha)
             
@@ -48,10 +48,10 @@ class Filters {
         }
         
     }
-    static func textColors(key: String,alpha: CGFloat) -> UIColor {
+    static func textColors(key: Key,alpha: CGFloat) -> UIColor {
         
-        switch key {
-        case "pass":
+        switch key as Key {
+        case .Pass:
             
             return UIColor(red: 64/255, green: 64/255, blue: 64/255, alpha: alpha)
             
@@ -63,31 +63,23 @@ class Filters {
         
     }
     
-    static func keys(sequence: Sequence,type: String) -> [String] {
+    static func keys(sequence: Sequence,type: String) -> [Key] {
         
         // PENALTIES
         // ============================================================
         // ============================================================
         switch type {
-        case "penalty_occurence":
-            
-            return ["before","during","after"]
-            
-        case "penalty_type":
-            
-            return ["holding","facemask","offside","personal foul"]
-            
         case "penalty_distance":
             
-            return ["5","10","15"]
+            return [.Five,.Ten,.Fifteen]
             
         case "penalty_options":
             
-            return ["previous spot","spot of foul","dead ball spot"]
+            return [.PreviousSpot,.SpotOfFoul,.DeadBallSpot]
             
         case "penalty_enforcement":
             
-            return ["spot","declined","offset","kick"]
+            return [.Spot,.Declined,.Offset,.OnKick]
             
         default:
             
@@ -101,22 +93,35 @@ class Filters {
         // KEYS
         // ============================================================
         // ============================================================
-        switch sequence.key {
-        case "kickoff":
+        var prev: Play?
+        for play in sequence.plays { prev = play }
+        switch sequence.key as Playtype {
+        case .Kickoff:
             
-            if sequence.plays.count == 0 {
+            if let play = prev {
                 
-                return ["kick"]
+                return [.Return,.Lateral]
                 
             } else {
                 
-                return ["return","lateral"]
+                return [.Kick]
                 
             }
             
-        case "down","pat":
+        case .Down,.PAT:
             
-            return ["run","pass","incomplete","interception","punt","lateral","field goal attempted","field goal made","block","recovery"]
+            if let play = prev {
+                
+                switch play.key as Key {
+                case .Interception,.Punt: return [.Return,.Lateral]
+                default: return [.Run,.Lateral]
+                }
+                
+            } else {
+                
+                return [.Run,.Pass,.Incomplete,.Interception,.Punt,.FGA,.FGM]
+                
+            }
             
         default:
             

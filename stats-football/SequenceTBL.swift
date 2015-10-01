@@ -11,7 +11,9 @@ import MultipeerConnectivity
 
 class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
-    var tracker: TrackerCTRL!
+    var tracker: Tracker!
+    
+    var sequences: [Sequence] = []
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -47,7 +49,7 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return tracker.game.sequences.count
+        return sequences.count
         
     }
     
@@ -64,46 +66,52 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.userInteractionEnabled = true
         
-        cell.team.backgroundColor = s.team.color
+        cell.team.backgroundColor = s.team.primary
         cell.flag.hidden = !s.flagged
         
         cell.leftTXT.text = s.team.short
-//        cell.leftTXT.textColor = s.team.color
         
         let t: String!
         
-        if s.startX == 50 {
+        switch s.startX.spot {
+        case 50:
+            
             t = 50.string()
-        } else if s.startX < 0 {
             
-            // -38
-            t = "\(s.team.short) \(s.startX * -1)"
-//            cell.rightTXT.textColor = s.team.color
+        case 1...49:
             
-        } else {
+            t = "\(s.team.short) \(s.startX.toShort())"
             
-            // 38
-            t = "\(tracker.opTeam(s.team).short) \(s.startX)"
-//            cell.rightTXT.textColor = tracker.opTeam(s.team).color
+        case 51...99:
+            
+            t = "\(tracker.opTeam(s.team).short) \(s.startX.toShort())"
+            
+        default:
+            
+            if s.startX.spot < 50 {
+                t = "\(s.team.short) ENDZONE"
+            } else {
+                t = "\(tracker.opTeam(s.team).short) ENDZONE"
+            }
             
         }
         
         cell.rightTXT.text = t
         
-        switch s.key {
-        case "kickoff":
+        switch s.key as Playtype {
+        case .Kickoff:
             
             cell.midTXT.text = "Kickoff"
             
-        case "freekick":
+        case .Freekick:
             
             cell.midTXT.text = "Freekick"
             
-        case "pat":
+        case .PAT:
             
             cell.midTXT.text = "PAT"
             
-        case "down":
+        case .Down:
             
             var fd: String!
             
@@ -121,28 +129,8 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
                 d = "nil"
             }
             
-            let a = s.startX.yardToFull(pos_right)
-            let b = s.fd!.yardToFull(pos_right)
-            
-            var togo: String!
-            
-            if pos_right {
-                
-                togo = "\(a - b)"
-                
-            } else {
-                
-                togo = "\(b - a)"
-                
-            }
-            
-            var f = ""
-            if let fd = s.fd {
-                
-                if fd == 100 { togo = "G" }
-                f = "\(fd)"
-                
-            }
+            var togo = "\(s.fd!.spot - s.startX.spot)"
+            if s.fd!.spot >= 100 { togo = "G" }
             
             switch d {
             case 1.string():
@@ -165,17 +153,17 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
         }
         
-//        if tracker.game.sequences.count == 1 {
-//            
-//            cell.selected = true
-//            cell.selectionStyle = UITableViewCellSelectionStyle.Default
-//            cell.userInteractionEnabled = false
-//            
-//        } else {
-//            
-//            cell.userInteractionEnabled = true
-//            
-//        }
+        //        if tracker.game.sequences.count == 1 {
+        //
+        //            cell.selected = true
+        //            cell.selectionStyle = UITableViewCellSelectionStyle.Default
+        //            cell.userInteractionEnabled = false
+        //
+        //        } else {
+        //
+        //            cell.userInteractionEnabled = true
+        //            
+        //        }
         
         return cell
         
@@ -183,9 +171,7 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        Stats.player(sequence: tracker.game.sequences[indexPath.row])
-        
-        tracker.sequenceSelected(indexPath.row)
+        tracker.selectSequence(indexPath.row)
         
     }
     
@@ -197,76 +183,40 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
-        
+        if editingStyle == .Delete {
+            
+            let s = sequences[indexPath.row]
+            
+            s.delete(nil)
+            
+            sequences.removeAtIndex(indexPath.row)
+            tracker.game.sequences.removeAtIndex(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
+            
+            tracker.selectSequence(0)
+            
+        }
         
     }
     
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! SequenceCell
-        
-        let s = tracker.game.sequences[indexPath.row]
-        
-        var flag = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "Flag") { (action, indexPath) -> Void in
-            
-            s.flagged = !s.flagged
-            s.save(nil)
-            
-            cell.flag.hidden = !s.flagged
-            
-            tableView.setEditing(false, animated: true)
-            
-        }
-        
-        var delete = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "Delete") { (action, indexPath) -> Void in
-            
-            if self.tracker.game.sequences.count > 1 {
-                
-                self.userInteractionEnabled = false
-                
-                s.delete(nil)
-                
-                var i = indexPath.row
-                
-                if indexPath.row < self.tracker.index {
-                    
-                    i--
-                    
-                } else if indexPath.row == self.tracker.index {
-                    
-                    if self.tracker.game.sequences.count > (indexPath.row+1) {
-                        
-                        i++
-                        
-                    } else {
-                        
-                        i--
-                        
-                    }
-                    
-                }
-                
-                self.tracker.game.sequences.removeAtIndex(indexPath.row)
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
-                
-                self.tracker.selectSequence(i)
-                
-                self.userInteractionEnabled = true
-                
-            }
-            
-        }
-        
-        flag.backgroundColor = UIColor(red: 254/255, green: 242/255, blue: 58/255, alpha: 1)
-        delete.backgroundColor = UIColor.redColor()
-        
-        return [flag,delete]
-        
-    }
+//    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+//        
+//        
+//        
+//    }
     
     func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath) {
         
-        tracker.selectSequence(tracker.index)
+        
+        
+    }
+    
+    
+    func reload(){
+        
+        tracker.game.getSequences()
+        sequences = tracker.game.sequences
+        reloadData()
         
     }
     

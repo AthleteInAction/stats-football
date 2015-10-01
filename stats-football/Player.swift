@@ -16,7 +16,8 @@ class PlayerObject: NSManagedObject {
     @NSManaged var first_name: String?
     @NSManaged var last_name: String?
     @NSManaged var used: String
-    @NSManaged var team: TeamObject
+    @NSManaged var team: TeamObject?
+    @NSManaged var game: GameObject
     @NSManaged var created_at: NSDate
     
 }
@@ -29,15 +30,16 @@ class Player {
     var last_name: String?
     var used: Int = 0
     var team: Team!
+    var game: Game!
     var object: PlayerObject!
     var created_at: NSDate!
     
-    init(team _t: Team,number _number: Int){
+    init(game _g: Game,number _number: Int){
         
         var entity = NSEntityDescription.entityForName("Players", inManagedObjectContext: context)
         var item = PlayerObject(entity: entity!, insertIntoManagedObjectContext: context)
         
-        team = _t
+        game = _g
         number = _number
         object = item
         created_at = NSDate()
@@ -46,7 +48,7 @@ class Player {
     
     init(object _object: PlayerObject){
         
-        team = Team(team: _object.team)
+        game = Game(game: _object.game)
         number = _object.number.toInt()!
         if let n = _object.first_name { first_name = n }
         if let n = _object.last_name { last_name = n }
@@ -66,7 +68,7 @@ class Player {
         object.first_name = first_name
         object.last_name = last_name
         object.used = used.string()
-        object.team = team.object
+        object.game = game.object
         object.created_at = created_at
         
         object.managedObjectContext?.save(&error)

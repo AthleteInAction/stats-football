@@ -26,8 +26,8 @@ class PlayObject: NSManagedObject {
 // ========================================================
 class Play {
     
-    var key: String!
-    var endX: Int?
+    var key: Key!
+    var endX: Yardline?
     var endY: Int?
     var player_a: Int!
     var player_b: Int?
@@ -52,8 +52,8 @@ class Play {
     
     init(play: PlayObject){
         
-        key = play.key
-        if let x = play.endX { endX = x.toInt()! }
+        key = play.key.toKey()
+        if let x = play.endX { endX = Yardline(spot: x.toInt()!) }
         if let y = play.endY { endY = y.toInt()! }
         player_a = play.player_a.toInt()!
         if let b = play.player_b { player_b = b.toInt()! }
@@ -96,11 +96,11 @@ class Play {
         
         object.sequence = sequence
         object.created_at = created_at
-        object.key = key
-        if let x = endX { object.endX = "\(x)" } else { object.endX = nil }
-        if let y = endY { object.endY = "\(y)" } else { object.endY = nil }
-        object.player_a = "\(player_a)"
-        if let b = player_b { object.player_b = "\(b)" } else { object.player_b = nil }
+        object.key = key.string
+        if let x = endX { object.endX = x.spot.string() } else { object.endX = nil }
+        if let y = endY { object.endY = y.string() } else { object.endY = nil }
+        object.player_a = player_a.string()
+        if let b = player_b { object.player_b = b.string() } else { object.player_b = nil }
         if let t = team { object.team = t.object } else { object.team = nil }
         
         object.managedObjectContext?.save(&error)
@@ -129,7 +129,7 @@ extension Play {
         
         var final: [String:AnyObject] = [
             "qtr": object.sequence.qtr,
-            "key": key,
+            "key": key.string,
             "playtype": object.sequence.key
         ]
         

@@ -24,12 +24,10 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
         super.viewDidLoad()
         
         colorBTN.layer.cornerRadius = 5
-        colorBTN.backgroundColor = team.color
+        colorBTN.backgroundColor = team.primary
         
         rosterTBL.delegate = self
         rosterTBL.dataSource = self
-        
-        team.getRoster()
         
         rosterTBL.reloadData()
         
@@ -274,7 +272,7 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
     
     func colorSelected(color: UIColor) {
         
-        team.color = color
+        team.primary = color
         team.save(nil)
         main.teamsTBL.reloadData()
         main.gamesTBL.getData()

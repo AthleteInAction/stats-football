@@ -6,7 +6,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StatsDisplay" customModule="stats_football" customModuleProvider="target">
             <connections>
+                <outlet property="kickReturnsTBL" destination="NMf-7C-yjf" id="RgD-xK-6eu"/>
                 <outlet property="passingTBL" destination="gT7-b8-5ti" id="DMP-eQ-g09"/>
+                <outlet property="puntReturnsTBL" destination="AFD-QE-0XR" id="Nrc-pQ-qpv"/>
+                <outlet property="receivingTBL" destination="A16-Qs-Dpq" id="BK0-vd-08v"/>
+                <outlet property="rushingTBL" destination="fb9-SQ-WYu" id="LgS-sn-M7Q"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -16,18 +20,58 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="gT7-b8-5ti" customClass="PassingTBL" customModule="stats_football" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="300" height="768"/>
+                    <rect key="frame" x="0.0" y="0.0" width="260" height="768"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="300" id="wUv-i9-rvd"/>
+                        <constraint firstAttribute="width" constant="260" id="wUv-i9-rvd"/>
+                    </constraints>
+                </tableView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="fb9-SQ-WYu" customClass="RushingTBL" customModule="stats_football" customModuleProvider="target">
+                    <rect key="frame" x="434" y="0.0" width="168" height="768"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="168" id="JFY-pg-1JS"/>
+                    </constraints>
+                </tableView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="A16-Qs-Dpq" customClass="ReceivingTBL" customModule="stats_football" customModuleProvider="target">
+                    <rect key="frame" x="262" y="0.0" width="170" height="768"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="170" id="MV1-6q-f3z"/>
+                    </constraints>
+                </tableView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="AFD-QE-0XR" customClass="PuntReturnTBL" customModule="stats_football" customModuleProvider="target">
+                    <rect key="frame" x="604" y="0.0" width="170" height="768"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="170" id="sbt-wg-p7P"/>
+                    </constraints>
+                </tableView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="NMf-7C-yjf" customClass="PuntReturnTBL" customModule="stats_football" customModuleProvider="target">
+                    <rect key="frame" x="776" y="0.0" width="170" height="768"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="170" id="i0A-2U-KMa"/>
                     </constraints>
                 </tableView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.20062154700000001" green="0.20062154700000001" blue="0.20062154700000001" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="NMf-7C-yjf" secondAttribute="bottom" id="0HZ-dH-yB3"/>
+                <constraint firstAttribute="bottom" secondItem="A16-Qs-Dpq" secondAttribute="bottom" id="1AU-6v-4CT"/>
                 <constraint firstItem="gT7-b8-5ti" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="361-dh-cJK"/>
                 <constraint firstAttribute="bottom" secondItem="gT7-b8-5ti" secondAttribute="bottom" id="CHs-qu-Oy8"/>
+                <constraint firstItem="A16-Qs-Dpq" firstAttribute="leading" secondItem="gT7-b8-5ti" secondAttribute="trailing" constant="2" id="I8x-Eu-8FY"/>
                 <constraint firstItem="gT7-b8-5ti" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="MAG-Mb-AKD"/>
+                <constraint firstItem="AFD-QE-0XR" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="MbL-8k-Qjp"/>
+                <constraint firstItem="fb9-SQ-WYu" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Xd4-ea-Av7"/>
+                <constraint firstItem="AFD-QE-0XR" firstAttribute="leading" secondItem="fb9-SQ-WYu" secondAttribute="trailing" constant="2" id="aE0-ZS-pE8"/>
+                <constraint firstAttribute="bottom" secondItem="fb9-SQ-WYu" secondAttribute="bottom" id="dZe-cD-6Ik"/>
+                <constraint firstAttribute="bottom" secondItem="AFD-QE-0XR" secondAttribute="bottom" id="fOq-m2-7Qu"/>
+                <constraint firstItem="A16-Qs-Dpq" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="o0E-gM-vO3"/>
+                <constraint firstItem="NMf-7C-yjf" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="oJH-cr-geA"/>
+                <constraint firstItem="NMf-7C-yjf" firstAttribute="leading" secondItem="AFD-QE-0XR" secondAttribute="trailing" constant="2" id="smw-eH-v3h"/>
+                <constraint firstItem="fb9-SQ-WYu" firstAttribute="leading" secondItem="A16-Qs-Dpq" secondAttribute="trailing" constant="2" id="xWO-rM-SYP"/>
             </constraints>
             <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>

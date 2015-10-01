@@ -10,19 +10,18 @@ extension Filters {
     
     static func score(s: Sequence) -> [Scores] {
         
+        if s.replay { return [.None,.None] }
+        
         var score = 0
         
         var pos_right = s.team.object.isEqual(s.game.home.object)
         
         let pos_right_original = s.team.object.isEqual(s.game.home.object)
         
-        s.getPlays()
-        s.getPenalties()
-        
         // IF KICK WITH NO RETURN
         // =======================================================
         // =======================================================
-        if s.plays.count == 1 && (s.plays.first?.key == "kick" || s.plays.first?.key == "punt") {
+        if s.plays.count == 1 && (s.plays.first?.key == .Kick || s.plays.first?.key == .Punt) {
             
             return [.None,.None]
             
@@ -36,7 +35,7 @@ extension Filters {
         // =======================================================
         // #######################################################
         var lastPossessionOutsideEndzone: Bool?
-        var lastSpot: Int?
+        var lastSpot: Yardline?
         var possessionChanged: Bool = false
         var fgm: Bool = false
         var fga: Bool = false
@@ -44,35 +43,22 @@ extension Filters {
         // #######################################################
         for (i,play) in enumerate(s.plays) {
             
-            if play.key == "field goal made" { fgm = true }
-            if play.key == "field goal attempted" { fga = true }
-            if play.key == "recovery" { recovery = true }
+            if play.key == .FGM { fgm = true }
+            if play.key == .FGA { fga = true }
+            if play.key == .Recovery { recovery = true }
             
             // CHECK FOR CHANGE IN POSSESSION
             // ++++++++++++++++++++++++++++++++
-            switch play.key {
-            case "punt","kick":
-                
-                pos_right = !pos_right
-                
-            case "fumble":
-                
-                if let team = play.team { pos_right = team.object.isEqual(s.game.home.object) }
-                
-            case "interception","recovery":
-                
-                pos_right = !pos_right
-                
-            default:
-                
-                ()
-                
+            switch play.key as Key {
+            case .Punt,.Kick,.Interception,.Recovery: pos_right = !pos_right
+            case .Fumble: if let team = play.team { pos_right = team.object.isEqual(s.game.home.object) }
+            default: ()
             }
             // ++++++++++++++++++++++++++++++++
             
             // LAST POSSESSION OUTSIDE ENDZONE
             // ++++++++++++++++++++++++++++++++
-            if (play.endX >= 1 && play.endX <= 50) || (play.endX >= -49 && play.endX <= -1) {
+            if play.endX?.spot > 0 && play.endX?.spot < 100 {
                 
                 lastPossessionOutsideEndzone = pos_right
                 
@@ -118,7 +104,7 @@ extension Filters {
             
             // RETURN TEAM ENDZONE
             // ++++++++++++++++++++++++++++++++
-            if x >= 100 {
+            if x.spot >= 100 {
                 
                 // IF KICKING TEAM HAS BALL
                 // ------------------------------------
@@ -127,7 +113,7 @@ extension Filters {
                     println("SCORE TOUCHDOWN A")
                     
                     var z: Scores = .Touchdown
-                    if s.key == "pat" {
+                    if s.key == Playtype.PAT {
                         
                         z = .Conversion
                         
@@ -177,7 +163,7 @@ extension Filters {
             
             // RETURN TEAM ENDZONE
             // ++++++++++++++++++++++++++++++++
-            if x <= -100 {
+            if x.spot <= 0 {
                 
                 // IF KICKING TEAM HAS BALL
                 // ------------------------------------
@@ -186,7 +172,7 @@ extension Filters {
                     println("SCORE TOUCHDOWN B")
                     
                     var z: Scores = .Touchdown
-                    if s.key == "pat" {
+                    if s.key == .PAT {
                         
                         z = .Conversion
                         
@@ -240,7 +226,7 @@ extension Filters {
         if fgm {
             
             var z: Scores = .FieldGoal
-            if s.key == "pat" {
+            if s.key == .PAT {
                 
                 z = .ExtraPoint
                 
@@ -255,55 +241,6 @@ extension Filters {
         }
         
         return [.None,.None]
-        
-    }
-    
-}
-
-enum Scores {
-    
-    case Touchdown
-    case Safety
-    case FieldGoal
-    case ExtraPoint
-    case Conversion
-    case None
-    
-    var string: String {
-        
-        switch self {
-        case .Touchdown:
-            return "touchdown"
-        case .Safety:
-            return "safety"
-        case .FieldGoal:
-            return "fieldgoal"
-        case .ExtraPoint:
-            return "extrapoint"
-        case .Conversion:
-            return "conversion"
-        default:
-            return ""
-        }
-        
-    }
-    
-    var value: Int {
-        
-        switch self {
-        case .Touchdown:
-            return 6
-        case .Safety:
-            return 2
-        case .FieldGoal:
-            return 3
-        case .ExtraPoint:
-            return 1
-        case .Conversion:
-            return 2
-        default:
-            return 0
-        }
         
     }
     
