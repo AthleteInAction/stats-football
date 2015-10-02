@@ -19,6 +19,7 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
     var disconnect: UIBarButtonItem!
     var ai: UIActivityIndicatorView!
     var at: UIView!
+    var cover: UIView!
     
     var game: [String:AnyObject] = [
         "home": [
@@ -35,6 +36,14 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
     
     @IBOutlet weak var runVIEW: SectionView!
     @IBOutlet weak var passVIEW: SectionView!
+    @IBOutlet weak var rpVIEW: RunPassBar!
+    @IBOutlet weak var homeBTN: UIButton!
+    @IBOutlet weak var awayBTN: UIButton!
+    @IBOutlet weak var togoTXT: UILabel!
+    @IBOutlet weak var threshTXT: UILabel!
+    @IBOutlet var downSWT: [UISwitch]!
+    @IBOutlet weak var togoSLDR: UISlider!
+    @IBOutlet weak var threshSLDR: UISlider!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +76,18 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
         passVIEW.type = .Pass
         passVIEW.sections = settings.passSections
         
+        homeBTN.layer.cornerRadius = 4
+        homeBTN.hidden = true
+        awayBTN.layer.cornerRadius = 4
+        awayBTN.hidden = true
+        
+        cover = UIView(frame: view.frame)
+        cover.backgroundColor = UIColor.blackColor()
+        cover.alpha = 0.4
+        view.addSubview(cover)
+        
+        edgesForExtendedLayout = UIRectEdge()
+        
     }
 
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
@@ -77,7 +98,7 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
             JP("GAME RECEIVED")
             JP(_game)
             self.game = _game
-            self.setData()
+            self.setData(1)
             
         }
     }
@@ -106,6 +127,8 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
                 self.navigationItem.setRightBarButtonItem(self.connect, animated: true)
                 
             }
+            
+            self.cover.hidden = _state == .Connected
             
         }
     }
@@ -145,24 +168,111 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
         
     }
     
-    func setData(){
+    var index: Int = 0
+    func setData(i: Int){
+        JP("SET DATA +++++++++++++++++++++++++++++++++++++++++++++++++++")
+        index = i
         
-        let home = gameData(data: game["home"] as! [String:AnyObject])
-        let away = gameData(data: game["away"] as! [String:AnyObject])
+        if i == 1 {
+            
+            homeBTN.backgroundColor = UIColor(red: 88/255, green: 88/255, blue: 88/255, alpha: 1)
+            awayBTN.backgroundColor = UIColor.clearColor()
+            
+        } else {
+            
+            awayBTN.backgroundColor = UIColor(red: 88/255, green: 88/255, blue: 88/255, alpha: 1)
+            homeBTN.backgroundColor = UIColor.clearColor()
+            
+        }
         
-        JP("RUNS: \(home.run)")
-        JP("RUN SECTIONS: \(home.runs)")
-        JP("PASS: \(home.pass)")
-        JP("PASS SECTIONS: \(home.passes)")
+        let H = game["home"] as! [String:AnyObject]
+        let A = game["away"] as! [String:AnyObject]
         
-        runVIEW.items = home.runs
-        runVIEW.total = home.run
+        homeBTN.setTitle(H["short"] as? String, forState: .Normal)
+        awayBTN.setTitle(A["short"] as? String, forState: .Normal)
+        
+        homeBTN.hidden = false
+        awayBTN.hidden = false
+        
+        var downs: [Int] = []
+        for (i,swt) in enumerate(downSWT) {
+            
+            if swt.on { downs.append(i+1) }
+            
+        }
+        
+        var d: TeamData!
+        
+        if i == 1 {
+            
+            d = gameData(data: H,downs: downs,togo: Int(togoSLDR.value),threshold: Int(threshSLDR.value))
+            
+        } else {
+            
+            d = gameData(data: A,downs: downs,togo: Int(togoSLDR.value),threshold: Int(threshSLDR.value))
+            
+        }
+        
+//        var d: TeamData {
+//            
+//            if i == 1 {
+//                return gameData(data: H,downs: downs,togo: Int(togoSLDR.value),threshold: Int(threshSLDR.value))
+//            } else {
+//                return gameData(data: A,downs: downs,togo: Int(togoSLDR.value),threshold: Int(threshSLDR.value))
+//            }
+//            
+//        }
+        
+        JP("RUNS: \(d.run)")
+        JP("RUN SECTIONS: \(d.runs)")
+        JP("PASS: \(d.pass)")
+        JP("PASS SECTIONS: \(d.passes)")
+        
+        rpVIEW._data = d
+        rpVIEW.setNeedsDisplay()
+        
+        runVIEW.items = d.runs
+        runVIEW.total = d.run
         runVIEW.setNeedsDisplay()
         
-        passVIEW.items = home.passes
-        passVIEW.total = home.pass
+        passVIEW.items = d.passes
+        passVIEW.total = d.pass
         passVIEW.setNeedsDisplay()
         
     }
 
+    @IBAction func teamTPD(sender: AnyObject) {
+        
+        JP("TEAM TPD")
+        setData(sender.tag)
+        
+    }
+    
+    @IBAction func distanceCHG(sender: UISlider) {
+        
+        sender.value = round(sender.value)
+        
+        if sender.value == 51 {
+            togoTXT.text = "All"
+        } else {
+            togoTXT.text = Int(sender.value).string()
+        }
+        
+    }
+    
+    @IBAction func threshCHG(sender: UISlider) {
+        
+        sender.value = round(sender.value)
+        
+        threshTXT.text = "+/- \(Int(sender.value))"
+        
+    }
+    
+    @IBAction func slideEnded(sender: AnyObject) {
+        
+        JP("SLIDE ENEDED")
+        setData(index)
+        
+    }
+    
 }

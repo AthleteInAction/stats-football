@@ -51,6 +51,7 @@
 		AD6842D01BBEDDEA007F4319 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6842CF1BBEDDEA007F4319 /* Settings.swift */; };
 		AD6842D41BBEE1BC007F4319 /* DataDisplayFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6842D31BBEE1BC007F4319 /* DataDisplayFunctions.swift */; };
 		AD6842DE1BBF0FA7007F4319 /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6842DD1BBF0FA7007F4319 /* SectionView.swift */; };
+		AD6842E41BBF1DC0007F4319 /* RunPassBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6842E31BBF1DC0007F4319 /* RunPassBar.swift */; };
 		AD879ACB1B8C2979002C96CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879ACA1B8C2979002C96CA /* AppDelegate.swift */; };
 		AD879ACE1B8C2979002C96CA /* stats_football.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AD879ACC1B8C2979002C96CA /* stats_football.xcdatamodeld */; };
 		AD879AD01B8C2979002C96CA /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD879ACF1B8C2979002C96CA /* Tracker.swift */; };
@@ -171,6 +172,7 @@
 		AD6842CF1BBEDDEA007F4319 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		AD6842D31BBEE1BC007F4319 /* DataDisplayFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataDisplayFunctions.swift; sourceTree = "<group>"; };
 		AD6842DD1BBF0FA7007F4319 /* SectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionView.swift; sourceTree = "<group>"; };
+		AD6842E31BBF1DC0007F4319 /* RunPassBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunPassBar.swift; sourceTree = "<group>"; };
 		AD879AC51B8C2979002C96CA /* stats-football.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "stats-football.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD879AC91B8C2979002C96CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AD879ACA1B8C2979002C96CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -573,6 +575,7 @@
 				AD895BA81BAEE22700F6F638 /* DataDisplay.xib */,
 				AD6842D31BBEE1BC007F4319 /* DataDisplayFunctions.swift */,
 				AD6842DD1BBF0FA7007F4319 /* SectionView.swift */,
+				AD6842E31BBF1DC0007F4319 /* RunPassBar.swift */,
 			);
 			name = DataDisplay;
 			sourceTree = "<group>";
@@ -890,6 +893,7 @@
 			files = (
 				AD879B091B8EE778002C96CA /* Playlog.swift in Sources */,
 				AD68425E1BB5B198007F4319 /* Stat.swift in Sources */,
+				AD6842E41BBF1DC0007F4319 /* RunPassBar.swift in Sources */,
 				AD63F54F1BB03CAD00BD6C9D /* Stats.swift in Sources */,
 				ADB8F9511BA233AC0049BDF0 /* DownFilter.swift in Sources */,
 				ADB8F9621BA2935C0049BDF0 /* TeamEdit.swift in Sources */,

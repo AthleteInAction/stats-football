@@ -9,7 +9,9 @@ import UIKit
 
 extension DataDisplay {
     
-    func gameData(data _data: [String : AnyObject]) -> TeamData {
+    func gameData(data _data: [String : AnyObject],downs _downs: [Int],togo _togo: Int,threshold _threshold: Int) -> TeamData {
+        
+        JP("GAME DATA")
         
         var _final = TeamData()
         
@@ -19,6 +21,45 @@ extension DataDisplay {
             
             switch play["playtype"] as! String {
             case "down":
+                
+                let down = play["down"] as! Int
+                let togo = play["togo"] as! Int
+                
+                if !contains(_downs,down) { break }
+                
+                JP("TOGO: \(togo)-\(_togo) : \(_togo - _threshold) ... \(_togo + _threshold)")
+                
+                var clean = true
+                
+                switch togo {
+                case (_togo - _threshold) ... (_togo + _threshold) : ()
+                default:
+                    
+                    if _togo != 51 { clean = false }
+                    
+                }
+                
+                if !clean { break }
+                
+                JP(play)
+                
+                switch play["key"] as! String {
+                case "run":
+                    
+                    _final.run++
+                    _final.runSection(play["endY"] as! Int)
+                    
+                case "pass":
+                    
+                    _final.pass++
+                    _final.passSection(play["endY"] as! Int)
+                    
+                default: ()
+                }
+                
+            case "pat":
+                
+                if !contains(_downs,5) { break }
                 
                 switch play["key"] as! String {
                 case "run":

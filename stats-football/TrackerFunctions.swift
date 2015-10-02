@@ -63,7 +63,12 @@ extension Tracker {
         downSEL.hidden = s.key != Playtype.Down
         downTXT.hidden = s.key != Playtype.Down
         field.line.center.x = s.startX.toX(pos_right)
-        if let x = s.fd { field.fd.center.x = x.toX(pos_right) }
+        if let x = s.fd {
+            
+            field.fd.center.x = x.toX(pos_right)
+            if x.spot >= 100 { field.fd.backgroundColor = UIColor.redColor() } else { field.fd.backgroundColor = UIColor.yellowColor() }
+        
+        }
         field.fd.hidden = s.fd == nil
         // ++++++++++++++++++++++++++++++++++++++
         
@@ -191,7 +196,7 @@ extension Tracker {
         
         let ip = NSIndexPath(forRow: index, inSection: 0)
         sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
-        sequenceTBL.selectRowAtIndexPath(ip, animated: false, scrollPosition: .Top)
+        sequenceTBL.selectRowAtIndexPath(ip, animated: false, scrollPosition: .None)
         
     }
     // ========================================================
