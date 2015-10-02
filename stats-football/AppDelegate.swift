@@ -17,6 +17,7 @@ var context: NSManagedObjectContext = appDel.managedObjectContext!
 var lastPeer: MCPeerID?
 var ratio: CGFloat = 1
 var vratio: CGFloat = 1
+var settings = Settings()
 
 typealias CoreDataCompletion = (error: NSError?) -> Void
 

@@ -220,6 +220,7 @@ extension Tracker {
         enableTables()
         enableScoreboard()
         field.hideCrosses()
+        field.highlight.hidden = true
         
         newPlay = nil
         newPenalty = nil
@@ -290,6 +291,7 @@ extension Tracker {
     
     func backTPD(sender: UIBarButtonItem){
         
+        MPC.stopAdvertising()
         navigationController?.popViewControllerAnimated(true)
         
     }

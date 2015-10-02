@@ -68,129 +68,22 @@ class MPCManager : NSObject {
     
     func sendGame(game: Game){
         
-        var homePlays: [[String:AnyObject]] = []
-        var awayPlays: [[String:AnyObject]] = []
-        var homeCurrent: [String:AnyObject]?
-        var awayCurrent: [String:AnyObject]?
+        game.getMPCData()
         
-        var d: [[String:AnyObject]] = []
-        
-        var sequences = game.object.sequences.allObjects as! [SequenceObject]
-        
-        sequences.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedDescending })
-        
-        for sequence in sequences {
-            
-            if sequence.key == "down" || sequence.key == "pat" || true {
-                
-                if sequence.team.isEqual(game.home.object) {
-                    
-                    homeCurrent = [
-                        "playtype": sequence.key,
-                        "qtr": sequence.qtr.toInt()!,
-                        "key": sequence.key
-                    ]
-                    
-                    if let d = sequence.down { homeCurrent!["down"] = d.toInt()! }
-                    if let d = sequence.fd {
-                        
-                        homeCurrent!["fd"] = d.toInt()!
-                        
-                        var los = sequence.startX.toInt()!
-                        var fd2 = d.toInt()!
-                        
-                        if los < 0 {
-                            los = los * -1
-                        } else {
-                            los = 100 - los
-                        }
-                        if fd2 < 0 {
-                            fd2 = fd2 * -1
-                        } else {
-                            fd2 = 100 - fd2
-                        }
-                        
-                        homeCurrent!["togo"] = fd2 - los
-                        
-                    }
-                    
-                } else if sequence.team.isEqual(game.away.object) {
-                    
-                    awayCurrent = [
-                        "playtype": sequence.key,
-                        "qtr": sequence.qtr.toInt()!,
-                        "key": sequence.key
-                    ]
-                    
-                    if let d = sequence.down { awayCurrent!["down"] = d.toInt()! }
-                    if let d = sequence.fd {
-                        
-                        awayCurrent!["fd"] = d.toInt()!
-                        
-                        var los = sequence.startX.toInt()!
-                        var fd2 = d.toInt()!
-                        
-                        if los < 0 {
-                            los = los * -1
-                        } else {
-                            los = 100 - los
-                        }
-                        if fd2 < 0 {
-                            fd2 = fd2 * -1
-                        } else {
-                            fd2 = 100 - fd2
-                        }
-                        
-                        awayCurrent!["togo"] = fd2 - los
-                        
-                    }
-                    
-                }
-                
-                var plays = sequence.plays.allObjects as! [PlayObject]
-                
-                plays.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedAscending })
-                
-                for (i,play) in enumerate(plays) {
-                    
-                    let p = Play(play: play)
-                    let final = p.serialize()
-                    
-                    if sequence.team.isEqual(game.home.object) {
-                        
-                        homePlays.append(final)
-                        
-                    } else if sequence.team.isEqual(game.away.object) {
-                        
-                        awayPlays.append(final)
-                        
-                    }
-                    
-                    break
-                    
-                }
-                
-            }
-            
-        }
-        
-        var home: [String:AnyObject] = [
-            "name": game.home.name,
-            "short": game.home.short,
-            "plays": homePlays
-        ]
-        if let c = homeCurrent { home["current"] = c }
-        
-        var away: [String:AnyObject] = [
+        var _away: [String:AnyObject] = [
             "name": game.away.name,
             "short": game.away.short,
-            "plays": awayPlays
+            "plays": game.away.MPCPlays
         ]
-        if let c = awayCurrent { away["current"] = c }
+        var _home: [String:AnyObject] = [
+            "name": game.home.name,
+            "short": game.home.short,
+            "plays": game.home.MPCPlays
+        ]
         
         var f: [String:AnyObject] = [
-            "home": home,
-            "away": away
+            "home": _home,
+            "away": _away
         ]
         
         let data = NSKeyedArchiver.archivedDataWithRootObject(f)

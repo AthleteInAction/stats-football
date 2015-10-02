@@ -15,6 +15,8 @@ class Field: UIView {
     var crossH: UIView!
     var crossV: UIView!
     
+    var highlight: UIView!
+    
     var line: LineMKR!
     var fd: FirstDownMKR!
     
@@ -90,6 +92,11 @@ class Field: UIView {
     }
     
     func setData(){
+        
+        highlight = UIView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: 0))
+        highlight.alpha = 0.2
+        highlight.backgroundColor = UIColor.whiteColor()
+        addSubview(highlight)
         
         line = LineMKR(frame: CGRect(x: -100, y: 0, width: ratio, height: bounds.height))
         line.field = self

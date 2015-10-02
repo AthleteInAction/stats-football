@@ -63,6 +63,40 @@ extension Tracker {
             field.crossV.center.x = x
             field.crossH.center.y = y
             
+            if b.index == 0 {
+                
+                var pct: CGFloat {
+                    
+                    return y / field.bounds.height
+                    
+                }
+                
+                switch play.key as Key {
+                case .Run:
+                    
+                    let r = settings.runSections
+                    let ss = settings.sectionSize(pct: pct, height: field.bounds.height, sections: r)
+                    
+                    let _frame = CGRect(x: 0, y: ss[0], width: field.bounds.width, height: ss[1])
+                    field.highlight.backgroundColor = Filters.colors(.Run, alpha: 1)
+                    field.highlight.frame = _frame
+                    field.highlight.hidden = false
+                    
+                case .Pass:
+                    
+                    let r = settings.passSections
+                    let ss = settings.sectionSize(pct: pct, height: field.bounds.height, sections: r)
+                    
+                    let _frame = CGRect(x: 0, y: ss[0], width: field.bounds.width, height: ss[1])
+                    field.highlight.backgroundColor = Filters.colors(.Pass, alpha: 1)
+                    field.highlight.frame = _frame
+                    field.highlight.hidden = false
+                    
+                default: ()
+                }
+                
+            }
+            
             let ip = NSIndexPath(forRow: b.index, inSection: 0)
             JP("INDEX: \(ip.row)")
             playTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
@@ -79,6 +113,7 @@ extension Tracker {
             play.save(nil)
             
             field.hideCrosses()
+            field.highlight.hidden = true
             
             updateScore()
             

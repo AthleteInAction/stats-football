@@ -141,21 +141,10 @@ extension Play {
             var los = object.sequence.startX.toInt()!
             var fd2 = d.toInt()!
             
-            if los < 0 {
-                los = los * -1
-            } else {
-                los = 100 - los
-            }
-            if fd2 < 0 {
-                fd2 = fd2 * -1
-            } else {
-                fd2 = 100 - fd2
-            }
-            
             final["togo"] = fd2 - los
             
         }
-        if let x = endX { final["endX"] = x }
+        if let x = endX { final["endX"] = x.spot }
         if let y = endY { final["endY"] = y }
         
         return final

@@ -18,6 +18,8 @@ extension Tracker {
         
         selectSequence(0)
         
+        MPC.startAdvertising()
+        
     }
     // ========================================================
     // ========================================================
@@ -131,6 +133,8 @@ extension Tracker {
             rightSCORE.text = game.away.score.string()
             
         }
+        
+        MPC.sendGame(game)
         
     }
     
@@ -392,6 +396,44 @@ extension Tracker {
         field.crossH.center.y = y
         field.crossV.center.x = x
         
+        if s.plays.count == 0 {
+            
+            if let p = newPlay {
+                
+                var pct: CGFloat {
+                    
+                    return y / field.bounds.height
+                    
+                }
+                
+                switch p.key as Key {
+                case .Run:
+                    
+                    let r = settings.runSections
+                    let ss = settings.sectionSize(pct: pct, height: field.bounds.height, sections: r)
+                    
+                    let _frame = CGRect(x: 0, y: ss[0], width: field.bounds.width, height: ss[1])
+                    field.highlight.backgroundColor = Filters.colors(.Run, alpha: 1)
+                    field.highlight.frame = _frame
+                    field.highlight.hidden = false
+                
+                case .Pass:
+                    
+                    let r = settings.passSections
+                    let ss = settings.sectionSize(pct: pct, height: field.bounds.height, sections: r)
+                    
+                    let _frame = CGRect(x: 0, y: ss[0], width: field.bounds.width, height: ss[1])
+                    field.highlight.backgroundColor = Filters.colors(.Pass, alpha: 1)
+                    field.highlight.frame = _frame
+                    field.highlight.hidden = false
+                    
+                default: ()
+                }
+                
+            }
+            
+        }
+        
         return true
         
     }
@@ -456,6 +498,8 @@ extension Tracker {
         sequenceTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
         
         selectSequence(0)
+        
+        MPC.sendGame(game)
         
     }
     // ========================================================

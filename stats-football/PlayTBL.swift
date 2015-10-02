@@ -98,16 +98,16 @@ class PlayTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         switch p.key as Key {
         case .Run:
-            txt += "runs"
+            txt += "run"
             txt += " to \(t)"
         case .Return:
-            txt += "returns"
+            txt += "return"
             txt += " to \(t)"
         case .Kick:
-            txt += "kicks"
+            txt += "kick"
             txt += " to \(t)"
         case .Pass:
-            txt += "passes to #"
+            txt += "pass to #"
             txt += p.player_b!.string()
             txt += ", down at \(t)"
             cell.TXT.textColor = UIColor(red: 64/155, green: 64/155, blue: 64/155, alpha: 1)

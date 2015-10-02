@@ -34,6 +34,8 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
     var lastFD: Yardline?
     var lastDOWN: Int?
     
+    var MPC = MPCManager()
+    
     // IB
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -108,6 +110,9 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
         sequenceTBL.tracker = self
         playTBL.tracker = self
         penaltyTBL.tracker = self
+        
+        MPC.receiver = self
+        MPC.stateMonitor = self
         
         let tap = UITapGestureRecognizer()
         tap.numberOfTapsRequired = 2

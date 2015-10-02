@@ -50,6 +50,7 @@ class Team {
     var teamPuntReturns: ReturnTotal = ReturnTotal()
     var kickReturns: [ReturnTotal] = []
     var teamKickReturns: ReturnTotal = ReturnTotal()
+    var MPCPlays: [[String:AnyObject]] = []
     
     init(name _name: String,short _short: String){
         

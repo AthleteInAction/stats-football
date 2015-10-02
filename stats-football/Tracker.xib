@@ -39,10 +39,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Qzz-hm-BlR" customClass="PenaltyTBL" customModule="stats_football" customModuleProvider="target">
-                    <rect key="frame" x="864" y="0.0" width="160" height="353"/>
+                    <rect key="frame" x="884" y="0.0" width="140" height="353"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="160" id="raa-3Z-i6u"/>
+                        <constraint firstAttribute="width" constant="140" id="raa-3Z-i6u"/>
                     </constraints>
                 </tableView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="field_raw_dark" translatesAutoresizingMaskIntoConstraints="NO" id="nwS-KV-uxk">
@@ -56,10 +56,10 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Rke-cr-7qE" customClass="PlayTBL" customModule="stats_football" customModuleProvider="target">
-                    <rect key="frame" x="703" y="0.0" width="160" height="353"/>
+                    <rect key="frame" x="703" y="0.0" width="180" height="353"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="160" id="Vn8-Sn-gPT"/>
+                        <constraint firstAttribute="width" constant="180" id="Vn8-Sn-gPT"/>
                     </constraints>
                 </tableView>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="NGJ-B9-jDc" customClass="SequenceTBL" customModule="stats_football" customModuleProvider="target">
