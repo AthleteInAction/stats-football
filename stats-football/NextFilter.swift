@@ -101,11 +101,17 @@ class NextFilter {
         // ==========================================
         var lastPossessionOutsideEndzone: Bool?
         var possessionChanged = false
+        var recovery = false
+        var fgm = false
+        var fga = false
         for play in _sequence.plays {
             
             switch play.key as Key {
             case .Kick,.Punt,.Interception,.Recovery: pos = !pos
             case .Fumble: if let team = play.team { pos = team.object.isEqual(_sequence.team.object) }
+            case .FGA: fga = true
+            case .FGM: fgm = true
+            case .Recovery: recovery = true
             default: ()
             }
             
@@ -119,7 +125,11 @@ class NextFilter {
                     
                 }
                 
-                if !hasPenaltySpot { lastSpot = x }
+                if !hasPenaltySpot {
+                    
+                    if play.key != .Incomplete { lastSpot = x }
+                
+                }
                 
             }
             // ++++++++++++++++++++++++++++++++
@@ -140,6 +150,36 @@ class NextFilter {
             S.team = _sequence.team
             S.key = .Kickoff
             S.startX = Yardline(spot: 40)
+            
+            return S
+            
+        }
+        // ==========================================
+        // ==========================================
+        
+        
+        // FIELD GOALS
+        // ==========================================
+        // ==========================================
+        if fgm {
+            
+            S.qtr = _sequence.qtr
+            S.startX = Yardline(spot: 40)
+            S.team = _sequence.team
+            S.key = .Kickoff
+            
+            return S
+            
+        }
+        
+        if fga && !possessionChanged && !recovery {
+            
+            S.qtr = _sequence.qtr
+            S.team = _sequence.game.oppositeTeam(team: _sequence.team)
+            S.key = .Down
+            S.startX = lastSpot!.opposite()
+            S.down = 1
+            S.fd = S.startX.increment(10)
             
             return S
             
@@ -337,6 +377,7 @@ class NextFilter {
                     
                     S.down = 1
                     S.team = _sequence.game.oppositeTeam(team: _sequence.team)
+                    S.startX = S.startX.opposite()
                     S.fd = S.startX.increment(10)
                     
                 }

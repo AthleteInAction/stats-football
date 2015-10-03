@@ -76,6 +76,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         nTXT.backgroundColor = UIColor.whiteColor()
         nTXT.textAlignment = .Center
         nTXT.layer.cornerRadius = 4
+        nTXT.keyboardType = UIKeyboardType.PhonePad
         nTXT.delegate = self
         
         navigationItem.titleView = nTXT

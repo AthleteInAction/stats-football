@@ -65,7 +65,11 @@ extension Filters {
             }
             // ++++++++++++++++++++++++++++++++
             
-            if let x = play.endX { lastSpot = x }
+            if let x = play.endX {
+                
+                if play.key != .Incomplete { lastSpot = x }
+            
+            }
             
             if pos_right != pos_right_original { possessionChanged = true }
             

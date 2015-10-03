@@ -422,7 +422,7 @@ extension Tracker {
                     field.highlight.frame = _frame
                     field.highlight.hidden = false
                 
-                case .Pass:
+                case .Pass,.Incomplete:
                     
                     let r = settings.passSections
                     let ss = settings.sectionSize(pct: pct, height: field.bounds.height, sections: r)

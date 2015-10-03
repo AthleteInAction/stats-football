@@ -149,6 +149,8 @@ extension Tracker {
                 self.field.setNeedsDisplay()
                 self.drawButtons()
                 
+                self.MPC.sendGame(self.game)
+                
             }
             
             var cancel3 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { action -> Void in

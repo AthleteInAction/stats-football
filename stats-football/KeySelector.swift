@@ -106,24 +106,27 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                 tracker.newPlay = play
                 
                 switch key {
-                case .Pass,.Interception:
+                case .Pass,.Interception,.Incomplete:
                     
                     nsel.type = "player_b"
                     nsel.newPlay = play
                     
                     navigationController?.pushViewController(nsel, animated: false)
                     
-                case .Incomplete:
-                    
-                    play.save(nil)
-                    
-                    s.plays.append(play)
-                    
-                    tracker.playTBL.plays.append(play)
-                    
-                    tracker.newPlay = nil
-                    
-                    dismissViewControllerAnimated(false, completion: nil)
+//                case .Incomplete:
+//                    
+//                    play.save(nil)
+//                    
+//                    s.plays.append(play)
+//                    
+//                    tracker.playTBL.plays.append(play)
+//                    
+//                    let ip = NSIndexPath(forRow: tracker.playTBL.plays.count-1, inSection: 0)
+//                    tracker.playTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
+//                    
+//                    tracker.newPlay = nil
+//                    
+//                    dismissViewControllerAnimated(false, completion: nil)
                     
                 default:
                     

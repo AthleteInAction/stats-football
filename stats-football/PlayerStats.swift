@@ -231,6 +231,22 @@ extension Stats {
                             }
                             
                         // PASS ++++++++++++++++++++++++++++++++++++++++++
+                        case .Incomplete:
+                        // INCOMPLETE ++++++++++++++++++++++++++++++++++++
+                            
+                            var stat: Stat = Stat()
+                            stat.playtype = sequence.key.string
+                            stat.key = "incompletion"
+                            stat.player = play.player_a
+                            if pos {
+                                stat.team = sequence.game.home
+                            } else {
+                                stat.team = sequence.game.away
+                            }
+                            
+                            stats.append(stat)
+                            
+                        // INCOMPLETE ++++++++++++++++++++++++++++++++++++
                         case .Return:
                         // RETURNS +++++++++++++++++++++++++++++++++++++++
                             

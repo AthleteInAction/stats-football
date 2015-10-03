@@ -28,7 +28,7 @@ class RunPassBar: UIView {
             runTXT.textAlignment = .Center
             runTXT.font = UIFont.systemFontOfSize(20, weight: 4)
             runTXT.textColor = UIColor.whiteColor()
-            runTXT.text = "50% (0)"
+            runTXT.text = "50% 0"
             run.addSubview(runTXT)
             addSubview(run)
             
@@ -37,8 +37,8 @@ class RunPassBar: UIView {
             passTXT = UILabel(frame: CGRect(x: 0, y: 0, width: pass.bounds.width, height: pass.bounds.height))
             passTXT.textAlignment = .Center
             passTXT.font = UIFont.systemFontOfSize(20, weight: 4)
-            passTXT.textColor = UIColor.whiteColor()
-            passTXT.text = "50% (0)"
+            passTXT.textColor = UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
+            passTXT.text = "50% 0"
             pass.addSubview(passTXT)
             addSubview(pass)
             
@@ -54,7 +54,7 @@ class RunPassBar: UIView {
             var runWidth = bounds.width * runPCT
             if runWidth < 100 { runWidth = 100 }
             if runWidth > (bounds.width - 100) { runWidth = bounds.width - 100 }
-            runTXT.text = "\(round(runPCT*1000)/10)% (\(_data.run))"
+            runTXT.text = "\(round(runPCT*100))% \(_data.run)"
             
             var passPCT: CGFloat {
                 
@@ -66,7 +66,7 @@ class RunPassBar: UIView {
             var passWidth = bounds.width * passPCT
             if passWidth < 100 { passWidth = 100 }
             if passWidth > (bounds.width - 100) { passWidth = bounds.width - 100 }
-            passTXT.text = "\(round(passPCT*1000)/10)% (\(_data.pass))"
+            passTXT.text = "\(round(passPCT*100))% \(_data.pass)"
             
             if runPCT == 0 && passPCT == 0 {
                 

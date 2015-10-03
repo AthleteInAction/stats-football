@@ -56,9 +56,13 @@ class SectionView: UIView {
                 
                 let _txt = UILabel(frame: CGRect(x: 0, y: 0, width: _label.bounds.width, height: _label.bounds.height))
                 _txt.textAlignment = .Center
-                _txt.textColor = UIColor.whiteColor()
-                _txt.font = UIFont.systemFontOfSize(12, weight: 1)
-                _txt.text = "0% (0)"
+                if type == .Pass {
+                    _txt.textColor = UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
+                } else {
+                    _txt.textColor = UIColor.whiteColor()
+                }
+                _txt.font = UIFont.systemFontOfSize(10, weight: 1)
+                _txt.text = "0% 0"
                 
                 _label.addSubview(_txt)
                 txts.append(_txt)
@@ -96,7 +100,7 @@ class SectionView: UIView {
                     
                 }
                 
-                _txt.text = "\(round(pct*1000)/10)% (\(section))"
+                _txt.text = "\(round(pct*100))% \(section)"
                 
                 UIView.animateWithDuration(0.5, animations: { () -> Void in
                     

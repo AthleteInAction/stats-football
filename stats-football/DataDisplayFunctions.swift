@@ -49,7 +49,7 @@ extension DataDisplay {
                     _final.run++
                     _final.runSection(play["endY"] as! Int)
                     
-                case "pass":
+                case "pass","incomplete":
                     
                     _final.pass++
                     _final.passSection(play["endY"] as! Int)
@@ -67,7 +67,7 @@ extension DataDisplay {
                     _final.run++
                     _final.runSection(play["endY"] as! Int)
                     
-                case "pass":
+                case "pass","incomplete":
                     
                     _final.pass++
                     _final.passSection(play["endY"] as! Int)

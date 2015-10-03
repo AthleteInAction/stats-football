@@ -98,7 +98,7 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
             JP("GAME RECEIVED")
             JP(_game)
             self.game = _game
-            self.setData(1)
+            self.setData(self.index)
             
         }
     }
@@ -168,7 +168,7 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
         
     }
     
-    var index: Int = 0
+    var index: Int = 1
     func setData(i: Int){
         JP("SET DATA +++++++++++++++++++++++++++++++++++++++++++++++++++")
         index = i
@@ -212,16 +212,6 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
             d = gameData(data: A,downs: downs,togo: Int(togoSLDR.value),threshold: Int(threshSLDR.value))
             
         }
-        
-//        var d: TeamData {
-//            
-//            if i == 1 {
-//                return gameData(data: H,downs: downs,togo: Int(togoSLDR.value),threshold: Int(threshSLDR.value))
-//            } else {
-//                return gameData(data: A,downs: downs,togo: Int(togoSLDR.value),threshold: Int(threshSLDR.value))
-//            }
-//            
-//        }
         
         JP("RUNS: \(d.run)")
         JP("RUN SECTIONS: \(d.runs)")
