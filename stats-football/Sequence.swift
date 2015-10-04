@@ -105,12 +105,12 @@ class Sequence {
         
         if let e = error {
             
-            println("DELETE SEQUENCE ERROR!")
-            println(e)
+            JP("DELETE SEQUENCE ERROR!")
+            JP(e)
             
         } else {
             
-            println("SEQUENCE DELETED!")
+            JP("SEQUENCE DELETED!")
             
         }
         
@@ -141,13 +141,13 @@ class Sequence {
         
         if let e = error {
             
-            println("SEQUENCE SAVE ERROR!")
-            println(e)
+            JP("SEQUENCE SAVE ERROR!")
+            JP(e)
             
         } else {
             
-            println(object)
-            println("SEQUENCE SAVED!")
+            JP(object)
+            JP("SEQUENCE SAVED!")
             
         }
         
@@ -157,6 +157,7 @@ class Sequence {
     
     func getPlays(){
         
+        JP("++++++++++ GET PLAYS START ++++++++++")
         var playObjects = object.plays.allObjects as! [PlayObject]
         
         plays = playObjects.map { o in
@@ -168,11 +169,13 @@ class Sequence {
         }
         
         plays.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedAscending })
+        JP("++++++++++ GET PLAYS END ++++++++++")
         
     }
     
     func getPenalties(){
         
+        JP("++++++++++ GET PENALTIES START ++++++++++")
         var penaltyObjects = object.penalties.allObjects as! [PenaltyObject]
         
         penalties = penaltyObjects.map { o in
@@ -184,6 +187,7 @@ class Sequence {
         }
         
         penalties.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedAscending })
+        JP("++++++++++ GET PENALTIES END ++++++++++")
         
     }
     

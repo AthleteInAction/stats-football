@@ -70,7 +70,6 @@ class GamesTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         let game = games[indexPath.row]
-        game.getSequences()
         
         var vc = Tracker(nibName: "Tracker",bundle: nil)
         vc.game = game

@@ -231,6 +231,22 @@ extension Stats {
                             }
                             
                         // PASS ++++++++++++++++++++++++++++++++++++++++++
+                        case .Interception:
+                        // INTERCEPTION ++++++++++++++++++++++++++++++++++
+                            
+                            var stat: Stat = Stat()
+                            stat.playtype = sequence.key.string
+                            stat.key = "int_thrown"
+                            stat.player = play.player_a
+                            if pos {
+                                stat.team = sequence.game.home
+                            } else {
+                                stat.team = sequence.game.away
+                            }
+                            
+                            stats.append(stat)
+                            
+                        // INTERCEPTION ++++++++++++++++++++++++++++++++++
                         case .Incomplete:
                         // INCOMPLETE ++++++++++++++++++++++++++++++++++++
                             

@@ -205,6 +205,7 @@ class PassingTotal {
         if _stat.key == "int_thrown" {
             
             att++
+            int++
             
         }
         

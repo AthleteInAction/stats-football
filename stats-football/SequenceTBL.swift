@@ -57,7 +57,7 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("sequence_cell") as! SequenceCell
         
-        let s = tracker.game.sequences[indexPath.row]
+        let s = sequences[indexPath.row]
         
         cell.sequence = s
         
@@ -67,7 +67,18 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         cell.userInteractionEnabled = true
         
         cell.team.backgroundColor = s.team.primary
-        cell.flag.hidden = !s.flagged
+//        cell.flag.hidden = !s.flagged
+        if let play = s.plays.first {
+            
+            cell.flag.hidden = false
+            cell.flag.backgroundColor = Filters.colors(play.key, alpha: 1)
+            cell.flag.alpha = 0.6
+            
+        } else {
+            
+            cell.flag.hidden = true
+            
+        }
         
         cell.leftTXT.text = s.team.short
         
@@ -214,7 +225,6 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     
     func reload(){
         
-        tracker.game.getSequences()
         sequences = tracker.game.sequences
         reloadData()
         

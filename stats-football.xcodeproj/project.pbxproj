@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD06DE481BC196CD0080B608 /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD06DE471BC196CD0080B608 /* Thread.swift */; };
 		AD1F8DA21B8F6B31001A6C52 /* SequenceTBL.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA11B8F6B31001A6C52 /* SequenceTBL.swift */; };
 		AD1F8DA41B8F7145001A6C52 /* PlayTBL.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA31B8F7145001A6C52 /* PlayTBL.swift */; };
 		AD1F8DA61B94FD5B001A6C52 /* BallBTN.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */; };
@@ -128,6 +129,7 @@
 /* Begin PBXFileReference section */
 		139C0BD1F20EF3EAB56E4E21 /* Pods_stats_football.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stats_football.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		39D33C1083B8540B6CEB271B /* Pods-stats-football.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stats-football.debug.xcconfig"; path = "Pods/Target Support Files/Pods-stats-football/Pods-stats-football.debug.xcconfig"; sourceTree = "<group>"; };
+		AD06DE471BC196CD0080B608 /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
 		AD1F8DA11B8F6B31001A6C52 /* SequenceTBL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceTBL.swift; sourceTree = "<group>"; };
 		AD1F8DA31B8F7145001A6C52 /* PlayTBL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayTBL.swift; sourceTree = "<group>"; };
 		AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BallBTN.swift; sourceTree = "<group>"; };
@@ -649,6 +651,7 @@
 				ADB8F95D1BA28D820049BDF0 /* Loading.swift */,
 				AD6842A21BB8151F007F4319 /* CodeTools.swift */,
 				AD6842A61BB829BB007F4319 /* Helpers.swift */,
+				AD06DE471BC196CD0080B608 /* Thread.swift */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -909,6 +912,7 @@
 				AD68429F1BB80C8E007F4319 /* TrackerHelpers.swift in Sources */,
 				AD6842C31BBCA754007F4319 /* ReceivingTBL.swift in Sources */,
 				AD6842C61BBDE277007F4319 /* PuntReturnTBL.swift in Sources */,
+				AD06DE481BC196CD0080B608 /* Thread.swift in Sources */,
 				AD895B4B1BAC211B00F6F638 /* PlayerEdit.swift in Sources */,
 				AD68429B1BB809FE007F4319 /* Yardline.swift in Sources */,
 				AD6842D41BBEE1BC007F4319 /* DataDisplayFunctions.swift in Sources */,

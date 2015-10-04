@@ -14,11 +14,25 @@ extension Tracker {
     // ========================================================
     func setData(){
         
-        if game.sequences.count == 0 { newSequence(1) }
+        JP("SET DATA")
         
-        selectSequence(0)
+        Loading.start()
         
-        MPC.startAdvertising()
+        Rhino.run({
+            
+            self.game.getSequences()
+            
+        },completion: { () -> Void in
+            
+            if self.game.sequences.count == 0 { self.newSequence(1) }
+            
+            self.selectSequence(0)
+            
+            self.MPC.startAdvertising()
+            
+            Loading.stop()
+            
+        })
         
     }
     // ========================================================
@@ -122,24 +136,24 @@ extension Tracker {
     
     // UPDATE SCORE
     func updateScore(){
-        
-        let s = game.sequences[index]
-        
-        game.getScore()
-        
-        if rightHome {
-            
-            leftSCORE.text = game.away.score.string()
-            rightSCORE.text = game.home.score.string()
-            
-        } else {
-            
-            leftSCORE.text = game.home.score.string()
-            rightSCORE.text = game.away.score.string()
-            
-        }
-        
-        MPC.sendGame(game)
+//        
+//        let s = game.sequences[index]
+//        
+//        game.getScore()
+//        
+//        if rightHome {
+//            
+//            leftSCORE.text = game.away.score.string()
+//            rightSCORE.text = game.home.score.string()
+//            
+//        } else {
+//            
+//            leftSCORE.text = game.home.score.string()
+//            rightSCORE.text = game.away.score.string()
+//            
+//        }
+//        
+//        MPC.sendGame(game)
         
     }
     
@@ -210,8 +224,6 @@ extension Tracker {
         
         lastDOWN = nil
         lastFD = nil
-        
-        game.getSequences()
         
         if game.sequences.count == 0 { return false }
         

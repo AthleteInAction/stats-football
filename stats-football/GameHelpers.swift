@@ -149,6 +149,7 @@ extension Game {
         
         for _sequence in _sequences {
             
+            JP("GET SCORE")
             _sequence.getPlays()
             _sequence.getPenalties()
             
@@ -194,6 +195,7 @@ extension Game {
         
         for _sequence in _sequences {
             
+            JP("PLAYER STATS")
             _sequence.getPlays()
             _sequence.getPenalties()
             
@@ -250,7 +252,7 @@ extension Game {
         for _stat in playerStats {
             
             switch _stat.key {
-            case "completion","incompletion":
+            case "completion","incompletion","int_thrown":
                 
                 if _stat.team.object.isEqual(home.object) {
                     

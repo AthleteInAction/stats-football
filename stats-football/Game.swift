@@ -79,12 +79,12 @@ class Game {
         
         if let e = error {
             
-            println("DELETE GAME ERROR!")
-            println(e)
+            JP("DELETE GAME ERROR!")
+            JP(e)
             
         } else {
             
-            println("GAME DELETED!")
+            JP("GAME DELETED!")
             
         }
         
@@ -106,13 +106,13 @@ class Game {
         
         if let e = error {
             
-            println("GAME SAVE ERROR!")
-            println(e)
+            JP("GAME SAVE ERROR!")
+            JP(e)
             
         } else {
             
-            println(object)
-            println("GAME SAVED!")
+            JP(object)
+            JP("GAME SAVED!")
             
         }
         
@@ -138,6 +138,7 @@ class Game {
     
     func getSequences(){
         
+        JP("++++++++++ GET SEQUENCES START ++++++++++")
         var sequenceObjects = object.sequences.allObjects as! [SequenceObject]
         
         sequences = sequenceObjects.map { o in
@@ -149,6 +150,7 @@ class Game {
         }
         
         sequences.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedDescending })
+        JP("++++++++++ GET SEQUENCES END ++++++++++")
         
     }
     
