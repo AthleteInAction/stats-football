@@ -17,13 +17,23 @@ class LineMKR: UIView {
     
     var pan: UIPanGestureRecognizer!
     
+    override func drawRect(rect: CGRect) {
+        
+//        let v = UIView(frame: CGRect(x: 0, y: 0, width: 50, height: 30))
+//        v.center.x = bounds.width / 2
+//        v.backgroundColor = UIColor.blueColor()
+//        v.alpha = 0.7
+//        addSubview(v)
+        
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         pan = UIPanGestureRecognizer(target: self, action: "dragged:")
         addGestureRecognizer(pan)
         
-        alpha = 0.7
+//        alpha = 0.7
         userInteractionEnabled = true
         
     }
@@ -66,6 +76,8 @@ class LineMKR: UIView {
         
         let ip = NSIndexPath(forRow: field.tracker.index, inSection: 0)
         field.tracker.sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
+        
+        field.setNeedsDisplay()
         
     }
 

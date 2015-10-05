@@ -114,7 +114,7 @@ extension Filters {
                 // ------------------------------------
                 if pos_right_original == pos_right {
                     
-                    println("SCORE TOUCHDOWN A")
+                    JP("SCORE TOUCHDOWN A")
                     
                     var z: Scores = .Touchdown
                     if s.key == Playtype.PAT {
@@ -137,7 +137,7 @@ extension Filters {
                         
                         if l == pos_right {
                             
-                            println("SCORE SAFETY A")
+                            JP("SCORE SAFETY A")
                             
                             if pos_right {
                                 return [.Safety,.None]
@@ -147,13 +147,13 @@ extension Filters {
                             
                         } else {
                             
-                            println("SCORE TOUCHBACK A")
+                            JP("SCORE TOUCHBACK A")
                             
                         }
                         
                     } else {
                         
-                        println("SCORE TOUCHBACK B")
+                        JP("SCORE TOUCHBACK B")
                         
                     }
                     // ====================================
@@ -173,7 +173,7 @@ extension Filters {
                 // ------------------------------------
                 if pos_right_original != pos_right {
                     
-                    println("SCORE TOUCHDOWN B")
+                    JP("SCORE TOUCHDOWN B")
                     
                     var z: Scores = .Touchdown
                     if s.key == .PAT {
@@ -196,7 +196,7 @@ extension Filters {
                         
                         if l == pos_right {
                             
-                            println("SCORE SAFETY B")
+                            JP("SCORE SAFETY B")
                             
                             if pos_right {
                                 return [.Safety,.None]
@@ -206,13 +206,13 @@ extension Filters {
                             
                         } else {
                             
-                            println("SCORE TOUCHBACK A")
+                            JP("SCORE TOUCHBACK A")
                             
                         }
                         
                     } else {
                         
-                        println("SCORE TOUCHBACK B")
+                        JP("SCORE TOUCHBACK B")
                         
                     }
                     // ====================================

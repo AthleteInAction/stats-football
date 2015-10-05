@@ -5,6 +5,7 @@
 //  Created by grobinson on 9/27/15.
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
+import Foundation
 
 enum Scores {
     
@@ -94,6 +95,7 @@ enum Playtype {
 enum Key {
     
     case Run
+    case Kneel
     case Pass
     case Incomplete
     case Interception
@@ -122,6 +124,7 @@ enum Key {
         
         switch self {
         case .Run: return "run"
+        case .Kneel: return "kneel"
         case .Pass: return "pass"
         case .Incomplete: return "incomplete"
         case .Interception: return "interception"
@@ -154,7 +157,8 @@ enum Key {
         
         switch self {
         case .Run: return "Run"
-        case .Pass: return "Pass"
+        case .Kneel: return "Kneel Down"
+        case .Pass: return "Completion"
         case .Incomplete: return "Incomplete"
         case .Interception: return "Interception"
         case .Fumble: return "Fumble"
@@ -188,7 +192,10 @@ enum Key {
         case .Five: return 5
         case .Ten: return 10
         case .Fifteen: return 15
-        default: return 30
+        default:
+            
+            fatalError("No distance value for \(self.string)")
+            
         }
         
     }

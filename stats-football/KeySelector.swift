@@ -85,6 +85,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         let key = keys[indexPath.row]
         
         cell.textLabel?.text = key.displayKey
+        cell.textLabel?.textAlignment = .Center
         
         return cell
         
@@ -112,21 +113,6 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     nsel.newPlay = play
                     
                     navigationController?.pushViewController(nsel, animated: false)
-                    
-//                case .Incomplete:
-//                    
-//                    play.save(nil)
-//                    
-//                    s.plays.append(play)
-//                    
-//                    tracker.playTBL.plays.append(play)
-//                    
-//                    let ip = NSIndexPath(forRow: tracker.playTBL.plays.count-1, inSection: 0)
-//                    tracker.playTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
-//                    
-//                    tracker.newPlay = nil
-//                    
-//                    dismissViewControllerAnimated(false, completion: nil)
                     
                 default:
                     
@@ -168,7 +154,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             // ++++++++++++++++++++++++++++++++++++++++++++++++
                 
                 switch key {
-                case .Kick:
+                case .OnKick:
                     
                     penalty.enforcement = key
                     
@@ -227,6 +213,18 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     for play in reverse(s.plays) {
                         
                         if let x = play.endX {
+                            
+                            yard = Yardline(spot: x.spot)
+                            
+                            break
+                            
+                        }
+                        
+                    }
+                    
+                    for p in reverse(s.penalties) {
+                        
+                        if let x = p.endX {
                             
                             yard = Yardline(spot: x.spot)
                             

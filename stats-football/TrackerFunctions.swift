@@ -22,13 +22,20 @@ extension Tracker {
             
             self.game.getSequences()
             
+            for _sequence in self.game.sequences {
+                
+                _sequence.getPlays()
+                _sequence.getPenalties()
+                
+            }
+            
         },completion: { () -> Void in
             
             if self.game.sequences.count == 0 { self.newSequence(1) }
             
             self.selectSequence(0)
             
-            self.MPC.startAdvertising()
+            MPC.startAdvertising()
             
             Loading.stop()
             
@@ -88,7 +95,7 @@ extension Tracker {
         
         // Set Side
         // ++++++++++++++++++++++++++++++++++++++
-        if rightHome {
+        if game.right_home {
             
             rightTEAM.setTitle(game.home.short, forState: .Normal)
             rightTEAM.backgroundColor = game.home.primary
@@ -136,24 +143,28 @@ extension Tracker {
     
     // UPDATE SCORE
     func updateScore(){
-//        
-//        let s = game.sequences[index]
-//        
-//        game.getScore()
-//        
-//        if rightHome {
-//            
-//            leftSCORE.text = game.away.score.string()
-//            rightSCORE.text = game.home.score.string()
-//            
-//        } else {
-//            
-//            leftSCORE.text = game.home.score.string()
-//            rightSCORE.text = game.away.score.string()
-//            
-//        }
-//        
-//        MPC.sendGame(game)
+        
+        Rhino.run({
+            
+            self.game.getScore()
+            
+        }, completion: { () -> Void in
+            
+            if self.game.right_home {
+                
+                self.leftSCORE.text = self.game.away.score.string()
+                self.rightSCORE.text = self.game.home.score.string()
+                
+            } else {
+                
+                self.leftSCORE.text = self.game.home.score.string()
+                self.rightSCORE.text = self.game.away.score.string()
+                
+            }
+            
+            MPC.sendGame(self.game)
+            
+        })
         
     }
     
@@ -243,8 +254,6 @@ extension Tracker {
         
         sequenceTBL.reload()
         
-        let s = game.sequences[index]
-        
         playTBL.reload()
         penaltyTBL.reload()
         
@@ -305,7 +314,7 @@ extension Tracker {
         
         popover = UIPopoverController(contentViewController: nav)
         popover.delegate = self
-        popover.popoverContentSize = CGSize(width: 220, height: view.bounds.height * 0.6)
+        popover.popoverContentSize = CGSize(width: 500, height: view.bounds.height * 0.7)
         popover.presentPopoverFromRect(field.frame, inView: field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
         
         return true

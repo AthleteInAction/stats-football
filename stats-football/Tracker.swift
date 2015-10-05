@@ -18,7 +18,6 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
     var popover: UIPopoverController!
     
     var rightPos: Bool = true
-    var rightHome: Bool = true
     
     var newPlay: Play?
     var newPenalty: Penalty?
@@ -33,8 +32,6 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
     
     var lastFD: Yardline?
     var lastDOWN: Int?
-    
-    var MPC = MPCManager()
     
     // IB
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -39,8 +39,8 @@ class DB {
                 
                 if let e = error {
                     
-                    println("ERROR:")
-                    println(e)
+                    JP("ERROR:")
+                    JP(e)
                     
                     completion(s: false,items: [])
                     
@@ -81,8 +81,8 @@ class DB {
                 
                 if let e = error {
                     
-                    println("ERROR:")
-                    println(e)
+                    JP("ERROR:")
+                    JP(e)
                     
                     completion(s: false,items: [])
                     
@@ -142,8 +142,8 @@ class DB {
                 
                 if let e = error {
                     
-                    println("Error!")
-                    println(e)
+                    JP("Error!")
+                    JP(e)
                     completion(s: false, team: item)
                     
                 } else {
@@ -167,8 +167,8 @@ class DB {
                 
                 if let e = error {
                     
-                    println("ERROR:")
-                    println(e)
+                    JP("ERROR:")
+                    JP(e)
                     
                     completion(s: false,items: [])
                     
@@ -228,8 +228,8 @@ class DB {
                 
                 if let e = error {
                     
-                    println("Error!")
-                    println(e)
+                    JP("Error!")
+                    JP(e)
                     completion(s: false, game: nil)
                     
                 } else {
@@ -254,8 +254,8 @@ class DB {
                 
                 if let e = error {
                     
-                    println("ERROR:")
-                    println(e)
+                    JP("ERROR:")
+                    JP(e)
                     
                     completion(s: false,games: [])
                     
@@ -314,8 +314,8 @@ class DB {
                 
                 if let e = error {
                     
-                    println("ERROR:")
-                    println(e)
+                    JP("ERROR:")
+                    JP(e)
                     
                     completion(s: false,items: [])
                     
@@ -375,8 +375,8 @@ class DB {
                 
                 if let e = error {
                     
-                    println("ERROR:")
-                    println(e)
+                    JP("ERROR:")
+                    JP(e)
                     
                     completion(s: false,items: [])
                     
@@ -412,8 +412,8 @@ class DB {
                 
                 if let e = error {
                     
-                    println("ERROR:")
-                    println(e)
+                    JP("ERROR:")
+                    JP(e)
                     
                     completion(s: false,items: [])
                     

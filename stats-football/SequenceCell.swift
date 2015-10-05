@@ -17,6 +17,7 @@ class SequenceCell: UITableViewCell {
     @IBOutlet weak var midTXT: UILabel!
     @IBOutlet weak var rightTXT: UILabel!
     @IBOutlet weak var team: UIView!
+    @IBOutlet weak var penalty: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -6,4 +6,7 @@
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
 
-func JP(o: AnyObject){ println(o) }
+func JP(o: AnyObject?){
+//    println(o)
+}
+func JP2(o: AnyObject?){ println(o) }

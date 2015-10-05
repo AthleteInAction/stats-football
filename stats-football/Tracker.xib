@@ -93,7 +93,7 @@
                             <color key="textColor" red="0.81493405370000005" green="0.81493405370000005" blue="0.81493405370000005" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cuA-uV-I9p">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cuA-uV-I9p">
                             <rect key="frame" x="358" y="16" width="16" height="29"/>
                             <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="24"/>
                             <color key="textColor" red="0.81493405372707173" green="0.81493405372707173" blue="0.81493405372707173" alpha="1" colorSpace="calibratedRGB"/>
@@ -211,7 +211,7 @@
                                 <constraint firstAttribute="width" constant="92" id="rFo-9d-xSR"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="27"/>
-                            <state key="normal" title="WGHS">
+                            <state key="normal">
                                 <color key="titleColor" red="0.14901960784313725" green="0.14901960784313725" blue="0.14901960784313725" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
@@ -226,7 +226,7 @@
                                 <constraint firstAttribute="width" constant="92" id="mJw-vh-Nji"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="27"/>
-                            <state key="normal" title="WG">
+                            <state key="normal">
                                 <color key="titleColor" red="0.14901960784313725" green="0.14901960784313725" blue="0.14901960784313725" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
@@ -234,8 +234,8 @@
                                 <action selector="switchTPD:" destination="-1" eventType="touchUpInside" id="sVg-2k-BZY"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="21" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wwe-S3-toy">
-                            <rect key="frame" x="108" y="16" width="31" height="29"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wwe-S3-toy">
+                            <rect key="frame" x="108" y="16" width="16" height="29"/>
                             <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="24"/>
                             <color key="textColor" red="0.81493405372707173" green="0.81493405372707173" blue="0.81493405372707173" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>

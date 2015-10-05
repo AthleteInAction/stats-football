@@ -17,7 +17,8 @@ var context: NSManagedObjectContext = appDel.managedObjectContext!
 var lastPeer: MCPeerID?
 var ratio: CGFloat = 1
 var vratio: CGFloat = 1
-var settings = Settings()
+let settings = Settings()
+let MPC = MPCManager()
 
 typealias CoreDataCompletion = (error: NSError?) -> Void
 
@@ -83,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("stats_football.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
-        if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil, error: &error) == nil {
+        if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: [NSMigratePersistentStoresAutomaticallyOption: true,NSInferMappingModelAutomaticallyOption: true], error: &error) == nil {
             coordinator = nil
             // Report any error we got.
             var dict = [String: AnyObject]()

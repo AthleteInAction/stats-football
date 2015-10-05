@@ -75,12 +75,12 @@ class Play {
         
         if let e = error {
             
-            println("DELETE PLAY ERROR!")
-            println(e)
+            JP("DELETE PLAY ERROR!")
+            JP(e)
             
         } else {
             
-            println("PLAY DELETED!")
+            JP("PLAY DELETED!")
             
         }
         
@@ -107,13 +107,13 @@ class Play {
         
         if let e = error {
             
-            println("PLAY SAVE ERROR!")
-            println(e)
+            JP("PLAY SAVE ERROR!")
+            JP(e)
             
         } else {
             
-            println(object)
-            println("PLAY SAVED!")
+            JP(object)
+            JP("PLAY SAVED!")
             
         }
         

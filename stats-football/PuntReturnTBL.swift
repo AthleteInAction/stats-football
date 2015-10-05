@@ -82,9 +82,10 @@ class PuntReturnTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
         
         if indexPath.section == 0 {
             
-            item = team.teamPuntReturns
             if type == "Kick" {
                 item = team.teamKickReturns
+            } else {
+                item = team.teamPuntReturns
             }
             cell.playerTXT.text = ""
             cell.backTXT.text = team.short

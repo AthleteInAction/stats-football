@@ -10,13 +10,13 @@ extension Tracker {
     
     func posRight(s: Sequence) -> Bool {
         
-        return (s.team.object!.isEqual(game.home.object!) && rightHome) || (s.team.object!.isEqual(game.away.object!) && !rightHome)
+        return (s.team.object!.isEqual(game.home.object!) && game.right_home) || (s.team.object!.isEqual(game.away.object!) && !game.right_home)
         
     }
     
     func posRight2(team: TeamObject) -> Bool {
         
-        return (team.isEqual(game.home.object!) && rightHome) || (team.isEqual(game.away.object!) && !rightHome)
+        return (team.isEqual(game.home.object!) && game.right_home) || (team.isEqual(game.away.object!) && !game.right_home)
         
     }
     

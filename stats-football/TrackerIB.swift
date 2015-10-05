@@ -113,7 +113,7 @@ extension Tracker {
         
         s.save(nil)
         
-        updateDown()
+        updateScoreboard()
         
     }
     
@@ -145,7 +145,7 @@ extension Tracker {
         
         let s = game.sequences[index]
         
-        if rightHome {
+        if game.right_home {
             
             if sender.tag == 1 {
                 
@@ -187,13 +187,13 @@ extension Tracker {
     
     @IBAction func switchTPD(sender: AnyObject) {
         
-        rightHome = !rightHome
+        game.right_home = !game.right_home
+        
+        game.save(nil)
         
         updateScoreboard()
         field.setNeedsDisplay()
         drawButtons()
-        
-        game.getPlayerStats()
         
     }
     
@@ -259,7 +259,7 @@ extension Tracker {
         
         if sender.tag == 1 {
             
-            if rightHome {
+            if game.right_home {
                 
                 vc.team = game.away
                 
@@ -271,7 +271,7 @@ extension Tracker {
             
         } else {
             
-            if rightHome {
+            if game.right_home {
                 
                 vc.team = game.home
                 

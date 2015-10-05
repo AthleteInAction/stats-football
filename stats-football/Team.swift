@@ -41,15 +41,15 @@ class Team {
     var object: TeamObject!
     var score: Int = 0
     var passing: [PassingTotal] = []
-    var teamPassing: PassingTotal = PassingTotal()
+    var teamPassing = PassingTotal()
     var rushing: [RushingTotal] = []
-    var teamRushing: RushingTotal = RushingTotal()
+    var teamRushing = RushingTotal()
     var receiving: [ReceivingTotal] = []
     var teamReceiving = ReceivingTotal()
     var puntReturns: [ReturnTotal] = []
-    var teamPuntReturns: ReturnTotal = ReturnTotal()
+    var teamPuntReturns = ReturnTotal()
     var kickReturns: [ReturnTotal] = []
-    var teamKickReturns: ReturnTotal = ReturnTotal()
+    var teamKickReturns = ReturnTotal()
     var MPCPlays: [[String:AnyObject]] = []
     
     init(name _name: String,short _short: String){
@@ -122,13 +122,13 @@ class Team {
         
         if let e = error {
             
-            println("TEAM SAVE ERROR!")
-            println(e)
+            JP("TEAM SAVE ERROR!")
+            JP(e)
             
         } else {
             
-            println(object)
-            println("TEAM SAVED!")
+            JP(object)
+            JP("TEAM SAVED!")
             
         }
         
@@ -157,12 +157,12 @@ class Team {
         
         if let e = error {
             
-            println("DELETE GAME ERROR!")
-            println(e)
+            JP("DELETE GAME ERROR!")
+            JP(e)
             
         } else {
             
-            println("GAME DELETED!")
+            JP("GAME DELETED!")
             
         }
         

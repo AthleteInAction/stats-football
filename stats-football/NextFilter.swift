@@ -25,7 +25,6 @@ class NextFilter {
         // ==========================================
         var lastSpot: Yardline?
         var hasPenaltySpot = false
-        _sequence.getPenalties()
         for penalty in reverse(_sequence.penalties) {
             
             if let spot = penalty.endX {
@@ -54,7 +53,22 @@ class NextFilter {
             S.startX = _sequence.startX
             S.down = _sequence.down
             S.fd = _sequence.fd
-            if let x = lastSpot { S.startX = x }
+            if let x = lastSpot {
+                
+                S.startX = x
+                
+                if let fd = S.fd {
+                    
+                    if x.spot >= fd.spot {
+                        
+                        S.down = 1
+                        S.fd = S.startX.increment(10)
+                        
+                    }
+                    
+                }
+            
+            }
             
             return S
             
@@ -324,6 +338,8 @@ class NextFilter {
             return S
             
         default:
+            
+            JP("DOWN")
             
             S.qtr = _sequence.qtr
             S.key = .Down

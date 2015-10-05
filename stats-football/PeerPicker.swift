@@ -39,7 +39,7 @@ class PeerPicker: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return dataDisplay.MPC.devices.count
+        return MPC.devices.count
         
     }
     
@@ -47,7 +47,7 @@ class PeerPicker: UITableViewController {
         
         let cell = UITableViewCell(style: .Default, reuseIdentifier: "cell")
         
-        let device = dataDisplay.MPC.devices[indexPath.row]
+        let device = MPC.devices[indexPath.row]
         
         cell.textLabel?.text = device.displayName
         
@@ -59,9 +59,9 @@ class PeerPicker: UITableViewController {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        let device = dataDisplay.MPC.devices[indexPath.row]
+        let device = MPC.devices[indexPath.row]
         
-        dataDisplay.MPC.serviceBrowser.invitePeer(device, toSession: dataDisplay.MPC.session, withContext: nil, timeout: 10)
+        MPC.serviceBrowser.invitePeer(device, toSession: MPC.session, withContext: nil, timeout: 10)
         
     }
     

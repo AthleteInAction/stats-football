@@ -19,7 +19,7 @@ extension Tracker: MPCManagerReceiver,MPCManagerStateChanged {
     func stateChanged(state: MCSessionState) {
         NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
             
-            if state == .Connected { self.MPC.sendGame(self.game) }
+            if state == .Connected { MPC.sendGame(self.game) }
             
         }
     }

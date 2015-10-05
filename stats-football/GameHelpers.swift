@@ -132,26 +132,10 @@ extension Game {
     // ============================================================
     func getScore(){
         
-        var sequenceObjects = object.sequences.allObjects as! [SequenceObject]
-        
-        var _sequences: [Sequence] = sequenceObjects.map { o in
-            
-            let sequence = Sequence(sequence: o)
-            
-            return sequence
-            
-        }
-        
-        _sequences.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedDescending })
-        
         var awayScore = 0
         var homeScore = 0
         
-        for _sequence in _sequences {
-            
-            JP("GET SCORE")
-            _sequence.getPlays()
-            _sequence.getPenalties()
+        for _sequence in sequences {
             
             let score = Filters.score(_sequence)
             
@@ -443,12 +427,12 @@ extension Game {
         var tmpp: [PassingTotal] = []
         for (key,val) in _passingHome { tmpp.append(val) }
         home.passing = tmpp
-        home.passing.sort({ $0.att > $1.att })
+        home.passing.sort({ $0.yds > $1.yds })
         
         tmpp.removeAll(keepCapacity: true)
         for (key,val) in _passingAway { tmpp.append(val) }
         away.passing = tmpp
-        away.passing.sort({ $0.att > $1.att })
+        away.passing.sort({ $0.yds > $1.yds })
         // ------------------------------------------------
         
         // RECEIVING
@@ -456,12 +440,12 @@ extension Game {
         var tmprec: [ReceivingTotal] = []
         for (key,val) in _receivingHome { tmprec.append(val) }
         home.receiving = tmprec
-        home.receiving.sort({ $0.rec > $1.rec })
+        home.receiving.sort({ $0.yds > $1.yds })
         
         tmprec.removeAll(keepCapacity: true)
         for (key,val) in _receivingAway { tmprec.append(val) }
         away.receiving = tmprec
-        away.receiving.sort({ $0.rec > $1.rec })
+        away.receiving.sort({ $0.yds > $1.yds })
         // ------------------------------------------------
         
         // RUSHING
@@ -469,12 +453,12 @@ extension Game {
         var tmpr: [RushingTotal] = []
         for (key,val) in _rushingHome { tmpr.append(val) }
         home.rushing = tmpr
-        home.rushing.sort({ $0.att > $1.att })
+        home.rushing.sort({ $0.yds > $1.yds })
         
         tmpr.removeAll(keepCapacity: true)
         for (key,val) in _rushingAway { tmpr.append(val) }
         away.rushing = tmpr
-        away.rushing.sort({ $0.att > $1.att })
+        away.rushing.sort({ $0.yds > $1.yds })
         // ------------------------------------------------
         
         // PUNT RETURNS
@@ -482,12 +466,12 @@ extension Game {
         var tmppunt: [ReturnTotal] = []
         for (key,val) in _puntReturnsHome { tmppunt.append(val) }
         home.puntReturns = tmppunt
-        home.puntReturns.sort({ $0.att > $1.att })
+        home.puntReturns.sort({ $0.yds > $1.yds })
         
         tmppunt.removeAll(keepCapacity: true)
         for (key,val) in _puntReturnsAway { tmppunt.append(val) }
         away.puntReturns = tmppunt
-        away.puntReturns.sort({ $0.att > $1.att })
+        away.puntReturns.sort({ $0.yds > $1.yds })
         // ------------------------------------------------
         
         // KICK RETURNS
@@ -495,13 +479,13 @@ extension Game {
         var tmpkick: [ReturnTotal] = []
         for (key,val) in _kickReturnsHome { tmpkick.append(val) }
         home.kickReturns = tmpkick
-        home.kickReturns.sort({ $0.att > $1.att })
+        home.kickReturns.sort({ $0.yds > $1.yds })
         
         tmpkick.removeAll(keepCapacity: true)
         for (key,val) in _kickReturnsAway { tmpkick.append(val) }
         away.kickReturns = tmpkick
         JP("AWAY KICK RETURNS: \(away.kickReturns.count)")
-        away.kickReturns.sort({ $0.att > $1.att })
+        away.kickReturns.sort({ $0.yds > $1.yds })
         // ------------------------------------------------
         
     }

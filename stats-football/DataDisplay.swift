@@ -11,8 +11,6 @@ import MultipeerConnectivity
 
 class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
     
-    var MPC = MPCManager()
-    
     var peerPicker: PeerPicker!
     
     var connect: UIBarButtonItem!
@@ -98,6 +96,11 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
             JP("GAME RECEIVED")
             JP(_game)
             self.game = _game
+            
+            let _show = _game["show"] as! String
+            
+            if _show == "home" { self.index = 1 } else { self.index = 0 }
+            
             self.setData(self.index)
             
         }

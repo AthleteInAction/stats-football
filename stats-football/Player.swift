@@ -75,13 +75,13 @@ class Player {
         
         if let e = error {
             
-            println("PLAYER SAVE ERROR!")
-            println(e)
+            JP("PLAYER SAVE ERROR!")
+            JP(e)
             
         } else {
             
-            println(object)
-            println("PLAYER SAVED!")
+            JP(object)
+            JP("PLAYER SAVED!")
             
         }
         
@@ -100,12 +100,12 @@ class Player {
         
         if let e = error {
             
-            println("DELETE PLAYER ERROR!")
-            println(e)
+            JP("DELETE PLAYER ERROR!")
+            JP(e)
             
         } else {
             
-            println("PLAYER DELETED!")
+            JP("PLAYER DELETED!")
             
         }
         

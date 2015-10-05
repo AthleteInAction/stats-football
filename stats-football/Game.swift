@@ -17,6 +17,7 @@ class GameObject: NSManagedObject {
     @NSManaged var id: String?
     @NSManaged var away: TeamObject
     @NSManaged var home: TeamObject
+    @NSManaged var right_home: String
     @NSManaged var players: NSSet
     @NSManaged var sequences: NSSet
     
@@ -28,6 +29,7 @@ class Game {
     var id: Int?
     var away: Team!
     var home: Team!
+    var right_home: Bool = true
     var players: [Player] = []
     var sequences: [Sequence] = []
     var playerStats: [Stat] = []
@@ -49,6 +51,7 @@ class Game {
         if let i = game.id { id = i.toInt()! }
         away = Team(team: game.away)
         home = Team(team: game.home)
+        right_home = game.right_home.toBool()
         object = game
         
     }
@@ -101,6 +104,7 @@ class Game {
         if let i = id { object.id = i.string() }
         object.away = away.object
         object.home = home.object
+        object.right_home = right_home.description
         
         object.managedObjectContext?.save(&error)
         

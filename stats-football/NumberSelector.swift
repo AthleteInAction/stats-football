@@ -12,6 +12,8 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
 
     @IBOutlet weak var table: UITableView!
     @IBOutlet weak var freqTBL: UITableView!
+    @IBOutlet weak var displayTXT: UILabel!
+    
     var nTXT: UITextField!
     
     var tracker: Tracker!
@@ -34,12 +36,16 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Player"
+        
         table.tag = 1
         freqTBL.tag = 2
         
-        s = tracker.game.sequences[tracker.index]
+        if tracker.game.sequences.count > 0 {
+            s = tracker.game.sequences[tracker.index]
+        }
         
-        if tracker.rightHome {
+        if tracker.game.right_home {
             selectedTeam = tracker.game.away
             teamKey.removeAll(keepCapacity: true)
             teamKey.append(tracker.game.away)
@@ -69,17 +75,17 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         edgesForExtendedLayout = UIRectEdge()
         
-        nTXT = UITextField(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
-        nTXT.placeholder = "New #"
-        nTXT.font = UIFont.systemFontOfSize(14)
-        nTXT.textColor = UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
-        nTXT.backgroundColor = UIColor.whiteColor()
-        nTXT.textAlignment = .Center
-        nTXT.layer.cornerRadius = 4
-        nTXT.keyboardType = UIKeyboardType.PhonePad
-        nTXT.delegate = self
-        
-        navigationItem.titleView = nTXT
+//        nTXT = UITextField(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
+//        nTXT.placeholder = "New #"
+//        nTXT.font = UIFont.systemFontOfSize(14)
+//        nTXT.textColor = UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
+//        nTXT.backgroundColor = UIColor.whiteColor()
+//        nTXT.textAlignment = .Center
+//        nTXT.layer.cornerRadius = 4
+//        nTXT.keyboardType = UIKeyboardType.PhonePad
+//        nTXT.delegate = self
+//        
+//        navigationItem.titleView = nTXT
         
     }
 
@@ -262,13 +268,13 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
                 
             default:
                 
-                println("NOTHING #")
+                JP("NOTHING #")
                 
             }
             
         } else {
             
-            println("NO NEW PLAY!")
+            JP("NO NEW PLAY!")
             
         }
         // =========================================================
@@ -284,7 +290,7 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
             
         } else {
             
-            println("NO NEW PENALTY!")
+            JP("NO NEW PENALTY!")
             
         }
         
@@ -320,6 +326,64 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         }
         
         return false
+        
+    }
+    
+    @IBAction func numberTPD(sender: UIButton) {
+        
+        if displayTXT.text?.length() >= 2 {
+            
+            displayTXT.text = sender.tag.string()
+            
+        } else {
+            
+            displayTXT.text! += sender.tag.string()
+            
+        }
+        
+    }
+    
+    @IBAction func enterTPD(sender: AnyObject) {
+        
+        if displayTXT.text != "" {
+            
+            let n = displayTXT.text!.toInt()!
+            
+            let newPlayer = Player(game: tracker.game, number: n)
+            
+            var foundPlayer: Player?
+            for player in tracker.game.players {
+                
+                if player.number == newPlayer.number { foundPlayer = player }
+                
+            }
+            
+            if let p = foundPlayer {
+                
+                p.used++
+                p.save(nil)
+                
+            } else {
+                
+                newPlayer.used++
+                newPlayer.save(nil)
+                numbers.insert(newPlayer, atIndex: 0)
+                
+            }
+            
+            selectPlayer(newPlayer)
+            
+        }
+        
+    }
+    
+}
+
+extension String {
+    
+    func length() -> Int {
+        
+        return count(self)
         
     }
     

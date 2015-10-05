@@ -109,7 +109,16 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
                 
             } else {
                 
-                cell.btmTXT.text = "No Spot"
+                switch penalty.enforcement as Key {
+                case .Declined,.Offset,.OnKick:
+                    
+                    cell.btmTXT.text = penalty.enforcement.displayKey
+                    
+                default:
+                    
+                    cell.btmTXT.text = "No Spot"
+                    
+                }
                 
             }
             
@@ -131,9 +140,8 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
             penalty.delete(nil)
             
-            s.getPenalties()
-            
-            penalties = s.penalties
+            s.penalties.removeAtIndex(indexPath.row)
+            penalties.removeAtIndex(indexPath.row)
             
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
             
@@ -147,7 +155,6 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
     func reload(){
         
         let s = tracker.game.sequences[tracker.index]
-        s.getPenalties()
         penalties = s.penalties
         reloadData()
         

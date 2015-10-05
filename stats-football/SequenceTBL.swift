@@ -67,16 +67,33 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         cell.userInteractionEnabled = true
         
         cell.team.backgroundColor = s.team.primary
-//        cell.flag.hidden = !s.flagged
+        
         if let play = s.plays.first {
             
             cell.flag.hidden = false
-            cell.flag.backgroundColor = Filters.colors(play.key, alpha: 1)
-            cell.flag.alpha = 0.6
+            switch play.key as Key {
+            case .Pass,.Interception,.Incomplete:
+                cell.flag.backgroundColor = Filters.colors(.Pass, alpha: 0.6)
+            case .Run:
+                cell.flag.backgroundColor = Filters.colors(.Run, alpha: 0.6)
+            default: ()
+                cell.flag.backgroundColor = Filters.colors(play.key, alpha: 0.6)
+            }
             
         } else {
             
             cell.flag.hidden = true
+            
+        }
+        
+        if let penalty = s.penalties.first {
+            
+            cell.penalty.hidden = false
+            cell.penalty.backgroundColor = Filters.colors(.Penalty, alpha: 0.6)
+            
+        } else {
+            
+            cell.penalty.hidden = true
             
         }
         

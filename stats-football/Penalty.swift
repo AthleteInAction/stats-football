@@ -90,13 +90,13 @@ class Penalty {
         
         if let e = error {
             
-            println("PENALTY SAVE ERROR!")
-            println(e)
+            JP("PENALTY SAVE ERROR!")
+            JP(e)
             
         } else {
             
-            println(object)
-            println("PENALTY SAVED!")
+            JP(object)
+            JP("PENALTY SAVED!")
             
         }
         
@@ -121,12 +121,12 @@ class Penalty {
         
         if let e = error {
             
-            println("DELETE PENALTY ERROR!")
-            println(e)
+            JP("DELETE PENALTY ERROR!")
+            JP(e)
             
         } else {
             
-            println("PENALTY DELETED!")
+            JP("PENALTY DELETED!")
             
         }
         

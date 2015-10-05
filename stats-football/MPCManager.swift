@@ -54,7 +54,7 @@ class MPCManager : NSObject {
     
     deinit {
         
-        println("DEINIT")
+        JP("DEINIT")
         stopAdvertising()
         stopBrowsing()
         
@@ -81,26 +81,36 @@ class MPCManager : NSObject {
             "plays": game.home.MPCPlays
         ]
         
-        var f: [String:AnyObject] = [
+        var _show = "away"
+        for _sequence in game.sequences {
+            
+            if _sequence.team.object.isEqual(game.home.object) { _show = "home" }
+            
+            break
+            
+        }
+        
+        var _data: [String:AnyObject] = [
             "home": _home,
-            "away": _away
+            "away": _away,
+            "show": _show
         ]
         
-        let data = NSKeyedArchiver.archivedDataWithRootObject(f)
+        let data = NSKeyedArchiver.archivedDataWithRootObject(_data)
         
         if session.connectedPeers.count > 0 {
             
             var error: NSError?
             if !session.sendData(data,toPeers: session.connectedPeers, withMode: .Reliable, error: &error){
                 
-                println("SEND ERROR:")
-                println(error)
+                JP("SEND ERROR:")
+                JP(error)
                 
             }
             
         } else {
             
-            println("NO PEERS CONNECTED!")
+            JP("NO PEERS CONNECTED!")
             
         }
         
@@ -193,7 +203,7 @@ extension MPCManager : MCSessionDelegate {
     
     func session(session: MCSession!, didReceiveData data: NSData!, fromPeer peerID: MCPeerID!) {
         
-        println("DID RECEIVE DATA: \(data.length) bytes")
+        JP("DID RECEIVE DATA: \(data.length) bytes")
         
         lastPeer = peerID
         

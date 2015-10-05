@@ -53,9 +53,9 @@ extension Tracker {
                 let pos_right = posRight(s)
                 
                 var button = PointBTN.buttonWithType(.Custom) as! PointBTN
-                button.frame = CGRectMake(0,0,20,20)
+                button.frame = CGRectMake(0,0,30,30)
                 button.layer.cornerRadius = 0.5 * button.bounds.size.width
-                button.titleLabel?.font = UIFont.systemFontOfSize(12)
+                button.titleLabel?.font = UIFont.systemFontOfSize(14)
                 button.tag = -1
                 button.index = i
                 

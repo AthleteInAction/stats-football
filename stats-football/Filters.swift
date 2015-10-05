@@ -75,7 +75,7 @@ class Filters {
             
         case "penalty_options":
             
-            return [.PreviousSpot,.SpotOfFoul,.DeadBallSpot]
+            return [.PreviousSpot,.SpotOfFoul,.DeadBallSpot,.Declined,.Offset,.OnKick]
             
         case "penalty_enforcement":
             

@@ -18,6 +18,7 @@ class StatsDisplay: UIViewController {
     
     var game: Game!
     var team: Team!
+    private var _team: Team!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,10 +74,6 @@ class StatsDisplay: UIViewController {
     
     func doStats(){
         
-        game.getTotals()
-        
-        var _team: Team!
-        
         if game.home.object.isEqual(team.object) {
             _team = game.home
         } else {
@@ -84,18 +81,33 @@ class StatsDisplay: UIViewController {
         }
         
         passingTBL.team = _team
-        passingTBL.passing = _team.passing
-        
         receivingTBL.team = _team
-        receivingTBL.receiving = _team.receiving
-        
         rushingTBL.team = _team
-        rushingTBL.rushing = _team.rushing
-        
         puntReturnsTBL.team = _team
-        puntReturnsTBL.returns = _team.puntReturns
-        
         kickReturnsTBL.team = _team
+        
+        Loading.start()
+        
+        Rhino.run({
+            
+            self.game.getTotals()
+        
+        }, completion: { () -> Void in
+            
+            self.setData()
+            
+            Loading.stop()
+            
+        })
+        
+    }
+    
+    func setData(){
+        
+        passingTBL.passing = _team.passing
+        receivingTBL.receiving = _team.receiving
+        rushingTBL.rushing = _team.rushing
+        puntReturnsTBL.returns = _team.puntReturns
         kickReturnsTBL.returns = _team.kickReturns
         
         passingTBL.reloadData()

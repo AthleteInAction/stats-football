@@ -135,8 +135,6 @@ extension Tracker {
             
             var delete2 = UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive) { action -> Void in
                 
-                JP("BUTTON 2 TAPPED DELETE 1")
-                s.getPlays()
                 let play = s.plays[b.index]
                 play.delete(nil)
                 s.plays.removeAtIndex(b.index)
@@ -144,14 +142,10 @@ extension Tracker {
                 
                 self.playTBL.deleteRowsAtIndexPaths([NSIndexPath(forRow: b.index, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
                 
-                JP("BUTTON 2 TAPPED DELETE 2")
-                s.getPlays()
-                self.playTBL.plays = s.plays
-                
                 self.field.setNeedsDisplay()
                 self.drawButtons()
                 
-                self.MPC.sendGame(self.game)
+                MPC.sendGame(self.game)
                 
             }
             
