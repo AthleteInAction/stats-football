@@ -132,12 +132,6 @@ class NumberSelector: UIViewController,UITableViewDataSource,UITableViewDelegate
         
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        
-        nTXT.endEditing(true)
-        
-    }
-    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         return 1

@@ -19,11 +19,11 @@ class LineMKR: UIView {
     
     override func drawRect(rect: CGRect) {
         
-//        let v = UIView(frame: CGRect(x: 0, y: 0, width: 50, height: 30))
-//        v.center.x = bounds.width / 2
-//        v.backgroundColor = UIColor.blueColor()
-//        v.alpha = 0.7
-//        addSubview(v)
+//        for i in 0 ... floor(bounds.height / 40) {
+//            
+//            let txt = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+//            
+//        }
         
     }
     
@@ -50,34 +50,38 @@ class LineMKR: UIView {
     
     func dragged(sender: UIPanGestureRecognizer){
         
-        let s = field.tracker.game.sequences[field.tracker.index]
-        
-        let pos_right = field.tracker.posRight(s)
-        
-        var translation  = sender.translationInView(superview!)
-        
-        var nex = round((lastLocation.x + translation.x) / ratio) * ratio
-        
-        let min = 11 * ratio
-        let max = 109 * ratio
-        
-        if nex > max { nex = max }
-        if nex < min { nex = min }
-        
-        s.startX = Yardline(x: nex, pos_right: pos_right)
-        
-        center.x = nex
-        
-        if sender.state == .Ended {
+        if field.tracker.newPlay == nil && field.tracker.newPenalty == nil {
             
-            s.save(nil)
+            let s = field.tracker.game.sequences[field.tracker.index]
+            
+            let pos_right = field.tracker.posRight(s)
+            
+            var translation  = sender.translationInView(superview!)
+            
+            var nex = round((lastLocation.x + translation.x) / ratio) * ratio
+            
+            let min = 11 * ratio
+            let max = 109 * ratio
+            
+            if nex > max { nex = max }
+            if nex < min { nex = min }
+            
+            s.startX = Yardline(x: nex, pos_right: pos_right)
+            
+            center.x = nex
+            
+            if sender.state == .Ended {
+                
+                s.save(nil)
+                
+            }
+            
+            let ip = NSIndexPath(forRow: field.tracker.index, inSection: 0)
+            field.tracker.sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
+            
+            field.setNeedsDisplay()
             
         }
-        
-        let ip = NSIndexPath(forRow: field.tracker.index, inSection: 0)
-        field.tracker.sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
-        
-        field.setNeedsDisplay()
         
     }
 

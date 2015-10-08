@@ -32,47 +32,82 @@ class Field: UIView {
             setData()
             tracker.setData()
             
-        }
-        
-        for v in subviews { if v.tag == -2 { v.removeFromSuperview() } }
-        
-        if tracker.game.sequences.count > 0 {
+        } else {
             
-            let s = tracker.game.sequences[tracker.index]
+            for v in subviews { if v.tag == -2 { v.removeFromSuperview() } }
             
-            let c = UIGraphicsGetCurrentContext()
-            
-            let pos_right: Bool = tracker.posRight(s)
-            
-            var x = s.startX.toX(pos_right)
-            var y = s.startY.toP() * bounds.height
-            if tracker.posRight(s) { y = (100 - s.startY).toP() * bounds.height }
-            
-            CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
-            
-            var prev: Play?
-            for (i,play) in enumerate(s.plays) {
+            if tracker.game.sequences.count > 0 {
                 
-                if let endX = play.endX {
+                let s = tracker.game.sequences[tracker.index]
+                
+                let c = UIGraphicsGetCurrentContext()
+                
+                let pos_right: Bool = tracker.posRight(s)
+                
+                var x = s.startX.toX(pos_right)
+                var y = s.startY.toP() * bounds.height
+                if tracker.posRight(s) { y = (100 - s.startY).toP() * bounds.height }
+                
+                var prev: Play?
+                for (i,play) in enumerate(s.plays) {
                     
-                    x = endX.toX(pos_right)
-                    y = play.endY!.toP() * bounds.height
-                    if tracker.posRight(s) { y = (100 - play.endY!).toP() * bounds.height }
-                    
-                    CGContextSetLineWidth(c, 10.0)
-                    CGContextSetLineDash(c, 10, [6,3], 2)
-                    
-                    var color = Filters.colors(play.key, alpha: 0.7).CGColor
-                    
-                    CGContextSetStrokeColorWithColor(c,color)
-                    
-                    CGContextAddLineToPoint(c,CGFloat(x),CGFloat(y))
-                    
-                    CGContextStrokePath(c)
-                    
-                    CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
-                    
-                    prev = play
+                    if let endX = play.endX {
+                        
+                        switch play.key as Key {
+                        case .FGA,.FGM: ()
+                        default:
+                            
+                            if i == 0 {
+                                
+                                switch play.key as Key {
+                                case .Kick,.BadSnap,.FumbledSnap:
+                                    
+                                    x = Yardline(spot: s.startX.spot - 3).toX(pos_right)
+                                    
+                                case .Pass,.Incomplete,.Interception:
+                                    
+                                    x = Yardline(spot: s.startX.spot - 4).toX(pos_right)
+                                    
+                                case .Punt:
+                                    
+                                    x = Yardline(spot: s.startX.spot - 12).toX(pos_right)
+                                    
+                                default: ()
+                                }
+                                
+                                CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
+                                
+                            }
+                            
+                            x = endX.toX(pos_right)
+                            y = play.endY!.toP() * bounds.height
+                            if tracker.posRight(s) { y = (100 - play.endY!).toP() * bounds.height }
+                            
+                            CGContextSetLineWidth(c, 10.0)
+                            
+                            var color = Filters.colors(play.key, alpha: 0.7).CGColor
+                            
+                            switch play.key as Key {
+                            case .Pass:
+                                CGContextSetLineDash(c, 10, [6,3], 2)
+                            case .Incomplete:
+                                color = Filters.colors(play.key, alpha: 0.3).CGColor
+                            default: ()
+                            }
+                            
+                            CGContextSetStrokeColorWithColor(c,color)
+                            
+                            CGContextAddLineToPoint(c,CGFloat(x),CGFloat(y))
+                            
+                            CGContextStrokePath(c)
+                            
+                            CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
+                            
+                        }
+                        
+                        prev = play
+                        
+                    }
                     
                 }
                 

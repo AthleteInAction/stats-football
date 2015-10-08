@@ -50,72 +50,76 @@ class FirstDownMKR: UIView {
     
     func dragged(sender: UIPanGestureRecognizer){
         
-        var translation  = sender.translationInView(superview!)
-        
-        var nex = round((lastLocation.x + translation.x) / ratio) * ratio
-        
-        let min = 10 * ratio
-        let max = 110 * ratio
-        
-        if nex > max { nex = max }
-        if nex < min { nex = min }
-        
-        let s = field.tracker.game.sequences[field.tracker.index]
-        
-        let pos_right = field.tracker.posRight(s)
-        
-        if pos_right {
+        if field.tracker.newPlay == nil && field.tracker.newPenalty == nil {
             
-            if nex < field.line.center.x {
+            var translation  = sender.translationInView(superview!)
+            
+            var nex = round((lastLocation.x + translation.x) / ratio) * ratio
+            
+            let min = 10 * ratio
+            let max = 110 * ratio
+            
+            if nex > max { nex = max }
+            if nex < min { nex = min }
+            
+            let s = field.tracker.game.sequences[field.tracker.index]
+            
+            let pos_right = field.tracker.posRight(s)
+            
+            if pos_right {
                 
-                if nex <= min || nex >= max {
+                if nex < field.line.center.x {
                     
-                    backgroundColor = UIColor.redColor()
+                    if nex <= min || nex >= max {
+                        
+                        backgroundColor = UIColor.redColor()
+                        
+                    } else {
+                        
+                        backgroundColor = UIColor.yellowColor()
+                        
+                    }
                     
-                } else {
+                    center.x = nex
                     
-                    backgroundColor = UIColor.yellowColor()
+                    s.fd = Yardline(x: nex, pos_right: pos_right)
                     
                 }
                 
-                center.x = nex
+            } else {
                 
-                s.fd = Yardline(x: nex, pos_right: pos_right)
-                
-            }
-            
-        } else {
-            
-            if nex > field.line.center.x {
-                
-                if nex <= min || nex >= max {
+                if nex > field.line.center.x {
                     
-                    backgroundColor = UIColor.redColor()
+                    if nex <= min || nex >= max {
+                        
+                        backgroundColor = UIColor.redColor()
+                        
+                    } else {
+                        
+                        backgroundColor = UIColor.yellowColor()
+                        
+                    }
                     
-                } else {
+                    center.x = nex
                     
-                    backgroundColor = UIColor.yellowColor()
+                    s.fd = Yardline(x: nex, pos_right: pos_right)
                     
                 }
                 
-                center.x = nex
+            }
+            
+            if sender.state == UIGestureRecognizerState.Ended {
                 
-                s.fd = Yardline(x: nex, pos_right: pos_right)
+                s.save(nil)
                 
             }
             
-        }
-        
-        if sender.state == UIGestureRecognizerState.Ended {
+            let ip = NSIndexPath(forRow: field.tracker.index, inSection: 0)
+            field.tracker.sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
             
-            s.save(nil)
+            field.tracker.updateDown()
             
         }
-        
-        let ip = NSIndexPath(forRow: field.tracker.index, inSection: 0)
-        field.tracker.sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
-        
-        field.tracker.updateDown()
         
     }
     

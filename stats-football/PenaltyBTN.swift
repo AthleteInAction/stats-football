@@ -11,12 +11,5 @@ import UIKit
 class PenaltyBTN: UIButton {
     
     var team: Team!
-    
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        
-        
-        
-    }
 
 }

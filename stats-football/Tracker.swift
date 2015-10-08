@@ -94,6 +94,7 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
         rightPTY.layer.cornerRadius = 4
         leftTEAM.layer.cornerRadius = 6
         rightTEAM.layer.cornerRadius = 6
+        cancelBTN.layer.cornerRadius = 6
         
         setDelegates()
         

@@ -315,7 +315,7 @@ extension Tracker {
         popover = UIPopoverController(contentViewController: nav)
         popover.delegate = self
         popover.popoverContentSize = CGSize(width: 500, height: view.bounds.height * 0.7)
-        popover.presentPopoverFromRect(field.frame, inView: field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+        popover.presentPopoverFromRect(CGRect(x: field.bounds.width/2, y: field.bounds.height, width: 0, height: 0), inView: field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
         
         return true
         

@@ -97,9 +97,13 @@ enum Key {
     case Run
     case Kneel
     case Pass
+    case Reception
     case Incomplete
     case Interception
+    case Sack
     case Fumble
+    case FumbledSnap
+    case BadSnap
     case Return
     case Kick
     case Punt
@@ -120,14 +124,22 @@ enum Key {
     case Ten
     case Fifteen
     
+    case Home
+    case Away
+    case NoRecovery
+    
     var string: String {
         
         switch self {
         case .Run: return "run"
         case .Kneel: return "kneel"
         case .Pass: return "pass"
+        case .Reception: return "reception"
         case .Incomplete: return "incomplete"
         case .Interception: return "interception"
+        case .Sack: return "sack"
+        case .FumbledSnap: return "fumbled_snap"
+        case .BadSnap: return "bad_snap"
         case .Fumble: return "fumble"
         case .Return: return "return"
         case .Kick: return "kick"
@@ -159,8 +171,12 @@ enum Key {
         case .Run: return "Run"
         case .Kneel: return "Kneel Down"
         case .Pass: return "Completion"
+        case .Reception: return "Reception"
         case .Incomplete: return "Incomplete"
         case .Interception: return "Interception"
+        case .Sack: return "Sack"
+        case .FumbledSnap: return "Fumbled Snap"
+        case .BadSnap: return "Bad Snap"
         case .Fumble: return "Fumble"
         case .Return: return "Return"
         case .Kick: return "Kick"
@@ -181,6 +197,45 @@ enum Key {
         case .Five: return "5 Yards"
         case .Ten: return "10 Yards"
         case .Fifteen: return "15 Yards"
+        case .NoRecovery: return "No Recovery"
+        default: return "E"
+        }
+        
+    }
+    
+    var displayShort: String {
+        
+        switch self {
+        case .Run: return "Run"
+        case .Kneel: return "Kneel"
+        case .Pass: return "Comp"
+        case .Reception: return "Catch"
+        case .Incomplete: return "Incomp"
+        case .Interception: return "Int"
+        case .Sack: return "Sack"
+        case .FumbledSnap: return "Fum Snap"
+        case .BadSnap: return "Bad Snap"
+        case .Fumble: return "Fumble"
+        case .Return: return "Return"
+        case .Kick: return "Kick"
+        case .Punt: return "Punt"
+        case .Lateral: return "Lateral"
+        case .FGA: return "FGA"
+        case .FGM: return "FGM"
+        case .Block: return "Block"
+        case .Recovery: return "Recovery"
+        case .PreviousSpot: return "Previous Spot"
+        case .SpotOfFoul: return "Spot of Foul"
+        case .DeadBallSpot: return "Dead Ball Spot"
+        case .Declined: return "Declined"
+        case .Offset: return "Offset"
+        case .OnKick: return "Enforced on Kick"
+        case .Penalty: return "Penalty"
+        case .Spot: return "Spot"
+        case .Five: return "5 Yards"
+        case .Ten: return "10 Yards"
+        case .Fifteen: return "15 Yards"
+        case .NoRecovery: return "No Recovery"
         default: return "E"
         }
         
@@ -207,9 +262,14 @@ extension String {
         
         switch self {
         case "run": return .Run
+        case "kneel": return .Kneel
         case "pass": return .Pass
+        case "reception": return .Reception
         case "incomplete": return .Incomplete
         case "interception": return .Interception
+        case "sack": return .Sack
+        case "fumbled_snap": return .FumbledSnap
+        case "bad_snap": return .BadSnap
         case "fumble": return .Fumble
         case "return": return .Return
         case "kick": return .Kick

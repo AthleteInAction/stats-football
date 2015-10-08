@@ -187,13 +187,46 @@ extension Tracker {
     
     @IBAction func switchTPD(sender: AnyObject) {
         
-        game.right_home = !game.right_home
+        let s = game.sequences[index]
         
-        game.save(nil)
+        let alert = UIAlertController(title: "Switch Sides", message: "Advance to next quarter?", preferredStyle: UIAlertControllerStyle.Alert)
         
-        updateScoreboard()
-        field.setNeedsDisplay()
-        drawButtons()
+        let yes = UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default) { (action) -> Void in
+            
+            self.game.right_home = !self.game.right_home
+            self.game.save(nil)
+            
+            s.qtr = s.qtr + 1
+            s.save(nil)
+            
+            self.updateScoreboard()
+            self.field.setNeedsDisplay()
+            self.drawButtons()
+            
+        }
+        
+        let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Default) { (action) -> Void in
+            
+            self.game.right_home = !self.game.right_home
+            self.game.save(nil)
+            
+            self.updateScoreboard()
+            self.field.setNeedsDisplay()
+            self.drawButtons()
+            
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive) { (action) -> Void in
+            
+            
+            
+        }
+        
+        alert.addAction(yes)
+        alert.addAction(no)
+        alert.addAction(cancel)
+        
+        presentViewController(alert, animated: true, completion: nil)
         
     }
     
@@ -247,7 +280,7 @@ extension Tracker {
         
         popover = UIPopoverController(contentViewController: nav)
         popover.delegate = self
-        popover.popoverContentSize = CGSize(width: 283, height: view.bounds.height * 0.6)
+        popover.popoverContentSize = CGSize(width: 500, height: view.bounds.height * 0.7)
         popover.presentPopoverFromRect(sender.frame, inView: scoreboard, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
         
     }

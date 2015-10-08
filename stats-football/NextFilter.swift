@@ -122,7 +122,7 @@ class NextFilter {
             
             switch play.key as Key {
             case .Kick,.Punt,.Interception,.Recovery: pos = !pos
-            case .Fumble: if let team = play.team { pos = team.object.isEqual(_sequence.team.object) }
+            case .Fumble,.FumbledSnap,.BadSnap: if let team = play.team { pos = team.object.isEqual(_sequence.team.object) }
             case .FGA: fga = true
             case .FGM: fgm = true
             case .Recovery: recovery = true

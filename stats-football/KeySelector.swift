@@ -84,7 +84,14 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         
         let key = keys[indexPath.row]
         
-        cell.textLabel?.text = key.displayKey
+        if key == .Home {
+            cell.textLabel?.text = "Recovered by \(tracker.game.home.short)"
+        } else if key == .Away {
+            cell.textLabel?.text = "Recovered by \(tracker.game.away.short)"
+        } else {
+            cell.textLabel?.text = key.displayKey
+        }
+        
         cell.textLabel?.textAlignment = .Center
         
         return cell
@@ -104,10 +111,49 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             // ++++++++++++++++++++++++++++++++++++++++++++++++
                 
                 play.key = key
-                tracker.newPlay = play
                 
                 switch key {
                 case .Pass,.Interception,.Incomplete:
+                    
+                    nsel.type = "player_b"
+                    nsel.newPlay = play
+                    
+                    navigationController?.pushViewController(nsel, animated: false)
+                    
+                case .FumbledSnap,.BadSnap,.Fumble:
+                    
+                    ksel.type = "fumble"
+                    ksel.newPlay = play
+                    
+                    navigationController?.pushViewController(ksel, animated: false)
+                    
+                default:
+                    
+                    tracker.newPlay = play
+                    
+                    tracker.spot()
+                    
+                    close()
+                    
+                }
+                
+            // ++++++++++++++++++++++++++++++++++++++++++++++++
+            case "fumble":
+            // ++++++++++++++++++++++++++++++++++++++++++++++++
+                
+                switch key {
+                case .Home:
+                    
+                    play.team = tracker.game.home
+                    
+                    nsel.type = "player_b"
+                    nsel.newPlay = play
+                    
+                    navigationController?.pushViewController(nsel, animated: false)
+                    
+                case .Away:
+                    
+                    play.team = tracker.game.away
                     
                     nsel.type = "player_b"
                     nsel.newPlay = play

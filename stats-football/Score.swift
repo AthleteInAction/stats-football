@@ -51,13 +51,18 @@ extension Filters {
             // ++++++++++++++++++++++++++++++++
             switch play.key as Key {
             case .Punt,.Kick,.Interception,.Recovery: pos_right = !pos_right
-            case .Fumble: if let team = play.team { pos_right = team.object.isEqual(s.game.home.object) }
+            case .Fumble,.FumbledSnap,.BadSnap: if let team = play.team { pos_right = team.object.isEqual(s.game.home.object) }
             default: ()
             }
             // ++++++++++++++++++++++++++++++++
             
             // LAST POSSESSION OUTSIDE ENDZONE
             // ++++++++++++++++++++++++++++++++
+            if s.key == Playtype.Down {
+                
+                lastPossessionOutsideEndzone = pos_right_original
+                
+            }
             if play.endX?.spot > 0 && play.endX?.spot < 100 {
                 
                 lastPossessionOutsideEndzone = pos_right

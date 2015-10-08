@@ -52,40 +52,93 @@ extension Tracker {
                 
                 let pos_right = posRight(s)
                 
-                var button = PointBTN.buttonWithType(.Custom) as! PointBTN
-                button.frame = CGRectMake(0,0,30,30)
-                button.layer.cornerRadius = 0.5 * button.bounds.size.width
-                button.titleLabel?.font = UIFont.systemFontOfSize(14)
-                button.tag = -1
-                button.index = i
-                
                 var x = play.endX!.toX(pos_right)
                 var y = play.endY!.toP() * field.bounds.height
                 if posRight(s) { y = (100 - play.endY!).toP() * field.bounds.height }
                 
-                button.center = CGPoint(x: x, y: CGFloat(y))
-                
-                var color = Filters.colors(play.key, alpha: 1.0)
-                var textColor = Filters.textColors(play.key, alpha: 1.0)
-                
-                button.setTitleColor(textColor, forState: UIControlState.Normal)
-                button.backgroundColor = color
-                
-                if play.key == Key.Fumble {
+                if i == 0 {
                     
-                    if let r = play.team {
+                    var ox: CGFloat!
+                    switch play.key as Key {
+                    case .Run,.FumbledSnap:
                         
-                        button.backgroundColor = r.primary
+                        ox = Yardline(spot: s.startX.spot - 3).toX(pos_right)
+                        
+                    case .Pass,.Incomplete,.Interception:
+                        
+                        ox = Yardline(spot: s.startX.spot - 4).toX(pos_right)
+                        
+                    case .Punt:
+                        
+                        ox = Yardline(spot: s.startX.spot - 12).toX(pos_right)
+                        
+                    default:
+                        
+                        ox = s.startX.toX(pos_right)
+                        
+                    }
+                    
+                    var oy = s.startY.toP() * field.bounds.height
+                    if posRight(s) { oy = (100 - s.startY).toP() * field.bounds.height }
+                    
+                    switch play.key as Key {
+                    case .Pass,.Punt,.Kick,.BadSnap,.FumbledSnap,.Incomplete,.Interception:
+                        
+                        let obutton = UIButton.buttonWithType(.Custom) as! UIButton
+                        obutton.frame = CGRectMake(0,0,26,26)
+                        obutton.layer.cornerRadius = 0.3 * obutton.bounds.size.width
+                        obutton.titleLabel?.font = UIFont.systemFontOfSize(14)
+                        obutton.backgroundColor = Filters.colors(play.key, alpha: 1)
+                        obutton.setTitleColor(Filters.textColors(play.key, alpha: 1), forState: .Normal)
+                        obutton.setTitle(play.player_a.string(), forState: .Normal)
+                        obutton.center = CGPoint(x: ox, y: oy)
+                        obutton.tag = -1
+                        obutton.userInteractionEnabled = false
+                        field.addSubview(obutton)
+                        
+                    case .FGM,.FGA: ()
+                    default:
+                        
+                        let obutton = UIButton.buttonWithType(.Custom) as! UIButton
+                        obutton.frame = CGRectMake(0,0,16,16)
+                        obutton.layer.cornerRadius = 0.3 * obutton.bounds.size.width
+                        obutton.backgroundColor = Filters.colors(play.key, alpha: 1)
+                        obutton.setTitleColor(Filters.textColors(play.key, alpha: 1), forState: .Normal)
+                        obutton.center = CGPoint(x: ox, y: oy)
+                        obutton.tag = -1
+                        obutton.userInteractionEnabled = false
+                        field.addSubview(obutton)
                         
                     }
                     
                 }
                 
-                if let p = play.player_b {
-                    button.setTitle(p.string(), forState: UIControlState.Normal)
-                } else {
-                    button.setTitle(play.player_a.string(), forState: UIControlState.Normal)
+                var button = PointBTN.buttonWithType(.Custom) as! PointBTN
+                
+                switch play.key as Key {
+                case .Kick,.Punt:
+                    
+                    button.frame = CGRectMake(0,0,20,20)
+                    
+                default:
+                    
+                    button.frame = CGRectMake(0,0,26,26)
+                    
+                    if let p = play.player_b {
+                        button.setTitle(p.string(), forState: UIControlState.Normal)
+                    } else {
+                        button.setTitle(play.player_a.string(), forState: UIControlState.Normal)
+                    }
+                    
                 }
+                
+                button.layer.cornerRadius = 0.3 * button.bounds.size.width
+                button.titleLabel?.font = UIFont.systemFontOfSize(14)
+                button.tag = -1
+                button.index = i
+                button.center = CGPoint(x: x, y: CGFloat(y))
+                button.setTitleColor(Filters.textColors(play.key, alpha: 1.0), forState: UIControlState.Normal)
+                button.backgroundColor = Filters.colors(play.key, alpha: 1.0)
                 
                 var pan = UIPanGestureRecognizer()
                 pan.addTarget(self, action: "buttonDragged:")

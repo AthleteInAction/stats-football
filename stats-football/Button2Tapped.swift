@@ -29,7 +29,7 @@ extension Tracker {
             
             self.popover = UIPopoverController(contentViewController: nav)
             self.popover.delegate = self
-            self.popover.popoverContentSize = CGSize(width: 283, height: self.view.bounds.height * 0.6)
+            self.popover.popoverContentSize = CGSize(width: 500, height: self.view.bounds.height * 0.7)
             self.popover.presentPopoverFromRect(b.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
             
         }
@@ -46,7 +46,7 @@ extension Tracker {
             
             self.popover = UIPopoverController(contentViewController: nav)
             self.popover.delegate = self
-            self.popover.popoverContentSize = CGSize(width: 283, height: self.view.bounds.height * 0.6)
+            self.popover.popoverContentSize = CGSize(width: 500, height: self.view.bounds.height * 0.6)
             self.popover.presentPopoverFromRect(b.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
             
         }
@@ -57,51 +57,51 @@ extension Tracker {
             
             var away = UIAlertAction(title: String(self.game.away.short), style: .Default, handler: { action -> Void in
                 
-                self.newPlay = Play(s: s)
-                self.newPlay?.key = .Fumble
-                self.newPlay?.player_a = b.titleLabel?.text?.toInt()
-                self.newPlay?.team = self.game.away
+                let p = Play(s: s)
+                p.key = .Fumble
+                p.player_a = b.titleLabel?.text?.toInt()
+                p.team = self.game.away
                 
                 var nsel = NumberSelector(nibName: "NumberSelector",bundle: nil)
                 nsel.tracker = self
-                nsel.newPlay = self.newPlay
+                nsel.newPlay = p
                 nsel.type = "player_b"
                 
                 var nav = UINavigationController(rootViewController: nsel)
                 
                 self.popover = UIPopoverController(contentViewController: nav)
                 self.popover.delegate = self
-                self.popover.popoverContentSize = CGSize(width: 283, height: self.view.bounds.height * 0.6)
+                self.popover.popoverContentSize = CGSize(width: 500, height: self.view.bounds.height * 0.6)
                 self.popover.presentPopoverFromRect(b.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
                 
             })
             
             var home = UIAlertAction(title: String(self.game.home.short), style: .Default, handler: { action -> Void in
                 
-                self.newPlay = Play(s: s)
-                self.newPlay?.key = .Fumble
-                self.newPlay?.player_a = b.titleLabel?.text?.toInt()
-                self.newPlay?.team = self.game.home
+                let p = Play(s: s)
+                p.key = .Fumble
+                p.player_a = b.titleLabel?.text?.toInt()
+                p.team = self.game.home
                 
                 var nsel = NumberSelector(nibName: "NumberSelector",bundle: nil)
                 nsel.tracker = self
-                nsel.newPlay = self.newPlay
+                nsel.newPlay = p
                 nsel.type = "player_b"
                 
                 var nav = UINavigationController(rootViewController: nsel)
                 
                 self.popover = UIPopoverController(contentViewController: nav)
                 self.popover.delegate = self
-                self.popover.popoverContentSize = CGSize(width: 283, height: self.view.bounds.height * 0.6)
+                self.popover.popoverContentSize = CGSize(width: 500, height: self.view.bounds.height * 0.6)
                 self.popover.presentPopoverFromRect(b.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
                 
             })
             
             var no = UIAlertAction(title: "No Recovery", style: .Default, handler: { action -> Void in
                 
-                self.newPlay = Play(s: s)
-                self.newPlay?.key = .Fumble
-                self.newPlay?.player_a = b.titleLabel?.text?.toInt()
+                let p = Play(s: s)
+                p.key = .Fumble
+                p.player_a = b.titleLabel?.text?.toInt()
                 
                 self.spot()
                 
@@ -151,7 +151,7 @@ extension Tracker {
             
             var cancel3 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { action -> Void in
                 
-                self.newPlay = nil
+                
                 
             }
             

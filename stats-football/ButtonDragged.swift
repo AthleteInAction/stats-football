@@ -29,7 +29,7 @@ extension Tracker {
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if sender.state == UIGestureRecognizerState.Began {
             
-            bLast = sender.view?.center
+            bLast = b.center
             
         }
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -52,8 +52,8 @@ extension Tracker {
             if y < vmin { y = vmin }
             if y > vmax { y = vmax }
             
-            sender.view?.center.x = x
-            sender.view?.center.y = y
+            b.center.x = x
+            b.center.y = y
             
             play.endX = Yardline(x: x, pos_right: pos_right)
             play.endY = Int(round((y / field.bounds.height) * 100))
