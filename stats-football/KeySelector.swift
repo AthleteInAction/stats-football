@@ -260,9 +260,18 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                         
                         if let x = play.endX {
                             
-                            yard = Yardline(spot: x.spot)
+                            var b = false
                             
-                            break
+                            switch play.key as Key {
+                            case .Incomplete: ()
+                            default:
+                                
+                                yard = Yardline(spot: x.spot)
+                                b = true
+                                
+                            }
+                            
+                            if b { break }
                             
                         }
                         

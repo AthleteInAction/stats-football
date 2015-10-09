@@ -68,6 +68,9 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         cell.team.backgroundColor = s.team.primary
         
+        cell.qtrTXT.text = s.qtr.string()
+        cell.qtrTXT.textColor = s.team.secondary
+        
         if let play = s.plays.first {
             
             cell.flag.hidden = false

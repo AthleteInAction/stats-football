@@ -187,7 +187,6 @@ extension Stats {
                 if vx.spot <= sequence.startX.spot {
                     if let f = fumbleI {  } else { endedBehindLine = true }
                 }
-                JP("RUSH ATTEMPT: \(rushAttempt) : RUSH-PLAY: \(rushPlay) : BEHIND LINE: \(endedBehindLine) : NORUSHES: \(noRushes) : FUMBLE-I: \(fumbleI)")
                 // ========================================================
                 // ========================================================
                 
@@ -297,9 +296,6 @@ extension Stats {
                         // RETURNS +++++++++++++++++++++++++++++++++++++++
                             
                             if let p = prev {
-                                
-                                JP2("A == CX: \(cx.spot) : END-X: \(endX.spot) : INFRACTION POINT: \(infractionPoint?.spot)")
-                                JP2("B == CX: \(cx.opposite().spot) : END-X: \(endX.opposite().spot) : INFRACTION POINT: \(infractionPoint?.opposite().spot)")
                                 
                                 if let ip = infractionPoint {
                                     
@@ -596,7 +592,7 @@ extension Stats {
                                     
                                     var stat: Stat = Stat()
                                     stat.attempt = rushAttempt == i
-                                    JP("\(play.player_a) : CX: \(cx.spot) : [\(i)]")
+                                    
                                     if cx.spot <= sequence.startX.spot {
                                         
                                         stat.value = (endX.spot - sequence.startX.spot)

@@ -18,6 +18,7 @@ class GameObject: NSManagedObject {
     @NSManaged var away: TeamObject
     @NSManaged var home: TeamObject
     @NSManaged var right_home: String
+    @NSManaged var created_at: NSDate?
     @NSManaged var players: NSSet
     @NSManaged var sequences: NSSet
     
@@ -30,6 +31,7 @@ class Game {
     var away: Team!
     var home: Team!
     var right_home: Bool = true
+    var created_at: NSDate!
     var players: [Player] = []
     var sequences: [Sequence] = []
     var playerStats: [Stat] = []
@@ -43,6 +45,7 @@ class Game {
         away = _away
         home = _home
         object = item
+        created_at = NSDate()
         
     }
     
@@ -52,6 +55,7 @@ class Game {
         away = Team(team: game.away)
         home = Team(team: game.home)
         right_home = game.right_home.toBool()
+        if let date = game.created_at { created_at = date } else { created_at = NSDate() }
         object = game
         
     }
@@ -105,6 +109,7 @@ class Game {
         object.away = away.object
         object.home = home.object
         object.right_home = right_home.description
+        object.created_at = created_at
         
         object.managedObjectContext?.save(&error)
         

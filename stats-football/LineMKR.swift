@@ -81,6 +81,8 @@ class LineMKR: UIView {
             
             field.setNeedsDisplay()
             
+            field.tracker.updateArrows()
+            
         }
         
     }

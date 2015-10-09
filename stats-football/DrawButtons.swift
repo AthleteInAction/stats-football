@@ -18,7 +18,7 @@ extension Tracker {
         
         for v in field.subviews {
             
-            if v.tag == -1 || v.tag == -3 { v.removeFromSuperview() }
+            if v.tag >= 0 { v.removeFromSuperview() }
             
         }
         
@@ -31,7 +31,6 @@ extension Tracker {
                 var v = PenaltyMKR(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
                 v.tracker = self
                 v.index = i
-                v.tag = -3
                 v.dir = dir
                 v.setMKR(x)
                 
@@ -46,113 +45,152 @@ extension Tracker {
             
         }
         
+        let pos_right = posRight(s)
+        
+        var x = s.startX.toX(pos_right)
+        var y = s.startY.toP() * field.bounds.height
+        if pos_right { y = (100 - s.startY).toP() * field.bounds.height }
+        
+        var team = s.team
+        
         for (i,play) in enumerate(s.plays) {
+            
+            switch play.key as Key {
+            case .Fumble,.FumbledSnap,.BadSnap: if let t = play.team { team = t }
+            default: ()
+            }
             
             if let endX = play.endX {
                 
-                let pos_right = posRight(s)
-                
-                var x = play.endX!.toX(pos_right)
-                var y = play.endY!.toP() * field.bounds.height
-                if posRight(s) { y = (100 - play.endY!).toP() * field.bounds.height }
-                
                 if i == 0 {
                     
-                    var ox: CGFloat!
                     switch play.key as Key {
-                    case .Run,.FumbledSnap:
+                    case .Run:
                         
-                        ox = Yardline(spot: s.startX.spot - 3).toX(pos_right)
+                        x = s.startX.increment(-3).toX(pos_right)
                         
                     case .Pass,.Incomplete,.Interception:
                         
-                        ox = Yardline(spot: s.startX.spot - 4).toX(pos_right)
+                        x = s.startX.increment(-4).toX(pos_right)
                         
                     case .Punt:
                         
-                        ox = Yardline(spot: s.startX.spot - 12).toX(pos_right)
+                        x = s.startX.increment(-12).toX(pos_right)
                         
                     default:
                         
-                        ox = s.startX.toX(pos_right)
+                        x = s.startX.toX(pos_right)
                         
                     }
                     
-                    var oy = s.startY.toP() * field.bounds.height
-                    if posRight(s) { oy = (100 - s.startY).toP() * field.bounds.height }
-                    
                     switch play.key as Key {
-                    case .Pass,.Punt,.Kick,.BadSnap,.FumbledSnap,.Incomplete,.Interception:
+                    case .Pass,.Incomplete,.Interception,.Punt,.Kick,.BadSnap,.FumbledSnap:
                         
-                        let obutton = UIButton.buttonWithType(.Custom) as! UIButton
-                        obutton.frame = CGRectMake(0,0,26,26)
-                        obutton.layer.cornerRadius = 0.3 * obutton.bounds.size.width
-                        obutton.titleLabel?.font = UIFont.systemFontOfSize(14)
-                        obutton.backgroundColor = Filters.colors(play.key, alpha: 1)
-                        obutton.setTitleColor(Filters.textColors(play.key, alpha: 1), forState: .Normal)
-                        obutton.setTitle(play.player_a.string(), forState: .Normal)
-                        obutton.center = CGPoint(x: ox, y: oy)
-                        obutton.tag = -1
-                        obutton.userInteractionEnabled = false
-                        field.addSubview(obutton)
+                        var _key: Key!
+                        switch play.key as Key {
+                        case .Pass,.Interception,.Incomplete: _key = .Throw
+                        default: _key = play.key
+                        }
                         
-                    case .FGM,.FGA: ()
+                        let o = PointVW(number: play.player_a, key: _key, team: team)
+                        o.center = CGPoint(x: x, y: CGFloat(y))
+                        o.userInteractionEnabled = false
+                        o.backgroundColor = UIColor.clearColor()
+                        field.addSubview(o)
+                        
+                    case .FGA,.FGM,.Sack:
+                        
+                        ()
+                        
                     default:
                         
-                        let obutton = UIButton.buttonWithType(.Custom) as! UIButton
-                        obutton.frame = CGRectMake(0,0,16,16)
-                        obutton.layer.cornerRadius = 0.3 * obutton.bounds.size.width
-                        obutton.backgroundColor = Filters.colors(play.key, alpha: 1)
-                        obutton.setTitleColor(Filters.textColors(play.key, alpha: 1), forState: .Normal)
-                        obutton.center = CGPoint(x: ox, y: oy)
-                        obutton.tag = -1
-                        obutton.userInteractionEnabled = false
-                        field.addSubview(obutton)
+                        let o = UIButton.buttonWithType(.Custom) as! UIButton
+                        o.frame = CGRectMake(0,0,16,16)
+                        o.layer.cornerRadius = 0.3 * o.bounds.size.width
+                        o.backgroundColor = Filters.colors(play.key, alpha: 1)
+                        o.center = CGPoint(x: x, y: y)
+                        o.userInteractionEnabled = false
+                        field.addSubview(o)
                         
                     }
                     
                 }
                 
-                var button = PointBTN.buttonWithType(.Custom) as! PointBTN
+                x = endX.toX(pos_right)
+                y = play.endY!.toP() * field.bounds.height
+                if pos_right { y = (100 - play.endY!).toP() * field.bounds.height }
                 
                 switch play.key as Key {
                 case .Kick,.Punt:
                     
+                    let button = UIButton.buttonWithType(.Custom) as! UIButton
                     button.frame = CGRectMake(0,0,20,20)
+                    button.layer.cornerRadius = 0.3 * button.bounds.size.width
+                    button.titleLabel?.font = UIFont.systemFontOfSize(14)
+                    button.tag = i
+                    button.center = CGPoint(x: x, y: CGFloat(y))
+                    button.backgroundColor = Filters.colors(play.key, alpha: 1.0)
+                    
+                    var pan = UIPanGestureRecognizer()
+                    pan.addTarget(self, action: "buttonDragged:")
+                    
+                    var tap2 = UITapGestureRecognizer()
+                    tap2.numberOfTapsRequired = 2
+                    tap2.addTarget(self, action: "button2Tapped:")
+                    
+                    button.addGestureRecognizer(pan)
+                    button.addGestureRecognizer(tap2)
+                    
+                    field.addSubview(button)
                     
                 default:
                     
-                    button.frame = CGRectMake(0,0,26,26)
+                    var _n = play.player_a
+                    if let p = play.player_b { _n = p }
                     
-                    if let p = play.player_b {
-                        button.setTitle(p.string(), forState: UIControlState.Normal)
-                    } else {
-                        button.setTitle(play.player_a.string(), forState: UIControlState.Normal)
+                    var _key = play.key
+                    
+                    var _team = team
+                    
+                    switch play.key as Key {
+                    case .Pass:
+                        _key = .Reception
+                    case .BadSnap,.FumbledSnap:
+                        _key = .Recovery
+                    case .Interception:
+                        _team = game.oppositeTeam(team: team)
+                    default:
+                        _key = play.key
                     }
+                    
+                    let button = PointVW(number: _n, key: _key, team: _team)
+                    button.center = CGPoint(x: x, y: CGFloat(y))
+                    button.tag = i
+                    button.userInteractionEnabled = true
+                    button.backgroundColor = UIColor.clearColor()
+                    
+                    var pan = UIPanGestureRecognizer()
+                    pan.addTarget(self, action: "buttonDragged:")
+                    
+                    var tap2 = UITapGestureRecognizer()
+                    tap2.numberOfTapsRequired = 2
+                    tap2.addTarget(self, action: "button2Tapped:")
+                    
+                    button.addGestureRecognizer(pan)
+                    button.addGestureRecognizer(tap2)
+                    
+                    field.addSubview(button)
                     
                 }
                 
-                button.layer.cornerRadius = 0.3 * button.bounds.size.width
-                button.titleLabel?.font = UIFont.systemFontOfSize(14)
-                button.tag = -1
-                button.index = i
-                button.center = CGPoint(x: x, y: CGFloat(y))
-                button.setTitleColor(Filters.textColors(play.key, alpha: 1.0), forState: UIControlState.Normal)
-                button.backgroundColor = Filters.colors(play.key, alpha: 1.0)
-                
-                var pan = UIPanGestureRecognizer()
-                pan.addTarget(self, action: "buttonDragged:")
-                
-                var tap2 = UITapGestureRecognizer()
-                tap2.numberOfTapsRequired = 2
-                tap2.addTarget(self, action: "button2Tapped:")
-                
-                button.addGestureRecognizer(pan)
-                button.addGestureRecognizer(tap2)
-                
-                field.addSubview(button)
-                
             }
+            
+            switch play.key as Key {
+            case .Interception: team = game.oppositeTeam(team: team)
+            default: ()
+            }
+            
+            if play.key == Key.Kick || play.key == Key.Punt { team = game.oppositeTeam(team: team) }
             
         }
         

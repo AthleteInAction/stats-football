@@ -20,6 +20,7 @@ class TeamObject: NSManagedObject {
     @NSManaged var short: String
     @NSManaged var primary: String
     @NSManaged var secondary: String
+    @NSManaged var created_at: NSDate?
     @NSManaged var away_games: NSSet
     @NSManaged var home_games: NSSet
     @NSManaged var sequences: NSSet
@@ -37,6 +38,7 @@ class Team {
     var short: String!
     var primary: UIColor!
     var secondary: UIColor!
+    var created_at: NSDate!
     var roster: [Player] = []
     var object: TeamObject!
     var score: Int = 0
@@ -62,6 +64,7 @@ class Team {
         primary = UIColor.blackColor()
         secondary = UIColor.whiteColor()
         object = item
+        created_at = NSDate()
         
     }
     
@@ -70,6 +73,7 @@ class Team {
         if let i = team.id { id = i.toInt()! }
         name = team.name
         short = team.short
+        if let date = team.created_at { created_at = date } else { created_at = NSDate() }
         object = team
         primary = getColor(object.primary)
         secondary = getColor(object.secondary)
@@ -80,7 +84,7 @@ class Team {
         
         let c = split(s){$0 == ","}.map { o in
             
-            CGFloat(String(o).toInt()!) / 100
+            CGFloat(String(o).toInt()!) / 255
             
         }
         
@@ -96,7 +100,7 @@ class Team {
         
         if color.getRed(&r, green: &g, blue: &b, alpha: &a){
             
-            return "\(Int(r*100)),\(Int(g*100)),\(Int(b*100))"
+            return "\(Int(round(r * 255))),\(Int(round(g * 255))),\(Int(round(b * 255)))"
             
         }
         
@@ -115,6 +119,7 @@ class Team {
         if let i = id { object.id = i.string() }
         object.name = name
         object.short = short
+        object.created_at = created_at
         object.primary = colorText(primary)
         object.secondary = colorText(secondary)
         

@@ -12,6 +12,7 @@ import CoreData
 @objc(PlayObject)
 class PlayObject: NSManagedObject {
     
+    @NSManaged var id: String?
     @NSManaged var key: String
     @NSManaged var endX: String?
     @NSManaged var endY: String?
@@ -26,6 +27,7 @@ class PlayObject: NSManagedObject {
 // ========================================================
 class Play {
     
+    var id: Int?
     var key: Key!
     var endX: Yardline?
     var endY: Int?
@@ -52,6 +54,7 @@ class Play {
     
     init(play: PlayObject){
         
+        if let i = play.id { id = i.toInt()! }
         key = play.key.toKey()
         if let x = play.endX { endX = Yardline(spot: x.toInt()!) }
         if let y = play.endY { endY = y.toInt()! }
@@ -94,6 +97,7 @@ class Play {
         
         var error: NSError?
         
+        if let i = id { object.id = i.string() }
         object.sequence = sequence
         object.created_at = created_at
         object.key = key.string

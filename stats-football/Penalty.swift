@@ -12,6 +12,7 @@ import CoreData
 @objc(PenaltyObject)
 class PenaltyObject: NSManagedObject {
     
+    @NSManaged var id: String?
     @NSManaged var distance: String
     @NSManaged var endX: String?
     @NSManaged var enforcement: String
@@ -28,6 +29,7 @@ class Penalty {
     // PROPERTIES
     // --------------------------------------
     // --------------------------------------
+    var id: Int?
     var team: Team!
     var distance: Int!
     var endX: Yardline?
@@ -78,6 +80,7 @@ class Penalty {
         var done = completion
         var error: NSError?
         
+        if let i = id { object.id = i.string() }
         object.sequence = sequence
         object.created_at = created_at
         object.distance = distance.string()

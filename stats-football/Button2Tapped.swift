@@ -11,8 +11,6 @@ extension Tracker {
     
     func button2Tapped(sender: UITapGestureRecognizer){
         
-        let b: PointBTN = sender.view as! PointBTN
-        
         let s = game.sequences[index]
         
         var alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
@@ -23,14 +21,14 @@ extension Tracker {
             nsel.tracker = self
             nsel.type = "tackle"
             nsel.newPlay = Play(s: s)
-            nsel.i = b.index
+            nsel.i = sender.view!.tag
             
             var nav = UINavigationController(rootViewController: nsel)
             
             self.popover = UIPopoverController(contentViewController: nav)
             self.popover.delegate = self
             self.popover.popoverContentSize = CGSize(width: 500, height: self.view.bounds.height * 0.7)
-            self.popover.presentPopoverFromRect(b.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+            self.popover.presentPopoverFromRect(sender.view!.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
             
         }
         
@@ -40,14 +38,14 @@ extension Tracker {
             nsel.tracker = self
             nsel.type = "sack"
             nsel.newPlay = Play(s: s)
-            nsel.i = b.index
+            nsel.i = sender.view!.tag
             
             var nav = UINavigationController(rootViewController: nsel)
             
             self.popover = UIPopoverController(contentViewController: nav)
             self.popover.delegate = self
             self.popover.popoverContentSize = CGSize(width: 500, height: self.view.bounds.height * 0.6)
-            self.popover.presentPopoverFromRect(b.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+            self.popover.presentPopoverFromRect(sender.view!.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
             
         }
         
@@ -58,8 +56,12 @@ extension Tracker {
             var away = UIAlertAction(title: String(self.game.away.short), style: .Default, handler: { action -> Void in
                 
                 let p = Play(s: s)
+                let play = s.plays[sender.view!.tag]
                 p.key = .Fumble
-                p.player_a = b.titleLabel?.text?.toInt()
+                switch play.key as Key {
+                case .Pass,.Interception: p.player_a = play.player_b!
+                default: p.player_a = play.player_a
+                }
                 p.team = self.game.away
                 
                 var nsel = NumberSelector(nibName: "NumberSelector",bundle: nil)
@@ -72,15 +74,19 @@ extension Tracker {
                 self.popover = UIPopoverController(contentViewController: nav)
                 self.popover.delegate = self
                 self.popover.popoverContentSize = CGSize(width: 500, height: self.view.bounds.height * 0.6)
-                self.popover.presentPopoverFromRect(b.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+                self.popover.presentPopoverFromRect(sender.view!.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
                 
             })
             
             var home = UIAlertAction(title: String(self.game.home.short), style: .Default, handler: { action -> Void in
                 
                 let p = Play(s: s)
+                let play = s.plays[sender.view!.tag]
                 p.key = .Fumble
-                p.player_a = b.titleLabel?.text?.toInt()
+                switch play.key as Key {
+                case .Pass,.Interception: p.player_a = play.player_b!
+                default: p.player_a = play.player_a
+                }
                 p.team = self.game.home
                 
                 var nsel = NumberSelector(nibName: "NumberSelector",bundle: nil)
@@ -93,15 +99,16 @@ extension Tracker {
                 self.popover = UIPopoverController(contentViewController: nav)
                 self.popover.delegate = self
                 self.popover.popoverContentSize = CGSize(width: 500, height: self.view.bounds.height * 0.6)
-                self.popover.presentPopoverFromRect(b.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+                self.popover.presentPopoverFromRect(sender.view!.frame, inView: self.field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
                 
             })
             
             var no = UIAlertAction(title: "No Recovery", style: .Default, handler: { action -> Void in
                 
                 let p = Play(s: s)
+                let play = s.plays[sender.view!.tag]
                 p.key = .Fumble
-                p.player_a = b.titleLabel?.text?.toInt()
+                p.player_a = play.player_a
                 
                 self.spot()
                 
@@ -120,8 +127,8 @@ extension Tracker {
             
             if let popoverController2 = alert2.popoverPresentationController {
                 
-                popoverController2.sourceView = b
-                popoverController2.sourceRect = b.bounds
+                popoverController2.sourceView = sender.view!
+                popoverController2.sourceRect = sender.view!.bounds
                 
             }
             
@@ -135,12 +142,9 @@ extension Tracker {
             
             var delete2 = UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive) { action -> Void in
                 
-                let play = s.plays[b.index]
+                let play = s.plays[sender.view!.tag]
                 play.delete(nil)
-                s.plays.removeAtIndex(b.index)
-                self.playTBL.plays.removeAtIndex(b.index)
-                
-                self.playTBL.deleteRowsAtIndexPaths([NSIndexPath(forRow: b.index, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
+                s.plays.removeAtIndex(sender.view!.tag)
                 
                 self.field.setNeedsDisplay()
                 self.drawButtons()
@@ -160,8 +164,8 @@ extension Tracker {
             
             if let popoverController3 = alert3.popoverPresentationController {
                 
-                popoverController3.sourceView = b
-                popoverController3.sourceRect = b.bounds
+                popoverController3.sourceView = sender.view!
+                popoverController3.sourceRect = sender.view!.bounds
                 
             }
             
@@ -176,8 +180,8 @@ extension Tracker {
         
         if let popoverController = alert.popoverPresentationController {
             
-            popoverController.sourceView = b
-            popoverController.sourceRect = b.bounds
+            popoverController.sourceView = sender.view!
+            popoverController.sourceRect = sender.view!.bounds
             
         }
         

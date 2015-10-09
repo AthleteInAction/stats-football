@@ -135,10 +135,38 @@ extension Tracker {
         
         updateDown()
         updateScore()
+        updateArrows()
         
     }
     // ========================================================
     // ========================================================
+    
+    
+    // UPDATE ARROWS
+    func updateArrows(){
+        
+        let s = game.sequences[index]
+        
+        let pos_right = posRight(s)
+        
+        // Arrows
+        // ++++++++++++++++++++++++++++++++++++++
+        if pos_right {
+            
+            field.arrows.image = UIImage(named: "arrows-left.png")
+            field.arrows.frame = CGRect(x: field.line.center.x, y: 0, width: -1053, height: 63)
+            field.arrows.center.y = field.bounds.height/2
+            
+        } else {
+            
+            field.arrows.image = UIImage(named: "arrows.png")
+            field.arrows.frame = CGRect(x: field.line.center.x, y: 0, width: 1053, height: 63)
+            field.arrows.center.y = field.bounds.height/2
+            
+        }
+        // ++++++++++++++++++++++++++++++++++++++
+        
+    }
     
     
     // UPDATE SCORE
@@ -254,7 +282,6 @@ extension Tracker {
         
         sequenceTBL.reload()
         
-        playTBL.reload()
         penaltyTBL.reload()
         
         updateScoreboard()
@@ -314,7 +341,7 @@ extension Tracker {
         
         popover = UIPopoverController(contentViewController: nav)
         popover.delegate = self
-        popover.popoverContentSize = CGSize(width: 500, height: view.bounds.height * 0.7)
+        popover.popoverContentSize = CGSize(width: 500, height: view.bounds.height * 0.8)
         popover.presentPopoverFromRect(CGRect(x: field.bounds.width/2, y: field.bounds.height, width: 0, height: 0), inView: field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
         
         return true
@@ -347,12 +374,6 @@ extension Tracker {
             n.save(nil)
             
             s.plays.append(n)
-            
-            playTBL.plays.append(n)
-            
-            let ip = NSIndexPath(forRow: playTBL.plays.count-1, inSection: 0)
-            
-            playTBL.insertRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.Top)
             
             field.setNeedsDisplay()
             drawButtons()
@@ -511,7 +532,15 @@ extension Tracker {
     // NEW SEQUENCE
     // ========================================================
     // ========================================================
-    func newSequence(sender: AnyObject){
+    func newSequence(sender: AnyObject) -> Bool {
+        
+        if newPenalty != nil || newPlay != nil {
+            
+            if field.crossH.hidden { return false } else { go() }
+        
+        }
+        
+        add.enabled = false
         
         let S = createSequence()
         
@@ -526,6 +555,15 @@ extension Tracker {
         selectSequence(0)
         
         MPC.sendGame(game)
+        
+        var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "enablePLUS:", userInfo: nil, repeats: false)
+        
+        return true
+        
+    }
+    func enablePLUS(timer: NSTimer){
+        
+        add.enabled = true
         
     }
     // ========================================================

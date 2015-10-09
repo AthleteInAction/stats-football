@@ -10,7 +10,7 @@ import UIKit
 
 protocol ColorPickerPTC {
     
-    func colorSelected(color: UIColor)
+    func colorSelected(i: Int,color: UIColor)
     
 }
 
@@ -19,6 +19,11 @@ class ColorPicker: UIViewController {
     //MARK: - Second example - rainbow buttons
     
     var delegate: ColorPickerPTC!
+    
+    var color: UIColor!
+    var index: Int!
+    
+    @IBOutlet weak var showVW: UIView!
     
     func displayColor(sender:UIButton){
         var r:CGFloat = 0,g:CGFloat = 0,b:CGFloat = 0
@@ -29,10 +34,10 @@ class ColorPicker: UIViewController {
             if color.getRed(&r, green: &g, blue: &b, alpha: &a){
                 let colorText = NSString(format: "HSB: %4.2f,%4.2f,%4.2f RGB: %4.2f,%4.2f,%4.2f",
                     Float(h),Float(s),Float(b),Float(r),Float(g),Float(b))
-                delegate.colorSelected(sender.backgroundColor!)
+                delegate.colorSelected(index,color: sender.backgroundColor!)
             }
         }
-        
+        showVW.backgroundColor = color
     }
     
     func makeRainbowButtons(buttonFrame:CGRect, sat:CGFloat, bright:CGFloat){
@@ -61,12 +66,13 @@ class ColorPicker: UIViewController {
             i = i - 0.1
             buttonFrame.origin.y = buttonFrame.origin.y + buttonFrame.size.height
         }
-        
+        showVW.backgroundColor = color
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         
-        delegate.colorSelected(UIColor.whiteColor())
+        showVW.backgroundColor = UIColor.whiteColor()
+        delegate.colorSelected(index,color: UIColor.whiteColor())
         
     }
     

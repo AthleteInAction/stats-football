@@ -97,6 +97,7 @@ enum Key {
     case Run
     case Kneel
     case Pass
+    case Throw
     case Reception
     case Incomplete
     case Interception
@@ -134,6 +135,7 @@ enum Key {
         case .Run: return "run"
         case .Kneel: return "kneel"
         case .Pass: return "pass"
+        case .Throw: return "pass"
         case .Reception: return "reception"
         case .Incomplete: return "incomplete"
         case .Interception: return "interception"
@@ -171,6 +173,7 @@ enum Key {
         case .Run: return "Run"
         case .Kneel: return "Kneel Down"
         case .Pass: return "Completion"
+        case .Throw: return "Pass"
         case .Reception: return "Reception"
         case .Incomplete: return "Incomplete"
         case .Interception: return "Interception"
@@ -209,21 +212,22 @@ enum Key {
         case .Run: return "Run"
         case .Kneel: return "Kneel"
         case .Pass: return "Comp"
+        case .Throw: return "Pass"
         case .Reception: return "Catch"
         case .Incomplete: return "Incomp"
         case .Interception: return "Int"
         case .Sack: return "Sack"
-        case .FumbledSnap: return "Fum Snap"
-        case .BadSnap: return "Bad Snap"
+        case .FumbledSnap: return "Snap"
+        case .BadSnap: return "Snap"
         case .Fumble: return "Fumble"
         case .Return: return "Return"
         case .Kick: return "Kick"
         case .Punt: return "Punt"
         case .Lateral: return "Lateral"
-        case .FGA: return "FGA"
-        case .FGM: return "FGM"
+        case .FGA: return "FGMiss"
+        case .FGM: return "FGMade"
         case .Block: return "Block"
-        case .Recovery: return "Recovery"
+        case .Recovery: return "Recov"
         case .PreviousSpot: return "Previous Spot"
         case .SpotOfFoul: return "Spot of Foul"
         case .DeadBallSpot: return "Dead Ball Spot"

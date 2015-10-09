@@ -17,9 +17,13 @@ class Filters {
             
             return UIColor(red: 57/255, green: 140/255, blue: 183/255, alpha: alpha)
             
-        case .Pass,.Incomplete,.Reception:
+        case .Pass,.Reception,.Throw,.FGM:
             
             return UIColor(red: 127/255, green: 255/255, blue: 155/255, alpha: alpha)
+            
+        case .Incomplete,.FGA,.Fumble,.FumbledSnap,.BadSnap,.Sack:
+            
+            return UIColor(red: 250/255, green: 82/255, blue: 89/255, alpha: alpha)
             
         case .Kick,.Punt:
             
@@ -37,10 +41,6 @@ class Filters {
             
             return UIColor(red: 170/255, green: 170/255, blue: 170/255, alpha: alpha)
             
-        case .Fumble:
-            
-            return UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: alpha)
-            
         default:
             
             return UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: alpha)
@@ -51,7 +51,7 @@ class Filters {
     static func textColors(key: Key,alpha: CGFloat) -> UIColor {
         
         switch key as Key {
-        case .Pass,.Incomplete,.Reception:
+        case .Pass,.Reception,.Throw,.FGM:
             
             return UIColor(red: 64/255, green: 64/255, blue: 64/255, alpha: alpha)
             
@@ -123,7 +123,7 @@ class Filters {
                 
             } else {
                 
-                return [.Run,.Pass,.Incomplete,.Interception,.Punt,.FumbledSnap,.BadSnap,.Recovery,.FGA,.FGM]
+                return [.Run,.Pass,.Incomplete,.Interception,.Punt,.Sack,.FumbledSnap,.BadSnap,.Recovery,.FGA,.FGM]
                 
             }
             

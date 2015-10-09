@@ -17,11 +17,9 @@ extension Tracker {
         
         let t = sender.translationInView(field)
         
-        let b: PointBTN = sender.view as! PointBTN
-        
         let s = game.sequences[index]
         
-        let play = s.plays[b.index]
+        let play = s.plays[sender.view!.tag]
         
         let pos_right = posRight(s)
         
@@ -29,7 +27,7 @@ extension Tracker {
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if sender.state == UIGestureRecognizerState.Began {
             
-            bLast = b.center
+            bLast = sender.view!.center
             
         }
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -40,8 +38,8 @@ extension Tracker {
             
             let min = ratio
             let max = 119 * ratio
-            let vmin = b.bounds.height / 2
-            let vmax = field.bounds.height - (b.bounds.height / 2)
+            let vmin = sender.view!.bounds.height / 2
+            let vmax = field.bounds.height - (sender.view!.bounds.height / 2)
             
             var x = round((t.x + bLast.x) / ratio) * ratio
             var ly = t.y + bLast.y
@@ -52,8 +50,8 @@ extension Tracker {
             if y < vmin { y = vmin }
             if y > vmax { y = vmax }
             
-            b.center.x = x
-            b.center.y = y
+            sender.view!.center.x = x
+            sender.view!.center.y = y
             
             play.endX = Yardline(x: x, pos_right: pos_right)
             play.endY = Int(round((y / field.bounds.height) * 100))
@@ -63,7 +61,7 @@ extension Tracker {
             field.crossV.center.x = x
             field.crossH.center.y = y
             
-            if b.index == 0 {
+            if sender.view!.tag == 0 {
                 
                 var pct: CGFloat {
                     
@@ -96,10 +94,6 @@ extension Tracker {
                 }
                 
             }
-            
-            let ip = NSIndexPath(forRow: b.index, inSection: 0)
-            JP("INDEX: \(ip.row)")
-            playTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
             
             field.setNeedsDisplay()
             

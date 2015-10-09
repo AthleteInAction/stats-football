@@ -17,14 +17,30 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
     @IBOutlet weak var newBTN: UIButton!
     @IBOutlet weak var shortTXT: UITextField!
     @IBOutlet weak var colorBTN: UIButton!
+    @IBOutlet weak var color2BTN: UIButton!
+    @IBOutlet var primaryTXT: [UITextField]!
+    @IBOutlet var secondaryTXT: [UITextField]!
     
     var nameTXT: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        colorBTN.layer.cornerRadius = 5
         colorBTN.backgroundColor = team.primary
+        color2BTN.backgroundColor = team.secondary
+        colorBTN.layer.cornerRadius = 5
+        color2BTN.layer.cornerRadius = 5
+        setColorTXT(0, color: team.primary)
+        setColorTXT(1, color: team.secondary)
+        
+        for txt in primaryTXT {
+            txt.delegate = self
+            txt.addTarget(self, action: "txtCHG:", forControlEvents: UIControlEvents.EditingChanged)
+        }
+        for txt in secondaryTXT {
+            txt.delegate = self
+            txt.addTarget(self, action: "txtCHG:", forControlEvents: UIControlEvents.EditingChanged)
+        }
         
         rosterTBL.delegate = self
         rosterTBL.dataSource = self
@@ -48,6 +64,92 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
         shortTXT.text = team.short
         
         navigationItem.titleView = nameTXT
+        
+    }
+    
+    func txtCHG(sender: UITextField) -> Bool {
+        
+        JP2("CHANGED: \(sender.tag)")
+        
+        if sender.tag == 0 {
+            
+            if primaryTXT[0].text == "" || primaryTXT[1].text == "" || primaryTXT[2].text == "" {
+                
+                return false
+                
+            }
+            
+            let color = UIColor(red: CGFloat(primaryTXT[0].text.toInt()!)/255, green: CGFloat(primaryTXT[1].text.toInt()!)/255, blue: CGFloat(primaryTXT[2].text.toInt()!)/255, alpha: 1)
+            
+            setColor(0, color: color)
+            
+        } else {
+            
+            if secondaryTXT[0].text == "" || secondaryTXT[1].text == "" || secondaryTXT[2].text == "" {
+                
+                return false
+                
+            }
+            
+            let color = UIColor(red: CGFloat(secondaryTXT[0].text.toInt()!)/255, green: CGFloat(secondaryTXT[1].text.toInt()!)/255, blue: CGFloat(secondaryTXT[2].text.toInt()!)/255, alpha: 1)
+            
+            setColor(1, color: color)
+            
+        }
+        
+        return true
+        
+    }
+    
+    func setColor(i: Int,color _color: UIColor){
+        
+        if i == 0 {
+            
+            colorBTN.backgroundColor = _color
+            team.primary = _color
+            
+        } else {
+            
+            color2BTN.backgroundColor = _color
+            team.secondary = _color
+            
+        }
+        
+        team.save(nil)
+        
+        setColorTXT(i, color: _color)
+        
+        main.teamsTBL.reloadData()
+        main.gamesTBL.getData()
+        
+    }
+    
+    func setColorTXT(i: Int,color _color: UIColor){
+        
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        
+        _color.getRed(&r, green: &g, blue: &b, alpha: &a)
+        
+        var red: Int = Int(round(r * 255))
+        var green: Int = Int(round(g * 255))
+        var blue: Int = Int(round(b * 255))
+        
+        if i == 0 {
+            
+            primaryTXT[0].text = red.string()
+            primaryTXT[1].text = green.string()
+            primaryTXT[2].text = blue.string()
+            
+        } else {
+            
+            secondaryTXT[0].text = red.string()
+            secondaryTXT[1].text = green.string()
+            secondaryTXT[2].text = blue.string()
+            
+        }
         
     }
     
@@ -246,13 +348,15 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
         
     }
     
-    @IBAction func colorTPD(sender: AnyObject) {
+    @IBAction func colorTPD(sender: UIButton) {
         
         let vc = ColorPicker(nibName: "ColorPicker",bundle: nil)
         vc.delegate = self
+        vc.index = sender.tag
+        vc.color = sender.backgroundColor
         
         var popover = UIPopoverController(contentViewController: vc)
-        popover.popoverContentSize = CGSize(width: 480, height: 440)
+        popover.popoverContentSize = CGSize(width: 480, height: 480)
         popover.presentPopoverFromRect(sender.frame, inView: view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
         
     }
@@ -270,13 +374,9 @@ class TeamDetail: UIViewController,UITableViewDelegate,UITableViewDataSource,UIT
         
     }
     
-    func colorSelected(color: UIColor) {
+    func colorSelected(i: Int,color: UIColor) {
         
-        team.primary = color
-        team.save(nil)
-        main.teamsTBL.reloadData()
-        main.gamesTBL.getData()
-        colorBTN.backgroundColor = color
+        setColor(i, color: color)
         
     }
     

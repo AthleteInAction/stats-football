@@ -15,6 +15,7 @@ class PointVW: UIView {
     
     var key: Key!
     var team: Team!
+    var index: Int!
     
     init(number _number: Int,key _key: Key,team _team: Team){
         
@@ -54,7 +55,7 @@ class PointVW: UIView {
         a.textColor = team.secondary
         a.font = UIFont.systemFontOfSize(10, weight: 1)
         a.sizeToFit()
-        a.frame = CGRect(x: 0, y: 0, width: a.frame.width + 8, height: a.frame.height + 6)
+        a.frame = CGRect(x: 0, y: 0, width: Int(a.frame.width + 8), height: Int(a.frame.height + 6))
         a.center.x = bounds.width/2
         
         var width = a.bounds.width
@@ -64,9 +65,9 @@ class PointVW: UIView {
         b.textColor = Filters.textColors(key, alpha: 1)
         b.font = UIFont.systemFontOfSize(10)
         b.sizeToFit()
-        b.frame = CGRect(x: 0, y: 0, width: b.frame.width + 8, height: b.frame.height + 6)
+        b.frame = CGRect(x: 0, y: 0, width: Int(b.frame.width + 8), height: Int(b.frame.height + 6))
         b.center.x = bounds.width/2
-        b.frame.origin.y = a.bounds.height
+        b.frame.origin.y = round(a.bounds.height)
         
         if b.bounds.width > width { width = b.bounds.width }
         
@@ -77,10 +78,10 @@ class PointVW: UIView {
         
         var c = center
         
-        frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: width, height: height)
+        frame = CGRect(x: Int(frame.origin.x), y: Int(frame.origin.y), width: Int(width), height: Int(height))
         
-        a.frame = CGRect(x: 0, y: 0, width: width, height: a.bounds.height)
-        b.frame = CGRect(x: 0, y: a.bounds.height, width: width, height: b.bounds.height)
+        a.frame = CGRect(x: 0, y: 0, width: Int(width), height: Int(a.bounds.height))
+        b.frame = CGRect(x: 0, y: Int(a.bounds.height), width: Int(width), height: Int(b.bounds.height))
         
         let cr: CGFloat = 4
         
@@ -101,12 +102,12 @@ class PointVW: UIView {
         center = c
         
         let triangle = TriangeView(frame: CGRect(x: 0, y: -6, width: 10, height: 6), color: Filters.colors(key, alpha: 1))
-        triangle.center.x = bounds.width/2
+        triangle.center.x = round(bounds.width/2)
         triangle.backgroundColor = UIColor.clearColor()
         addSubview(triangle)
         
-        let triangle2 = TriangeView(frame: CGRect(x: 0, y: bounds.height, width: 10, height: 6), color: Filters.colors(key, alpha: 1))
-        triangle2.center.x = bounds.width/2
+        let triangle2 = TriangeView(frame: CGRect(x: 0, y: Int(bounds.height), width: 10, height: 6), color: Filters.colors(key, alpha: 1))
+        triangle2.center.x = round(bounds.width/2)
         triangle2.backgroundColor = UIColor.clearColor()
         triangle2.transform = CGAffineTransformMakeRotation((180.0 * CGFloat(M_PI)) / 180.0)
         addSubview(triangle2)

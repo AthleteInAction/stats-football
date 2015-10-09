@@ -33,6 +33,8 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
     var lastFD: Yardline?
     var lastDOWN: Int?
     
+    var add: UIBarButtonItem!
+    
     // IB
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -44,7 +46,6 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
     @IBOutlet weak var downSEL: UISegmentedControl!
     @IBOutlet weak var cancelBTN: UIButton!
     @IBOutlet weak var sequenceTBL: SequenceTBL!
-    @IBOutlet weak var playTBL: PlayTBL!
     @IBOutlet weak var penaltyTBL: PenaltyTBL!
     @IBOutlet weak var fimg: UIImageView!
     @IBOutlet weak var rightPTY: PenaltyBTN!
@@ -75,14 +76,11 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
         sequenceTBL.tableFooterView = tblView
         sequenceTBL.tableFooterView?.hidden = true
         sequenceTBL.backgroundColor = UIColor.clearColor()
-        playTBL.tableFooterView = tblView
-        playTBL.tableFooterView?.hidden = true
-        playTBL.backgroundColor = UIColor.clearColor()
         penaltyTBL.tableFooterView = tblView
         penaltyTBL.tableFooterView?.hidden = true
         penaltyTBL.backgroundColor = UIColor.clearColor()
         
-        let add = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "newSequence:")
+        add = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "newSequence:")
         navigationItem.setRightBarButtonItem(add, animated: true)
         
         let back = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: "backTPD:")
@@ -106,7 +104,6 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
         
         field.tracker = self
         sequenceTBL.tracker = self
-        playTBL.tracker = self
         penaltyTBL.tracker = self
         
         MPC.receiver = self
