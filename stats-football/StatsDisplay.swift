@@ -118,4 +118,65 @@ class StatsDisplay: UIViewController {
         
     }
 
+    @IBAction func sendTPD(sender: AnyObject) {
+        
+        let conf = UIAlertController(title: "Finished!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        let ok = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil)
+        conf.addAction(ok)
+        
+        let alert = UIAlertController(title: "Send \(_team.short) Stats", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        
+        var txt: UITextField!
+        
+        func addTextField(_txt: UITextField!){
+            
+            _txt.placeholder = "Email"
+            _txt.keyboardType = UIKeyboardType.EmailAddress
+            _txt.text = last_email.string()
+            txt = _txt
+            
+        }
+        
+        alert.addTextFieldWithConfigurationHandler(addTextField)
+        
+        let send = UIAlertAction(title: "Send", style: UIAlertActionStyle.Default) { (action) -> Void in
+            
+            if txt.text != "" {
+                
+                Loading.start()
+                
+                self.game.sendStats(team: self._team, email: txt.text, completion: { (error) -> Void in
+                    
+                    if error == nil {
+                        
+                        
+                        
+                    } else {
+                        
+                        conf.message = "There was an error!"
+                        
+                    }
+                    
+                    self.presentViewController(conf, animated: true, completion: nil)
+                    
+                    Loading.stop()
+                    
+                })
+            }
+            
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive) { (action) -> Void in
+            
+            
+            
+        }
+        
+        alert.addAction(send)
+        alert.addAction(cancel)
+        
+        presentViewController(alert, animated: true, completion: nil)
+        
+    }
+    
 }

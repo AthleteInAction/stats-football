@@ -27,6 +27,8 @@ extension Tracker {
                 _sequence.getPlays()
                 _sequence.getPenalties()
                 
+                _sequence.scoreSave(nil)
+                
             }
             
         },completion: { () -> Void in
@@ -38,6 +40,8 @@ extension Tracker {
             MPC.startAdvertising()
             
             Loading.stop()
+            
+            self.game.qtrScoring()
             
         })
         
@@ -111,6 +115,11 @@ extension Tracker {
             leftPTY.team = game.away
             leftPTY.setTitle(game.away.short+" Penalty", forState: .Normal)
             
+            leftStats = UIBarButtonItem(title: game.away.short+" Stats", style: .Plain, target: self, action: "statsTPD:")
+            leftStats.tag = 0
+            rightStats = UIBarButtonItem(title: game.home.short+" Stats", style: .Plain, target: self, action: "statsTPD:")
+            rightStats.tag = 1
+            
         } else {
             
             rightTEAM.setTitle(game.away.short, forState: .Normal)
@@ -127,8 +136,18 @@ extension Tracker {
             leftPTY.team = game.home
             leftPTY.setTitle(game.home.short+" Penalty", forState: .Normal)
             
+            leftStats = UIBarButtonItem(title: game.home.short+" Stats", style: .Plain, target: self, action: "statsTPD:")
+            leftStats.tag = 1
+            rightStats = UIBarButtonItem(title: game.away.short+" Stats", style: .Plain, target: self, action: "statsTPD:")
+            rightStats.tag = 0
+            
         }
         // ++++++++++++++++++++++++++++++++++++++
+        
+        toolbar.items = [leftStats,sep,rightStats,flexSpace,eraseBTN,flexSpace,exportBTN,sep,docs]
+        
+        tosTXT.hidden = s.score == .None
+        tosTXT.text = s.score_time
         
         rightBALL.hidden = !pos_right
         leftBALL.hidden = pos_right
@@ -136,10 +155,19 @@ extension Tracker {
         updateDown()
         updateScore()
         updateArrows()
+        updateLog()
         
     }
     // ========================================================
     // ========================================================
+    
+    func updateLog(){
+        
+        let s = game.sequences[index]
+        
+        eraseBTN.enabled = s.plays.count > 0 || s.penalties.count > 0
+        
+    }
     
     
     // UPDATE ARROWS
@@ -289,8 +317,6 @@ extension Tracker {
         field.setNeedsDisplay()
         drawButtons()
         
-        setSeeks()
-        
         return true
         
     }
@@ -380,7 +406,8 @@ extension Tracker {
             
             cancelTPD(1)
             
-            updateScore()
+            s.scoreSave(nil)
+            updateScoreboard()
             
         }
         
@@ -402,9 +429,22 @@ extension Tracker {
             
             cancelTPD(1)
             
-            updateScore()
+            s.scoreSave(nil)
+            updateScoreboard()
             
         }
+        
+        return true
+        
+    }
+    // ========================================================
+    // ========================================================
+    
+    
+    // FIELD TOUCHES BEGAN
+    // ========================================================
+    // ========================================================
+    func fieldTouchesBegan(touches: Set<NSObject>) -> Bool {
         
         return true
         
@@ -416,7 +456,7 @@ extension Tracker {
     // FIELD TOUCHES MOVED
     // ========================================================
     // ========================================================
-    func fieldTOuchesMoved(touches: Set<NSObject>) -> Bool {
+    func fieldTouchesMoved(touches: Set<NSObject>) -> Bool {
         
         if newPlay == nil && newPenalty == nil { return false }
         
@@ -447,11 +487,7 @@ extension Tracker {
             
             if let p = newPlay {
                 
-                var pct: CGFloat {
-                    
-                    return y / field.bounds.height
-                    
-                }
+                let pct: CGFloat = y / field.bounds.height
                 
                 switch p.key as Key {
                 case .Run:
@@ -464,7 +500,7 @@ extension Tracker {
                     field.highlight.frame = _frame
                     field.highlight.hidden = false
                 
-                case .Pass,.Incomplete:
+                case .Pass,.Incomplete,.Interception:
                     
                     let r = settings.passSections
                     let ss = settings.sectionSize(pct: pct, height: field.bounds.height, sections: r)
@@ -474,7 +510,10 @@ extension Tracker {
                     field.highlight.frame = _frame
                     field.highlight.hidden = false
                     
-                default: ()
+                default:
+                    
+                    ()
+                    
                 }
                 
             }
@@ -491,7 +530,7 @@ extension Tracker {
     // FIELD TOUCHES ENDED
     // ========================================================
     // ========================================================
-    func fieldTOuchesEnded(touches: Set<NSObject>) -> Bool {
+    func fieldTouchesEnded(touches: Set<NSObject>) -> Bool {
         
         if newPlay != nil || newPenalty != nil { enterOn = true }
         
@@ -543,7 +582,6 @@ extension Tracker {
         add.enabled = false
         
         let S = createSequence()
-        
         S.save(nil)
         
         game.sequences.insert(S, atIndex: 0)
@@ -568,5 +606,74 @@ extension Tracker {
     }
     // ========================================================
     // ========================================================
+    
+    
+    // TOUCHES BEGAN
+    // ========================================================
+    // ========================================================
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        view.endEditing(true)
+        super.touchesBegan(touches, withEvent: event)
+        
+    }
+    // ========================================================
+    // ========================================================
+    
+    
+    // TOS END
+    // ========================================================
+    // ========================================================
+    func tosEND(sender: AnyObject){
+        
+        let s = game.sequences[index]
+        
+        s.score_time = tosTXT.text
+        
+        s.save(nil)
+        
+    }
+    // ========================================================
+    // ========================================================
+    
+    func eraseTPD(sender: UIBarButtonItem){
+        
+        let s = game.sequences[index]
+        
+        if let penalty = s.penalties.last {
+            
+            let i = s.penalties.count - 1
+            
+            penalty.delete(nil)
+            s.penalties.removeAtIndex(i)
+            penaltyTBL.penalties.removeAtIndex(i)
+            
+            let ip = NSIndexPath(forRow: i, inSection: 0)
+            penaltyTBL.deleteRowsAtIndexPaths([ip], withRowAnimation: .Top)
+            
+            field.setNeedsDisplay()
+            drawButtons()
+            updateScore()
+            updateLog()
+            
+        } else {
+            
+            if let play = s.plays.last {
+                
+                let i = s.plays.count - 1
+                
+                play.delete(nil)
+                s.plays.removeAtIndex(i)
+                
+                field.setNeedsDisplay()
+                drawButtons()
+                updateScore()
+                updateLog()
+                
+            }
+            
+        }
+        
+    }
     
 }

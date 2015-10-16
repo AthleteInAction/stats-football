@@ -21,13 +21,29 @@ class Stat {
 
 class ReturnTotal {
     
-    var player: Int!
+    var player: Int?
     var att: Int = 0
     var yds: Int = 0
     var long: Int = 0
     var td: Int = 0
     
     init(){}
+    
+    func serialize() -> [String:AnyObject] {
+        
+        var _final: [String:AnyObject] = [
+            "att": att,
+            "yds": yds,
+            "td": td,
+            "long": long,
+            "ypr": yardsPerReturn()
+        ]
+        
+        if let p = player { _final["player"] = p }
+        
+        return _final
+        
+    }
     
     init(player _player: Int){ player = _player }
     
@@ -69,13 +85,29 @@ class ReturnTotal {
 
 class ReceivingTotal {
     
-    var player: Int!
+    var player: Int?
     var rec: Int = 0
     var yds: Int = 0
     var long: Int = 0
     var td: Int = 0
     
     init(){}
+    
+    func serialize() -> [String:AnyObject] {
+        
+        var _final: [String:AnyObject] = [
+            "rec": rec,
+            "yds": yds,
+            "td": td,
+            "long": long,
+            "ypr": yardsPerCatch()
+        ]
+        
+        if let p = player { _final["player"] = p }
+        
+        return _final
+        
+    }
     
     init(player _player: Int){ player = _player }
     
@@ -117,13 +149,29 @@ class ReceivingTotal {
 
 class RushingTotal {
     
-    var player: Int!
+    var player: Int?
     var att: Int = 0
     var yds: Int = 0
     var td: Int = 0
     var long: Int = 0
     
     init(){}
+    
+    func serialize() -> [String:AnyObject] {
+        
+        var _final: [String:AnyObject] = [
+            "att": att,
+            "yds": yds,
+            "td": td,
+            "long": long,
+            "ypa": yardsPerAttempt()
+        ]
+        
+        if let p = player { _final["player"] = p }
+        
+        return _final
+        
+    }
     
     init(player _player: Int){ player = _player }
     
@@ -165,7 +213,7 @@ class RushingTotal {
 
 class PassingTotal {
     
-    var player: Int!
+    var player: Int?
     var att: Int = 0
     var comp: Int = 0
     var yds: Int = 0
@@ -174,6 +222,26 @@ class PassingTotal {
     var long: Int = 0
     
     init(){}
+    
+    func serialize() -> [String:AnyObject] {
+        
+        var _final: [String:AnyObject] = [
+            "att": att,
+            "comp": comp,
+            "yds": yds,
+            "td": td,
+            "int": int,
+            "long": long,
+            "ypa": yardsPerAttempt(),
+            "rat": passerRating(),
+            "comp_pct": completionPercentage()
+        ]
+        
+        if let p = player { _final["player"] = p }
+        
+        return _final
+        
+    }
     
     init(player _player: Int){
         

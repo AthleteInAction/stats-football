@@ -10,8 +10,11 @@ import UIKit
 import CoreData
 import MultipeerConnectivity
 
-let domain = "http://will-big.local:3000"
-//let domain = "https://wambl-stats-api-staging.herokuapp.com"
+// GLOBALS
+// ===============================================================
+// ===============================================================
+//let domain = "http://will-big.local:3000"
+let domain = "https://wambl-stats-api-staging.herokuapp.com"
 var appDel: AppDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
 var context: NSManagedObjectContext = appDel.managedObjectContext!
 var lastPeer: MCPeerID?
@@ -19,8 +22,14 @@ var ratio: CGFloat = 1
 var vratio: CGFloat = 1
 let settings = Settings()
 let MPC = MPCManager()
-
+var dbDate = NSDateFormatter()
 typealias CoreDataCompletion = (error: NSError?) -> Void
+
+var last_email = Setting(key: "last_email")
+var touchback_yardline = Setting(key: "touchback_yardline")
+var kickoff_yardline = Setting(key: "kickoff_yardline")
+// ===============================================================
+// ===============================================================
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -34,6 +43,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        var tracker = Tracker(nibName: "Tracker",bundle: nil)
 //        window?.rootViewController = tracker
 //        window?.makeKeyAndVisible()
+        
+        dbDate.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.S"
         
         return true
         

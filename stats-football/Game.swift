@@ -176,4 +176,84 @@ class Game {
         
     }
     
+    func remoteSave(completion: Completion?) -> Bool {
+        
+        var c = completion
+        
+        if away.id == nil || home.id == nil {
+            
+            var e = NSError(domain: "Away and Home teams must be saved remotely first : \(away.id) - \(home.id)", code: 0, userInfo: nil)
+            JP2(e)
+            c?(error: e)
+            
+            return false
+            
+        }
+        
+        var loc = ""
+        var successCode = 201
+        var method = Method.POST
+        
+        if let i = id {
+            
+            loc = "/\(i)"
+            successCode = 200
+            method = .PUT
+            
+        }
+        
+        let _item = [
+            "game": [
+                "away_id": away.id!,
+                "home_id": home.id!,
+                "right_home": right_home,
+                "created_at": dbDate.stringFromDate(created_at)
+            ]
+        ]
+        
+        let s = "\(domain)/api/v1/games\(loc).json"
+        
+        Alamofire.request(method, s, parameters: _item, encoding: .JSON)
+            .responseJSON { request, response, data, error in
+                
+                var e: NSError?
+                
+                if error == nil {
+                    
+                    if response?.statusCode == successCode {
+                        
+                        var json = JSON(data!)
+                        
+                        self.id = json["game"]["id"].intValue
+                        self.save(nil)
+                        
+                    } else {
+                        
+                        JP2("Status Code Error: \(response?.statusCode)")
+                        JP2(_item)
+                        JP2(request)
+                        
+                        e = NSError(domain: "Bad status code", code: 99, userInfo: nil)
+                        
+                    }
+                    
+                } else {
+                    
+                    JP2("Error!")
+                    JP2(_item)
+                    JP2(error)
+                    JP2(request)
+                    
+                    e = error
+                    
+                }
+                
+                c?(error: e)
+                
+        }
+        
+        return true
+        
+    }
+    
 }

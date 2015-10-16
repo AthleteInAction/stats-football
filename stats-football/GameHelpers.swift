@@ -14,8 +14,8 @@ extension Game {
         
         var homePlays: [[String:AnyObject]] = []
         var awayPlays: [[String:AnyObject]] = []
-        var homeCurrent: [String:AnyObject]?
-        var awayCurrent: [String:AnyObject]?
+        var homeCurrent = [String:AnyObject]()
+        var awayCurrent =  [String:AnyObject]()
         
         var d: [[String:AnyObject]] = []
         
@@ -23,9 +23,9 @@ extension Game {
         
         _sequences.sort({ $0.created_at.compare($1.created_at) == NSComparisonResult.OrderedDescending })
         
-        for sequence in _sequences {
+        for (i,sequence) in enumerate(_sequences) {
             
-            if sequence.key == "down" || sequence.key == "pat" || true {
+            if i == 0 {
                 
                 if sequence.team.isEqual(home.object) {
                     
@@ -35,26 +35,15 @@ extension Game {
                         "key": sequence.key
                     ]
                     
-                    if let d = sequence.down { homeCurrent!["down"] = d.toInt()! }
+                    if let d = sequence.down { homeCurrent["down"] = d.toInt()! }
                     if let d = sequence.fd {
                         
-                        homeCurrent!["fd"] = d.toInt()!
+                        homeCurrent["fd"] = d.toInt()!
                         
                         var los = sequence.startX.toInt()!
                         var fd2 = d.toInt()!
                         
-                        if los < 0 {
-                            los = los * -1
-                        } else {
-                            los = 100 - los
-                        }
-                        if fd2 < 0 {
-                            fd2 = fd2 * -1
-                        } else {
-                            fd2 = 100 - fd2
-                        }
-                        
-                        homeCurrent!["togo"] = fd2 - los
+                        homeCurrent["togo"] = fd2 - los
                         
                     }
                     
@@ -66,30 +55,23 @@ extension Game {
                         "key": sequence.key
                     ]
                     
-                    if let d = sequence.down { awayCurrent!["down"] = d.toInt()! }
+                    if let d = sequence.down { awayCurrent["down"] = d.toInt()! }
                     if let d = sequence.fd {
                         
-                        awayCurrent!["fd"] = d.toInt()!
+                        awayCurrent["fd"] = d.toInt()!
                         
                         var los = sequence.startX.toInt()!
                         var fd2 = d.toInt()!
                         
-                        if los < 0 {
-                            los = los * -1
-                        } else {
-                            los = 100 - los
-                        }
-                        if fd2 < 0 {
-                            fd2 = fd2 * -1
-                        } else {
-                            fd2 = 100 - fd2
-                        }
-                        
-                        awayCurrent!["togo"] = fd2 - los
+                        awayCurrent["togo"] = fd2 - los
                         
                     }
                     
                 }
+                
+            }
+            
+            if sequence.key == "down" || sequence.key == "pat" || true {
                 
                 var plays = sequence.plays.allObjects as! [PlayObject]
                 
@@ -119,7 +101,9 @@ extension Game {
         }
         
         home.MPCPlays = homePlays
+        home.MPCCurrent = homeCurrent
         away.MPCPlays = awayPlays
+        away.MPCCurrent = awayCurrent
         
     }
     

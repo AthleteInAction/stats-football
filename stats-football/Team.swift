@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import Alamofire
 import SwiftyJSON
+
 // =================================================================================
 // =================================================================================
 @objc(TeamObject)
@@ -53,6 +54,7 @@ class Team {
     var kickReturns: [ReturnTotal] = []
     var teamKickReturns = ReturnTotal()
     var MPCPlays: [[String:AnyObject]] = []
+    var MPCCurrent = [String:AnyObject]()
     
     init(name _name: String,short _short: String){
         
@@ -127,13 +129,13 @@ class Team {
         
         if let e = error {
             
-            JP("TEAM SAVE ERROR!")
-            JP(e)
+            JP2("TEAM SAVE ERROR!")
+            JP2(e)
             
         } else {
             
-            JP(object)
             JP("TEAM SAVED!")
+            JP(object)
             
         }
         
@@ -172,6 +174,75 @@ class Team {
         }
         
         c?(error: error)
+        
+    }
+    
+    func remoteSave(completion: Completion?){
+        
+        var c = completion
+        
+        var loc = ""
+        var successCode = 201
+        var method = Method.POST
+        
+        if let i = id {
+            
+            loc = "/\(i)"
+            successCode = 200
+            method = .PUT
+            
+        }
+        
+        let _item = [
+            "team": [
+                "name": name,
+                "short": short,
+                "primary": colorText(primary),
+                "secondary": colorText(secondary),
+                "created_at": dbDate.stringFromDate(created_at)
+            ]
+        ]
+        
+        let s = "\(domain)/api/v1/teams\(loc).json"
+        
+        Alamofire.request(method, s, parameters: _item, encoding: .JSON)
+            .responseJSON { request, response, data, error in
+                
+                var e: NSError?
+                
+                if error == nil {
+                    
+                    if response?.statusCode == successCode {
+                        
+                        var json = JSON(data!)
+                        
+                        self.id = json["team"]["id"].intValue
+                        self.save(nil)
+                        
+                    } else {
+                        
+                        JP2("Status Code Error: \(response?.statusCode)")
+                        JP2(_item)
+                        JP2(request)
+                        
+                        e = NSError(domain: "Bad status code", code: 99, userInfo: nil)
+                        
+                    }
+                    
+                } else {
+                    
+                    JP2("Error!")
+                    JP2(_item)
+                    JP2(error)
+                    JP2(request)
+                    
+                    e = error
+                    
+                }
+                
+                c?(error: e)
+                
+        }
         
     }
     

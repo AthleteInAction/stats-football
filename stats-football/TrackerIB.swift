@@ -38,27 +38,6 @@ extension Tracker {
             
         }
         
-        setSeeks()
-        
-    }
-    func setSeeks(){
-        
-        if index >= (game.sequences.count - 1) {
-            prevBTN.alpha = 0.3
-            prevBTN.userInteractionEnabled = false
-        } else {
-            prevBTN.alpha = 1
-            prevBTN.userInteractionEnabled = true
-        }
-        
-        if index <= 0 {
-            nextBTN.alpha = 0.3
-            nextBTN.userInteractionEnabled = false
-        } else {
-            nextBTN.alpha = 1
-            nextBTN.userInteractionEnabled = true
-        }
-        
     }
     
     @IBAction func playTypeChanged(sender: AnyObject) {
@@ -243,6 +222,8 @@ extension Tracker {
         let ip = NSIndexPath(forRow: index, inSection: 0)
         sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
         
+        updateScoreboard()
+        
     }
     
     @IBAction func cancelTPD(sender: AnyObject) {
@@ -285,34 +266,18 @@ extension Tracker {
         
     }
     
-    @IBAction func statsTPD(sender: AnyObject) {
+    func statsTPD(sender: AnyObject) {
         
         let vc = StatsDisplay(nibName: "StatsDisplay",bundle: nil)
         vc.game = game
         
-        if sender.tag == 1 {
+        if sender.tag == 0 {
             
-            if game.right_home {
-                
-                vc.team = game.away
-                
-            } else {
-                
-                vc.team = game.home
-                
-            }
+            vc.team = game.away
             
         } else {
             
-            if game.right_home {
-                
-                vc.team = game.home
-                
-            } else {
-                
-                vc.team = game.away
-                
-            }
+            vc.team = game.home
             
         }
         
@@ -326,6 +291,80 @@ extension Tracker {
         
         MPC.stopAdvertising()
         navigationController?.popViewControllerAnimated(true)
+        
+    }
+    
+    func exportTPD(sender: AnyObject){
+        
+        let vc = RemoteSave(nibName: "RemoteSave",bundle: nil)
+        vc.game = game
+        
+        let nav = UINavigationController(rootViewController: vc)
+        
+        presentViewController(nav, animated: true, completion: nil)
+        
+    }
+    
+    func docsTPD(sender: AnyObject){
+        
+        let conf = UIAlertController(title: "Finished!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        let ok = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil)
+        conf.addAction(ok)
+        
+        let alert = UIAlertController(title: "Send Summary", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        
+        var txt: UITextField!
+        
+        func addTextField(_txt: UITextField!){
+            
+            _txt.placeholder = "Email"
+            _txt.keyboardType = UIKeyboardType.EmailAddress
+            _txt.text = last_email.string()
+            txt = _txt
+            
+        }
+        
+        alert.addTextFieldWithConfigurationHandler(addTextField)
+        
+        let send = UIAlertAction(title: "Send", style: UIAlertActionStyle.Default) { (action) -> Void in
+            
+            if txt.text != "" {
+                
+                last_email.setValue(txt.text)
+                
+                Loading.start()
+                
+                self.game.sendSummary(email: txt.text, completion: { (error) -> Void in
+                    
+                    if error == nil {
+                        
+                        
+                        
+                    } else {
+                        
+                        conf.message = "There was an error!"
+                        
+                    }
+                    
+                    self.presentViewController(conf, animated: true, completion: nil)
+                    
+                    Loading.stop()
+                    
+                })
+            }
+            
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive) { (action) -> Void in
+            
+            
+            
+        }
+        
+        alert.addAction(send)
+        alert.addAction(cancel)
+        
+        presentViewController(alert, animated: true, completion: nil)
         
     }
     

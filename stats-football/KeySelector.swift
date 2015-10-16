@@ -211,6 +211,9 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     let ip = NSIndexPath(forRow: tracker.penaltyTBL.penalties.count-1, inSection: 0)
                     tracker.penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
                     
+                    s.scoreSave(nil)
+                    tracker.updateScoreboard()
+                    
                     
                 case .Offset,.Declined:
                     
@@ -222,6 +225,9 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     tracker.penaltyTBL.penalties.append(penalty)
                     let ip = NSIndexPath(forRow: tracker.penaltyTBL.penalties.count-1, inSection: 0)
                     tracker.penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
+                    
+                    s.save(nil)
+                    tracker.updateScoreboard()
                     
                 case .PreviousSpot:
                     
@@ -246,7 +252,8 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     
                     s.replay = true
                     
-                    s.save(nil)
+                    s.scoreSave(nil)
+                    tracker.updateScoreboard()
                     
                     tracker.replaySWI.setOn(true, animated: true)
                     tracker.field.setNeedsDisplay()
@@ -310,6 +317,9 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     
                     tracker.field.setNeedsDisplay()
                     tracker.drawButtons()
+                    
+                    s.scoreSave(nil)
+                    tracker.updateScoreboard()
                     
                 case .SpotOfFoul:
                     

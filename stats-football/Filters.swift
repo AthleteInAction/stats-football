@@ -13,9 +13,14 @@ class Filters {
     static func colors(key: Key,alpha: CGFloat) -> UIColor {
         
         switch key as Key {
-        case .Run,.Return:
+        case .Run:
             
-            return UIColor(red: 57/255, green: 140/255, blue: 183/255, alpha: alpha)
+//            return UIColor(red: 57/255, green: 140/255, blue: 183/255, alpha: alpha)
+            return UIColor(red: 51/255, green: 208/255, blue: 247/255, alpha: alpha)
+            
+        case .Return:
+            
+            return UIColor(red: 254/255, green: 45/255, blue: 124/255, alpha: alpha)
             
         case .Pass,.Reception,.Throw,.FGM:
             

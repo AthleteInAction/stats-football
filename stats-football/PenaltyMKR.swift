@@ -86,7 +86,8 @@ class PenaltyMKR: UIButton {
             
             tracker.penaltyTBL.penalties = s.penalties
             
-            tracker.updateScore()
+            s.save(nil)
+            tracker.updateScoreboard()
             
         }
         

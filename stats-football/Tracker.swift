@@ -58,8 +58,15 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
     @IBOutlet weak var rightTEAM: UIButton!
     @IBOutlet weak var leftSCORE: UILabel!
     @IBOutlet weak var rightSCORE: UILabel!
-    @IBOutlet weak var prevBTN: UIButton!
-    @IBOutlet weak var nextBTN: UIButton!
+    @IBOutlet weak var tosTXT: UITextField!
+    @IBOutlet weak var toolbar: UIToolbar!
+    var leftStats: UIBarButtonItem!
+    var rightStats: UIBarButtonItem!
+    var flexSpace: UIBarButtonItem!
+    var sep: UIBarButtonItem!
+    var exportBTN: UIBarButtonItem!
+    var docs: UIBarButtonItem!
+    var eraseBTN: UIBarButtonItem!
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
@@ -94,6 +101,13 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
         rightTEAM.layer.cornerRadius = 6
         cancelBTN.layer.cornerRadius = 6
         
+        flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil)
+        exportBTN = UIBarButtonItem(title: "Export", style: .Plain, target: self, action: "exportTPD:")
+        docs = UIBarButtonItem(title: "Summary", style: .Plain, target: self, action: "docsTPD:")
+        sep = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
+        eraseBTN = UIBarButtonItem(title: "Erase", style: .Plain, target: self, action: "eraseTPD:")
+        sep.width = 20
+        
         setDelegates()
         
     }
@@ -112,6 +126,8 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
         let tap = UITapGestureRecognizer()
         tap.numberOfTapsRequired = 2
         tap.addTarget(self, action: "field2TPD:")
+        
+        tosTXT.addTarget(self, action: "tosEND:", forControlEvents: UIControlEvents.EditingDidEndOnExit)
         
         field.addGestureRecognizer(tap)
         

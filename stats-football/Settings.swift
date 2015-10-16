@@ -49,6 +49,40 @@ class Settings {
         
     }
     
+//    func sectionSize(pct _pct: CGFloat,height _height: CGFloat,sections _sections: [Int]) -> [CGFloat] {
+//        
+//        var a = _sections[0].percent()
+//        
+//        for (i,_section) in enumerate(_sections) {
+//            
+//            a = _section.percent()
+//            
+//            if ((i+1) <= (_sections.count-1)){
+//                
+//                let b = _sections[i+1].percent()
+//                
+//                switch _pct {
+//                case a ... b:
+//                    
+//                    let height = (b - a) * _height
+//                    
+//                    return [a * _height,height]
+//                    
+//                default: ()
+//                }
+//                
+//            } else {
+//                
+//                return [0,(a * _height)]
+//                
+//            }
+//            
+//        }
+//        
+//        return [0,(a * _height)]
+//        
+//    }
+    
 }
 
 extension Int {

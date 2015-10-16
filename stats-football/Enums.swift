@@ -19,18 +19,25 @@ enum Scores {
     var string: String {
         
         switch self {
-        case .Touchdown:
-            return "touchdown"
-        case .Safety:
-            return "safety"
-        case .FieldGoal:
-            return "fieldgoal"
-        case .ExtraPoint:
-            return "extrapoint"
-        case .Conversion:
-            return "conversion"
-        default:
-            return ""
+        case .Touchdown: return "touchdown"
+        case .Safety: return "safety"
+        case .FieldGoal: return "fieldgoal"
+        case .ExtraPoint: return "extrapoint"
+        case .Conversion: return "conversion"
+        default: return ""
+        }
+        
+    }
+    
+    var display: String {
+        
+        switch self {
+        case .Touchdown: return "TOUCHDOWN"
+        case .Safety: return "SAFETY"
+        case .FieldGoal: return "FIELD GOAL"
+        case .ExtraPoint: return "EXTRA POINT"
+        case .Conversion: return "CONVERSION"
+        default: return ""
         }
         
     }
@@ -38,18 +45,11 @@ enum Scores {
     var value: Int {
         
         switch self {
-        case .Touchdown:
-            return 6
-        case .Safety:
-            return 2
-        case .FieldGoal:
-            return 3
-        case .ExtraPoint:
-            return 1
-        case .Conversion:
-            return 2
-        default:
-            return 0
+        case .Touchdown: return 6
+        case .Safety,Conversion: return 2
+        case .FieldGoal: return 3
+        case .ExtraPoint: return 1
+        default: return 0
         }
         
     }
@@ -292,6 +292,19 @@ extension String {
         case "penalty": return .Penalty
         case "spot": return .Spot
         default: return .Run
+        }
+        
+    }
+    
+    func toScore() -> Scores {
+        
+        switch self {
+        case "touchdown": return .Touchdown
+        case "safety": return .Safety
+        case "fieldgoal": return .FieldGoal
+        case "extrapoint": return .ExtraPoint
+        case "conversion": return .Conversion
+        default: return .None
         }
         
     }

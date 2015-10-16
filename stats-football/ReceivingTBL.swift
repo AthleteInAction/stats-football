@@ -88,8 +88,8 @@ class ReceivingTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
         } else {
             
             item = receiving[indexPath.row]
-            cell.playerTXT.text = "#"+item.player.string()
-            cell.backTXT.text = "#"+item.player.string()
+            cell.playerTXT.text = "#"+item.player!.string()
+            cell.backTXT.text = "#"+item.player!.string()
             
         }
         

@@ -19,6 +19,8 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
     var at: UIView!
     var cover: UIView!
     
+    var cu = [String:AnyObject]()
+    
     var game: [String:AnyObject] = [
         "home": [
             "name":"",
@@ -42,9 +44,14 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
     @IBOutlet var downSWT: [UISwitch]!
     @IBOutlet weak var togoSLDR: UISlider!
     @IBOutlet weak var threshSLDR: UISlider!
+    @IBOutlet weak var autoSW: UISwitch!
+    @IBOutlet weak var currentBTN: UIButton!
+    @IBOutlet weak var allBTN: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        UIApplication.sharedApplication().idleTimerDisabled = true
         
         MPC.receiver = self
         MPC.stateMonitor = self
@@ -84,6 +91,10 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
         cover.alpha = 0.4
         view.addSubview(cover)
         
+        currentBTN.hidden = true
+        currentBTN.layer.cornerRadius = 4
+        allBTN.layer.cornerRadius = currentBTN.layer.cornerRadius
+        
         edgesForExtendedLayout = UIRectEdge()
         
     }
@@ -99,7 +110,11 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
             
             let _show = _game["show"] as! String
             
-            if _show == "home" { self.index = 1 } else { self.index = 0 }
+            if self.autoSW.on {
+                
+                if _show == "home" { self.index = 1 } else { self.index = 0 }
+                
+            }
             
             self.setData(self.index)
             
@@ -150,6 +165,8 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
         
         MPC.stopBrowsing()
         
+        UIApplication.sharedApplication().idleTimerDisabled = false
+        
         dismissViewControllerAnimated(true, completion: nil)
         
     }
@@ -172,16 +189,44 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
     }
     
     var index: Int = 1
-    func setData(i: Int){
-        JP("SET DATA +++++++++++++++++++++++++++++++++++++++++++++++++++")
+    func setData(i: Int) -> Bool {
+        
+        if game["away"] == nil {
+            
+            awayBTN.hidden = true
+            
+        }
+        
+        if game["home"] == nil {
+            
+            homeBTN.hidden = true
+            
+        }
+        
         index = i
         
         if i == 1 {
+            
+            if game["away"] == nil { return false } else {
+                
+                let g = game["away"] as! [String:AnyObject]
+                
+                if g["plays"] == nil { return false }
+                
+            }
             
             homeBTN.backgroundColor = UIColor(red: 88/255, green: 88/255, blue: 88/255, alpha: 1)
             awayBTN.backgroundColor = UIColor.clearColor()
             
         } else {
+            
+            if game["home"] == nil { return false } else {
+                
+                let g = game["home"] as! [String:AnyObject]
+                
+                if g["plays"] == nil { return false }
+                
+            }
             
             awayBTN.backgroundColor = UIColor(red: 88/255, green: 88/255, blue: 88/255, alpha: 1)
             homeBTN.backgroundColor = UIColor.clearColor()
@@ -210,9 +255,41 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
             
             d = gameData(data: H,downs: downs,togo: Int(togoSLDR.value),threshold: Int(threshSLDR.value))
             
+            if H["current"] != nil {
+                
+                self.cu = H["current"] as! [String:AnyObject]
+                
+                if self.cu["playtype"] != nil && self.cu["playtype"] as! String == "down" {
+                    
+                    let down = self.cu["down"] as! Int
+                    let togo = self.cu["togo"] as! Int
+                    currentBTN.setTitle("\(down) and \(togo)", forState: .Normal)
+                    
+                }
+                
+            }
+            
+            currentBTN.hidden = H["current"] == nil
+            
         } else {
             
             d = gameData(data: A,downs: downs,togo: Int(togoSLDR.value),threshold: Int(threshSLDR.value))
+            
+            if A["current"] != nil {
+                
+                self.cu = A["current"] as! [String:AnyObject]
+                
+                if self.cu["playtype"] != nil && self.cu["playtype"] as! String == "down" {
+                    
+                    let down = self.cu["down"] as! Int
+                    let togo = self.cu["togo"] as! Int
+                    currentBTN.setTitle("\(down) and \(togo)", forState: .Normal)
+                    
+                }
+                
+            }
+            
+            currentBTN.hidden = A["current"] == nil
             
         }
         
@@ -231,6 +308,8 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
         passVIEW.items = d.passes
         passVIEW.total = d.pass
         passVIEW.setNeedsDisplay()
+        
+        return true
         
     }
 
@@ -264,6 +343,47 @@ class DataDisplay: UIViewController,MPCManagerReceiver,MPCManagerStateChanged {
     @IBAction func slideEnded(sender: AnyObject) {
         
         JP("SLIDE ENEDED")
+        setData(index)
+        
+    }
+    
+    @IBAction func currentTPD(sender: AnyObject){
+        
+        let down = cu["down"] as! Int
+        let togo = cu["togo"] as! Int
+        
+        for (i,sw) in enumerate(downSWT) {
+            
+            if down == i+1 {
+                
+                sw.setOn(true, animated: true)
+                
+            } else {
+                
+                sw.setOn(false, animated: true)
+                
+            }
+            
+        }
+        
+        togoSLDR.value = Float(togo)
+        togoTXT.text = togo.string()
+        
+        setData(index)
+        
+    }
+    
+    @IBAction func allTPD(sender: AnyObject) {
+        
+        for (i,sw) in enumerate(downSWT) {
+            
+            if i < 4 { sw.setOn(true, animated: true) }
+            
+        }
+        
+        togoSLDR.value = 51
+        togoTXT.text = "All"
+        
         setData(index)
         
     }

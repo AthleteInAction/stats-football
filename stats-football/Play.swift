@@ -7,6 +7,8 @@
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
 import CoreData
+import Alamofire
+import SwiftyJSON
 // ========================================================
 // ========================================================
 @objc(PlayObject)
@@ -122,6 +124,116 @@ class Play {
         }
         
         c?(error: error)
+        
+    }
+    
+    func remoteSave(completion: CoreDataCompletion?) -> Bool {
+        
+        var c = completion
+        
+        if sequence.id == nil {
+            
+            var e = NSError(domain: "Sequence must be saved remotely first : \(sequence.id)", code: 0, userInfo: nil)
+            JP2(e)
+            c?(error: e)
+            
+            return false
+            
+        }
+        
+        if sequence.game.id == nil {
+            
+            var e = NSError(domain: "Game must be saved remotely first : \(sequence.game.id)", code: 0, userInfo: nil)
+            JP2(e)
+            c?(error: e)
+            
+            return false
+            
+        }
+        
+        var loc = ""
+        var successCode = 201
+        var method = Method.POST
+        
+        if let i = id {
+            
+            loc = "/\(i)"
+            successCode = 200
+            method = .PUT
+            
+        }
+        
+        var _item: [String:AnyObject] = [
+            "game_id": sequence.game.id!,
+            "sequence_id": sequence.id!,
+            "key": key.string,
+            "player_a": player_a,
+            "created_at": dbDate.stringFromDate(created_at)
+        ]
+        
+        if let i = team {
+            
+            if i.id == nil {
+                
+                var e = NSError(domain: "Team must be saved remotely first : \(i.id)", code: 0, userInfo: nil)
+                JP2(e)
+                c?(error: e)
+                
+                return false
+                
+            }
+            
+            _item["team_id"] = i.id!
+            
+        }
+        if let x = endX { _item["end_x"] = x.spot }
+        if let x = endY { _item["end_y"] = x }
+        if let n = player_b { _item["player_b"] = n }
+        
+        let _final = ["play": _item]
+        
+        let s = "\(domain)/api/v1/plays\(loc).json"
+        
+        Alamofire.request(method, s, parameters: _final, encoding: .JSON)
+            .responseJSON { request, response, data, error in
+                
+                var e: NSError?
+                
+                if error == nil {
+                    
+                    if response?.statusCode == successCode {
+                        
+                        var json = JSON(data!)
+                        
+                        self.id = json["play"]["id"].intValue
+                        self.save(nil)
+                        
+                    } else {
+                        
+                        JP2("Status Code Error: \(response?.statusCode)")
+                        JP2(_final)
+                        JP2(request)
+                        
+                        e = NSError(domain: "Bad status code", code: 99, userInfo: nil)
+                        
+                    }
+                    
+                } else {
+                    
+                    JP2("Error!")
+                    JP2(_final)
+                    JP2(error)
+                    JP2(request)
+                    
+                    e = error
+                    
+                }
+                
+                c?(error: e)
+                
+        }
+        
+        return true
         
     }
     

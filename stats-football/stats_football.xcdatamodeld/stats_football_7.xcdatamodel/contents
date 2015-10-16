@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14F27" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Games" representedClassName="GameObject" syncable="YES">
+        <attribute name="created_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="right_home" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="start_date" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="away" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="away_games" inverseEntity="Teams" syncable="YES"/>
+        <relationship name="home" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="home_games" inverseEntity="Teams" syncable="YES"/>
+        <relationship name="players" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Players" inverseName="game" inverseEntity="Players" syncable="YES"/>
+        <relationship name="sequences" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sequences" inverseName="game" inverseEntity="Sequences" syncable="YES"/>
+    </entity>
+    <entity name="Penalties" representedClassName="PenaltyObject" syncable="YES">
+        <attribute name="created_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="distance" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endX" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="enforcement" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="player" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="sequence" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Sequences" inverseName="penalties" inverseEntity="Sequences" syncable="YES"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="penalties" inverseEntity="Teams" syncable="YES"/>
+    </entity>
+    <entity name="Players" representedClassName="PlayerObject" syncable="YES">
+        <attribute name="created_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="first_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="last_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="number" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="used" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="game" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Games" inverseName="players" inverseEntity="Games" syncable="YES"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="roster" inverseEntity="Teams" syncable="YES"/>
+    </entity>
+    <entity name="Plays" representedClassName="PlayObject" syncable="YES">
+        <attribute name="created_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="endX" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endY" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="player_a" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="player_b" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="sequence" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Sequences" inverseName="plays" inverseEntity="Sequences" syncable="YES"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="plays" inverseEntity="Teams" syncable="YES"/>
+    </entity>
+    <entity name="Sequences" representedClassName="SequenceObject" syncable="YES">
+        <attribute name="created_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="down" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fd" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flagged" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="has_score" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="qtr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="replay" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="score_time" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startX" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startY" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="game" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Games" inverseName="sequences" inverseEntity="Games" syncable="YES"/>
+        <relationship name="penalties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Penalties" inverseName="sequence" inverseEntity="Penalties" syncable="YES"/>
+        <relationship name="plays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Plays" inverseName="sequence" inverseEntity="Plays" syncable="YES"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Teams" inverseName="sequences" inverseEntity="Teams" syncable="YES"/>
+    </entity>
+    <entity name="Teams" representedClassName="TeamObject" syncable="YES">
+        <attribute name="created_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="primary" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="secondary" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="short" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="away_games" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Games" inverseName="away" inverseEntity="Games" syncable="YES"/>
+        <relationship name="home_games" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Games" inverseName="home" inverseEntity="Games" syncable="YES"/>
+        <relationship name="penalties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Penalties" inverseName="team" inverseEntity="Penalties" syncable="YES"/>
+        <relationship name="plays" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Plays" inverseName="team" inverseEntity="Plays" syncable="YES"/>
+        <relationship name="roster" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Players" inverseName="team" inverseEntity="Players" syncable="YES"/>
+        <relationship name="sequences" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sequences" inverseName="team" inverseEntity="Sequences" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Games" positionX="-198" positionY="-135" width="128" height="165"/>
+        <element name="Penalties" positionX="-81" positionY="306" width="128" height="165"/>
+        <element name="Players" positionX="153" positionY="236" width="128" height="165"/>
+        <element name="Plays" positionX="171" positionY="-18" width="128" height="180"/>
+        <element name="Sequences" positionX="-369" positionY="9" width="128" height="285"/>
+        <element name="Teams" positionX="-2" positionY="-135" width="128" height="225"/>
+    </elements>
+</model>

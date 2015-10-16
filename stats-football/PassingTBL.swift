@@ -88,8 +88,8 @@ class PassingTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
         } else {
             
             item = passing[indexPath.row]
-            cell.playerTXT.text = "#"+item.player.string()
-            cell.backTXT.text = "#"+item.player.string()
+            cell.playerTXT.text = "#"+item.player!.string()
+            cell.backTXT.text = "#"+item.player!.string()
             
         }
         

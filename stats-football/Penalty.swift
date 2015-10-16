@@ -7,6 +7,8 @@
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
 import CoreData
+import Alamofire
+import SwiftyJSON
 // ========================================================
 // ========================================================
 @objc(PenaltyObject)
@@ -138,6 +140,111 @@ class Penalty {
     }
     // --------------------------------------
     // --------------------------------------
+    
+    func remoteSave(completion: CoreDataCompletion?) -> Bool {
+        
+        var c = completion
+        
+        if sequence.id == nil {
+            
+            var e = NSError(domain: "Sequence must be saved remotely first : \(sequence.id)", code: 0, userInfo: nil)
+            JP2(e)
+            c?(error: e)
+            
+            return false
+            
+        }
+        
+        if sequence.game.id == nil {
+            
+            var e = NSError(domain: "Game must be saved remotely first : \(sequence.game.id)", code: 0, userInfo: nil)
+            JP2(e)
+            c?(error: e)
+            
+            return false
+            
+        }
+        
+        if team.id == nil {
+            
+            var e = NSError(domain: "Team must be saved remotely first : \(team.id)", code: 0, userInfo: nil)
+            JP2(e)
+            c?(error: e)
+            
+            return false
+            
+        }
+        
+        var loc = ""
+        var successCode = 201
+        var method = Method.POST
+        
+        if let i = id {
+            
+            loc = "/\(i)"
+            successCode = 200
+            method = .PUT
+            
+        }
+        
+        var _item: [String:AnyObject] = [
+            "game_id": sequence.game.id!,
+            "sequence_id": sequence.id!,
+            "team_id": team.id!,
+            "distance": distance,
+            "enforcement": enforcement.string,
+            "created_at": dbDate.stringFromDate(created_at)
+        ]
+        
+        if let x = endX { _item["end_x"] = x.spot }
+        if let p = player { _item["player"] = p }
+        
+        let _final = ["penalty": _item]
+        
+        let s = "\(domain)/api/v1/penaltys\(loc).json"
+        
+        Alamofire.request(method, s, parameters: _final, encoding: .JSON)
+            .responseJSON { request, response, data, error in
+                
+                var e: NSError?
+                
+                if error == nil {
+                    
+                    if response?.statusCode == successCode {
+                        
+                        var json = JSON(data!)
+                        
+                        self.id = json["penalty"]["id"].intValue
+                        self.save(nil)
+                        
+                    } else {
+                        
+                        JP2("Status Code Error: \(response?.statusCode)")
+                        JP2(_final)
+                        JP2(request)
+                        
+                        e = NSError(domain: "Bad status code", code: 99, userInfo: nil)
+                        
+                    }
+                    
+                } else {
+                    
+                    JP2("Error!")
+                    JP2(_final)
+                    JP2(error)
+                    JP2(request)
+                    
+                    e = error
+                    
+                }
+                
+                c?(error: e)
+                
+        }
+        
+        return true
+        
+    }
     
 }
 // ========================================================

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RemoteSave" customModule="stats_football" customModuleProvider="target">
+            <connections>
+                <outlet property="bar" destination="bSy-cc-zfw" id="vZv-ga-E6c"/>
+                <outlet property="labelTXT" destination="L7l-Xz-Qft" id="gJ9-Rz-XTa"/>
+                <outlet property="pctTXT" destination="hQy-fy-oJa" id="W7W-FS-cYS"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="859" height="608"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bSy-cc-zfw">
+                    <rect key="frame" x="8" y="254" width="843" height="100"/>
+                    <color key="backgroundColor" red="0.98111619480000001" green="0.32013011359999999" blue="0.34837192169999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="100" id="X2O-LP-MO4"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Saving Plays..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L7l-Xz-Qft">
+                    <rect key="frame" x="346" y="206" width="168" height="28"/>
+                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="23"/>
+                    <color key="textColor" red="0.91041522789999996" green="0.91041522789999996" blue="0.91041522789999996" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="34%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hQy-fy-oJa">
+                    <rect key="frame" x="403" y="290" width="53" height="28"/>
+                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="23"/>
+                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="bSy-cc-zfw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="Ty5-fz-T6N"/>
+                <constraint firstItem="bSy-cc-zfw" firstAttribute="top" secondItem="L7l-Xz-Qft" secondAttribute="bottom" constant="20" id="ZSK-X9-9JE"/>
+                <constraint firstAttribute="centerX" secondItem="bSy-cc-zfw" secondAttribute="centerX" id="c5f-5d-vRa"/>
+                <constraint firstAttribute="centerY" secondItem="bSy-cc-zfw" secondAttribute="centerY" id="f2P-ck-nbf"/>
+                <constraint firstAttribute="centerY" secondItem="hQy-fy-oJa" secondAttribute="centerY" id="hNn-dm-Hvh"/>
+                <constraint firstAttribute="centerX" secondItem="hQy-fy-oJa" secondAttribute="centerX" id="jsB-Tm-Ivp"/>
+                <constraint firstAttribute="trailing" secondItem="bSy-cc-zfw" secondAttribute="trailing" constant="8" id="kfz-Eu-Dw9"/>
+                <constraint firstAttribute="centerX" secondItem="L7l-Xz-Qft" secondAttribute="centerX" id="v1T-Z0-6bE"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="537.5" y="474"/>
+        </view>
+    </objects>
+</document>

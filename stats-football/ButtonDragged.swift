@@ -109,7 +109,8 @@ extension Tracker {
             field.hideCrosses()
             field.highlight.hidden = true
             
-            updateScore()
+            s.scoreSave(nil)
+            updateScoreboard()
             
         }
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++

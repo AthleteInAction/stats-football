@@ -88,14 +88,16 @@ class NextFilter {
                 S.key = .Down
                 S.down = 1
                 
-                if play.endX!.spot < 100 {
+                if !hasPenaltySpot { lastSpot = play.endX! }
+                
+                if lastSpot!.spot < 100 {
                     
-                    S.startX = play.endX!.opposite()
+                    S.startX = lastSpot!.opposite()
                     
                 } else {
                     
                     // TOUCHBACK
-                    S.startX = Yardline(spot: 20)
+                    S.startX = Yardline(spot: touchback_yardline.int())
                     
                 }
                 
@@ -163,7 +165,7 @@ class NextFilter {
             S.qtr = _sequence.qtr
             S.team = _sequence.team
             S.key = .Kickoff
-            S.startX = Yardline(spot: 40)
+            S.startX = Yardline(spot: kickoff_yardline.int())
             
             return S
             
@@ -178,7 +180,7 @@ class NextFilter {
         if fgm {
             
             S.qtr = _sequence.qtr
-            S.startX = Yardline(spot: 40)
+            S.startX = Yardline(spot: kickoff_yardline.int())
             S.team = _sequence.team
             S.key = .Kickoff
             
@@ -234,7 +236,7 @@ class NextFilter {
                             S.team = _sequence.game.oppositeTeam(team: _sequence.team)
                             S.qtr = _sequence.qtr
                             S.key = .Freekick
-                            S.startX = Yardline(spot: 40)
+                            S.startX = Yardline(spot: kickoff_yardline.int())
                             
                             return S
                             
@@ -248,7 +250,7 @@ class NextFilter {
                     S.qtr = _sequence.qtr
                     S.key = .Down
                     S.down = 1
-                    S.startX = Yardline(spot: 20)
+                    S.startX = Yardline(spot: touchback_yardline.int())
                     S.fd = S.startX.increment(10)
                     
                     return S
@@ -284,7 +286,7 @@ class NextFilter {
                             S.team = _sequence.team
                             S.qtr = _sequence.qtr
                             S.key = .Freekick
-                            S.startX = Yardline(spot: 40)
+                            S.startX = Yardline(spot: kickoff_yardline.int())
                             
                             return S
                             
@@ -298,7 +300,7 @@ class NextFilter {
                     S.qtr = _sequence.qtr
                     S.key = .Down
                     S.down = 1
-                    S.startX = Yardline(spot: 20)
+                    S.startX = Yardline(spot: touchback_yardline.int())
                     S.fd = S.startX.increment(10)
                     
                     return S
@@ -319,7 +321,7 @@ class NextFilter {
         switch _sequence.key as Playtype {
         case .Kickoff,.Freekick:
             
-            S.qtr = 1
+            S.qtr = _sequence.qtr
             if pos == pos_original {
                 
                 S.team = _sequence.team

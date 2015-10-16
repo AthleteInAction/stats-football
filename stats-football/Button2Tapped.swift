@@ -151,6 +151,9 @@ extension Tracker {
                 
                 MPC.sendGame(self.game)
                 
+                s.scoreSave(nil)
+                self.updateScoreboard()
+                
             }
             
             var cancel3 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { action -> Void in

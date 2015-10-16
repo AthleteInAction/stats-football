@@ -73,12 +73,14 @@ class MPCManager : NSObject {
         var _away: [String:AnyObject] = [
             "name": game.away.name,
             "short": game.away.short,
-            "plays": game.away.MPCPlays
+            "plays": game.away.MPCPlays,
+            "current": game.away.MPCCurrent
         ]
         var _home: [String:AnyObject] = [
             "name": game.home.name,
             "short": game.home.short,
-            "plays": game.home.MPCPlays
+            "plays": game.home.MPCPlays,
+            "current": game.home.MPCCurrent
         ]
         
         var _show = "away"

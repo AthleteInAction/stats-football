@@ -88,8 +88,8 @@ class RushingTBL: UITableView,UITableViewDelegate,UITableViewDataSource {
         } else {
             
             item = rushing[indexPath.row]
-            cell.playerTXT.text = "#"+item.player.string()
-            cell.backTXT.text = "#"+item.player.string()
+            cell.playerTXT.text = "#"+item.player!.string()
+            cell.backTXT.text = "#"+item.player!.string()
             
         }
         

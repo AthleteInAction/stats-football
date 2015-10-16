@@ -350,6 +350,29 @@ extension Stats {
                                     
                                 }
                                 
+                                if p.key == .Interception {
+                                    
+                                    var stat = Stat()
+                                    stat.attempt = true
+                                    stat.playtype = sequence.key.string
+                                    stat.key = "int_return"
+                                    stat.player = play.player_a
+                                    stat.value = (endX.opposite().spot - cx.opposite().spot)
+                                    
+                                    if pos {
+                                        stat.team = sequence.game.home
+                                    } else {
+                                        stat.team = sequence.game.away
+                                    }
+                                    
+                                    if let lp = lastPlayWithSpot {
+                                        if lp == i { stat.score = score[pos.toInt()] }
+                                    }
+                                    
+                                    stats.append(stat)
+                                    
+                                }
+                                
 //                                if cx.opposite().spot < infractionPoint.opposite().spot {
 //
 //                                    if endX.opposite().spot > infractionPoint.opposite().spot { endX = infractionPoint.opposite() }

@@ -32,6 +32,9 @@ extension Tracker {
             self.field.setNeedsDisplay()
             self.drawButtons()
             
+            s.save(nil)
+            self.updateScoreboard()
+            
         }
         
         var no = UIAlertAction(title: "No", style: UIAlertActionStyle.Default) { action -> Void in

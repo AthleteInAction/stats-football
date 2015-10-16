@@ -143,13 +143,13 @@ class Field: UIView {
         
         line = LineMKR(frame: CGRect(x: -100, y: 0, width: ratio, height: bounds.height))
         line.field = self
-        line.backgroundColor = UIColor.blueColor()
+        line.backgroundColor = Filters.colors(.Run, alpha: 1)
         line.tag = -1
         insertSubview(line, atIndex: 2)
         
         fd = FirstDownMKR(frame: CGRect(x: -100, y: 0, width: ratio, height: bounds.height))
         fd.field = self
-        fd.backgroundColor = UIColor.yellowColor()
+        fd.backgroundColor = Filters.colors(.Penalty, alpha: 1)
         fd.tag = -1
         insertSubview(fd, atIndex: 3)
         fd.hidden = true
@@ -196,15 +196,21 @@ class Field: UIView {
         
     }
     
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        tracker.fieldTouchesBegan(touches)
+        
+    }
+    
     override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
         
-        tracker.fieldTOuchesMoved(touches)
+        tracker.fieldTouchesMoved(touches)
         
     }
     
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         
-        tracker.fieldTOuchesEnded(touches)
+        tracker.fieldTouchesEnded(touches)
         
     }
     
