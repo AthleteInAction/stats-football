@@ -42,51 +42,64 @@ extension Stats {
         var infractionPoint: Yardline?
         var hasPenaltyWithSpot = false
         var enforcedFromPreviousSpot = false
+        var replay = false
         for penalty in reverse(sequence.penalties) {
+            
+            if penalty.replay { replay = true }
             
             if let x = penalty.endX {
                 
-                hasPenaltyWithSpot = true
+                var b = false
                 
-                if penalty.enforcement != Key.DeadBallSpot {
+                switch penalty.enforcement as Key {
+                case .Declined,.Offset,.OnKick: ()
+                default:
                     
-                    if penalty.team.object.isEqual(sequence.team.object) {
+                    hasPenaltyWithSpot = true
+                    
+                    if penalty.enforcement != Key.DeadBallSpot {
                         
-                        if x.spot < (penalty.distance * 2) {
+                        if penalty.team.object.isEqual(sequence.team.object) {
                             
-                            infractionPoint = Yardline(spot: x.spot * 2)
+                            if x.spot < (penalty.distance * 2) {
+                                
+                                infractionPoint = Yardline(spot: x.spot * 2)
+                                
+                            } else {
+                                
+                                infractionPoint = x.increment(penalty.distance)
+                                
+                            }
                             
                         } else {
                             
-                            infractionPoint = x.increment(penalty.distance)
+                            if x.spot > (100 - (penalty.distance * 2)) {
+                                
+                                infractionPoint = Yardline(spot: x.spot - (100 - x.spot))
+                                
+                            } else {
+                                
+                                infractionPoint = x.increment(penalty.distance * -1)
+                                
+                            }
                             
                         }
                         
-                    } else {
-                        
-                        if x.spot > (100 - (penalty.distance * 2)) {
+                        if penalty.enforcement == Key.PreviousSpot {
                             
-                            infractionPoint = Yardline(spot: x.spot - (100 - x.spot))
+                            enforcedFromPreviousSpot = true
                             
-                        } else {
-                            
-                            infractionPoint = x.increment(penalty.distance * -1)
+                            infractionPoint = Yardline(spot: sequence.startX.spot)
                             
                         }
                         
-                    }
-                    
-                    if penalty.enforcement == Key.PreviousSpot {
-                        
-                        enforcedFromPreviousSpot = true
-                        
-                        infractionPoint = Yardline(spot: sequence.startX.spot)
+                        b = true
                         
                     }
-                    
-                    break
                     
                 }
+                
+                if b { break }
                 
             }
             
@@ -94,7 +107,7 @@ extension Stats {
         // ========================================================
         // ========================================================
         
-            if !sequence.replay || true {
+            if !replay || true {
                 
                 let score = Filters.score(sequence)
                 
@@ -200,6 +213,8 @@ extension Stats {
                     
                     let team = teamSide(pos)
                     
+                    if play.key == .Recovery { pos = !pos }
+                    
                     // SPOTS -----------------------------
                     // SPOTS -----------------------------
                     if let x = play.endX {
@@ -259,7 +274,7 @@ extension Stats {
                         case .Interception:
                         // INTERCEPTION ++++++++++++++++++++++++++++++++++
                             
-                            if enforcedFromPreviousSpot || sequence.replay { break }
+                            if enforcedFromPreviousSpot || replay { break }
                             
                             var stat: Stat = Stat()
                             stat.playtype = sequence.key.string
@@ -277,7 +292,7 @@ extension Stats {
                         case .Incomplete:
                         // INCOMPLETE ++++++++++++++++++++++++++++++++++++
                             
-                            if enforcedFromPreviousSpot || sequence.replay { break }
+                            if enforcedFromPreviousSpot || replay { break }
                             
                             var stat: Stat = Stat()
                             stat.playtype = sequence.key.string
@@ -763,10 +778,7 @@ extension Stats {
                     // CHECK FOR CHANGE IN POSSESSION
                     // ++++++++++++++++++++++++++++++++
                     switch play.key as Key {
-                    case .Punt,.Kick,.Interception,.Recovery:
-                        
-                        pos = !pos
-                        
+                    case .Punt,.Kick,.Interception: pos = !pos
                     case .Fumble:
                         
                         //                        if let team = play.team { pos = team.object.isEqual(sequence.team.object) }

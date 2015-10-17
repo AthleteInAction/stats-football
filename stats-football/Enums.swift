@@ -119,6 +119,8 @@ enum Key {
     case Declined
     case Offset
     case OnKick
+    case ReplayDown
+    case AutoFirst
     case Penalty
     case Spot
     case Five
@@ -128,6 +130,9 @@ enum Key {
     case Home
     case Away
     case NoRecovery
+    
+    case Yes
+    case No
     
     var string: String {
         
@@ -157,11 +162,15 @@ enum Key {
         case .Declined: return "declined"
         case .Offset: return "offset"
         case .OnKick: return "onkick"
+        case .ReplayDown: return "replay_down"
+        case .AutoFirst: return "auto_first"
         case .Penalty: return "penalty"
         case .Spot: return "spot"
         case .Five: return "5"
         case .Ten: return "10"
         case .Fifteen: return "15"
+        case .Yes: return "yes"
+        case .No: return "no"
         default: return "E"
         }
         
@@ -191,16 +200,20 @@ enum Key {
         case .Recovery: return "Recovery"
         case .PreviousSpot: return "Previous Spot"
         case .SpotOfFoul: return "Spot of Foul"
-        case .DeadBallSpot: return "Dead Ball Spot"
+        case .DeadBallSpot: return "After the Play"
         case .Declined: return "Declined"
         case .Offset: return "Offset"
         case .OnKick: return "Enforced on Kick"
+        case .ReplayDown: return "Replay the Down"
+        case .AutoFirst: return "Automatic First Down"
         case .Penalty: return "Penalty"
         case .Spot: return "Spot"
         case .Five: return "5 Yards"
         case .Ten: return "10 Yards"
         case .Fifteen: return "15 Yards"
         case .NoRecovery: return "No Recovery"
+        case .Yes: return "Yes"
+        case .No: return "No"
         default: return "E"
         }
         
@@ -230,16 +243,20 @@ enum Key {
         case .Recovery: return "Recov"
         case .PreviousSpot: return "Previous Spot"
         case .SpotOfFoul: return "Spot of Foul"
-        case .DeadBallSpot: return "Dead Ball Spot"
+        case .DeadBallSpot: return "After the Play"
         case .Declined: return "Declined"
         case .Offset: return "Offset"
         case .OnKick: return "Enforced on Kick"
+        case .ReplayDown: return "Replay Down"
+        case .AutoFirst: return "Automatic First Down"
         case .Penalty: return "Penalty"
         case .Spot: return "Spot"
         case .Five: return "5 Yards"
         case .Ten: return "10 Yards"
         case .Fifteen: return "15 Yards"
         case .NoRecovery: return "No Recovery"
+        case .Yes: return "Yes"
+        case .No: return "No"
         default: return "E"
         }
         
@@ -258,6 +275,8 @@ enum Key {
         }
         
     }
+    
+    var bool: Bool { return self == .Yes }
     
 }
 extension String {
@@ -289,6 +308,8 @@ extension String {
         case "declined": return .Declined
         case "offset": return .Offset
         case "onkick": return .OnKick
+        case "replay_down": return .ReplayDown
+        case "auto_first": return .AutoFirst
         case "penalty": return .Penalty
         case "spot": return .Spot
         default: return .Run

@@ -88,12 +88,14 @@ class PointVW: UIView {
         layer.cornerRadius = cr
         
         let aShape = CAShapeLayer()
+        aShape.backgroundColor = UIColor.clearColor().CGColor
         aShape.bounds = a.frame
         aShape.position = a.center
         aShape.path = UIBezierPath(roundedRect: a.bounds, byRoundingCorners: .TopRight | .TopLeft, cornerRadii: CGSize(width: cr, height: cr)).CGPath
         a.layer.mask = aShape
         
         let bShape = CAShapeLayer()
+        bShape.backgroundColor = UIColor.clearColor().CGColor
         bShape.bounds = b.frame
         bShape.position = b.center
         bShape.path = UIBezierPath(roundedRect: b.bounds, byRoundingCorners: .BottomRight | .BottomLeft, cornerRadii: CGSize(width: cr, height: cr)).CGPath

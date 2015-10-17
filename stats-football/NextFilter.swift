@@ -25,15 +25,26 @@ class NextFilter {
         // ==========================================
         var lastSpot: Yardline?
         var hasPenaltySpot = false
+        var replay = false
+        var autoFD = false
         for penalty in reverse(_sequence.penalties) {
+            
+            if penalty.replay { replay = true }
+            if penalty.fd { autoFD = true }
             
             if let spot = penalty.endX {
                 
-                lastSpot = spot
+                var b = false
                 
-                hasPenaltySpot = true
+                switch penalty.enforcement as Key {
+                case .Declined,.Offset,.OnKick: ()
+                default:
+                    lastSpot = spot
+                    hasPenaltySpot = true
+                    b = true
+                }
                 
-                break
+                if b { break }
                 
             }
             
@@ -45,7 +56,7 @@ class NextFilter {
         // REPLAY DOWN
         // ==========================================
         // ==========================================
-        if _sequence.replay || _sequence.plays.count == 0 {
+        if replay || (_sequence.plays.count == 0 && _sequence.penalties.count == 0) {
             
             S.team = _sequence.team
             S.qtr = _sequence.qtr
@@ -123,11 +134,13 @@ class NextFilter {
         for play in _sequence.plays {
             
             switch play.key as Key {
-            case .Kick,.Punt,.Interception,.Recovery: pos = !pos
+            case .Kick,.Punt,.Interception: pos = !pos
             case .Fumble,.FumbledSnap,.BadSnap: if let team = play.team { pos = team.object.isEqual(_sequence.team.object) }
             case .FGA: fga = true
             case .FGM: fgm = true
-            case .Recovery: recovery = true
+            case .Recovery:
+                recovery = true
+                pos = !pos
             default: ()
             }
             
@@ -400,6 +413,13 @@ class NextFilter {
                     
                 }
                 
+            }
+            
+            if autoFD {
+                
+                S.down = 1
+                S.fd = S.startX.increment(10)
+            
             }
             
             return S

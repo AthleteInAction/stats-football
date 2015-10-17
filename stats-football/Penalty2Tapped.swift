@@ -25,9 +25,6 @@ extension Tracker {
             penalty.delete(nil)
             
             s.penalties.removeAtIndex(b.index)
-            self.penaltyTBL.penalties.removeAtIndex(b.index)
-            
-            self.penaltyTBL.deleteRowsAtIndexPaths([NSIndexPath(forRow: b.index, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Top)
             
             self.field.setNeedsDisplay()
             self.drawButtons()

@@ -20,6 +20,7 @@ class SequenceCell: UITableViewCell {
     @IBOutlet weak var penalty: UIView!
     @IBOutlet weak var qtrTXT: UILabel!
     @IBOutlet weak var scoreTXT: UILabel!
+    @IBOutlet weak var timeTXT: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

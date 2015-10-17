@@ -209,23 +209,6 @@ extension Tracker {
         
     }
     
-    @IBAction func replayCHG(sender: AnyObject) {
-        
-        let s = game.sequences[index]
-        
-        s.replay = replaySWI.on
-        
-        s.save(nil)
-        
-        sequenceTBL.sequences[index] = s
-        
-        let ip = NSIndexPath(forRow: index, inSection: 0)
-        sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
-        
-        updateScoreboard()
-        
-    }
-    
     @IBAction func cancelTPD(sender: AnyObject) {
         
         enterOn = false
@@ -261,7 +244,7 @@ extension Tracker {
         
         popover = UIPopoverController(contentViewController: nav)
         popover.delegate = self
-        popover.popoverContentSize = CGSize(width: 500, height: view.bounds.height * 0.8)
+        popover.popoverContentSize = CGSize(width: 500, height: view.bounds.height * 0.85)
         popover.presentPopoverFromRect(sender.frame, inView: scoreboard, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
         
     }
@@ -289,6 +272,7 @@ extension Tracker {
     
     func backTPD(sender: UIBarButtonItem){
         
+        UIApplication.sharedApplication().idleTimerDisabled = false
         MPC.stopAdvertising()
         navigationController?.popViewControllerAnimated(true)
         

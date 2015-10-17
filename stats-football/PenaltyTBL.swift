@@ -20,7 +20,7 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         delegate = self
         dataSource = self
         
-        rowHeight = 46
+        rowHeight = 60
         
         separatorStyle = .None
         
@@ -69,7 +69,15 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         
         var top = "\(penalty.distance) yard penalty"
         
+        cell.lastTXT.text = ""
         cell.topTXT.text = top
+        JP2("----------- \(penalty.replay) :: \(penalty.fd)")
+        if penalty.replay {
+            cell.lastTXT.text = "Replay Down"
+        }
+        if penalty.fd {
+            cell.lastTXT.text = "First Down"
+        }
         
         switch penalty.enforcement as Key {
         case .Declined,.Offset,.Kick:

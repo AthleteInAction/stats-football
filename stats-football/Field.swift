@@ -89,7 +89,8 @@ class Field: UIView {
                         switch play.key as Key {
                         case .Pass,.Incomplete,.Interception,.Punt,.Kick:
                             CGContextSetLineDash(c, 10, [6,3], 2)
-                        default: ()
+                        default:
+                            CGContextSetLineDash(c, 0, [0,0], 0)
                         }
                         
                         CGContextSetStrokeColorWithColor(c,color)
@@ -141,13 +142,13 @@ class Field: UIView {
         highlight.tag = -1
         addSubview(highlight)
         
-        line = LineMKR(frame: CGRect(x: -100, y: 0, width: ratio, height: bounds.height))
+        line = LineMKR(frame: CGRect(x: -100, y: 0, width: 6, height: bounds.height))
         line.field = self
         line.backgroundColor = Filters.colors(.Run, alpha: 1)
         line.tag = -1
         insertSubview(line, atIndex: 2)
         
-        fd = FirstDownMKR(frame: CGRect(x: -100, y: 0, width: ratio, height: bounds.height))
+        fd = FirstDownMKR(frame: CGRect(x: -100, y: 0, width: 6, height: bounds.height))
         fd.field = self
         fd.backgroundColor = Filters.colors(.Penalty, alpha: 1)
         fd.tag = -1

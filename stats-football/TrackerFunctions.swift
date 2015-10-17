@@ -78,11 +78,6 @@ extension Tracker {
         playTypeSEL.selectedSegmentIndex = s.key.int
         // ++++++++++++++++++++++++++++++++++++++
         
-        // Set Replay
-        // ++++++++++++++++++++++++++++++++++++++
-        replaySWI.setOn(s.replay, animated: true)
-        // ++++++++++++++++++++++++++++++++++++++
-        
         // Set Down
         // ++++++++++++++++++++++++++++++++++++++
         downSEL.hidden = s.key != Playtype.Down
@@ -143,6 +138,8 @@ extension Tracker {
             
         }
         // ++++++++++++++++++++++++++++++++++++++
+        
+        field.line.backgroundColor = s.team.primary
         
         toolbar.items = [leftStats,sep,rightStats,flexSpace,eraseBTN,flexSpace,exportBTN,sep,docs]
         
@@ -310,8 +307,6 @@ extension Tracker {
         
         sequenceTBL.reload()
         
-        penaltyTBL.reload()
-        
         updateScoreboard()
         
         field.setNeedsDisplay()
@@ -367,7 +362,7 @@ extension Tracker {
         
         popover = UIPopoverController(contentViewController: nav)
         popover.delegate = self
-        popover.popoverContentSize = CGSize(width: 500, height: view.bounds.height * 0.8)
+        popover.popoverContentSize = CGSize(width: 500, height: view.bounds.height * 0.85)
         popover.presentPopoverFromRect(CGRect(x: field.bounds.width/2, y: field.bounds.height, width: 0, height: 0), inView: field, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
         
         return true
@@ -418,11 +413,6 @@ extension Tracker {
             penalty.save(nil)
             
             s.penalties.append(penalty)
-            penaltyTBL.penalties.append(penalty)
-            
-            let ip = NSIndexPath(forRow: penaltyTBL.penalties.count-1, inSection: 0)
-            
-            penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.Top)
             
             field.setNeedsDisplay()
             drawButtons()
@@ -446,6 +436,65 @@ extension Tracker {
     // ========================================================
     func fieldTouchesBegan(touches: Set<NSObject>) -> Bool {
         
+        if newPlay == nil && newPenalty == nil { return false }
+        
+        let s = game.sequences[index]
+        
+        let pos_right = posRight(s)
+        
+        let t: UITouch = touches.first as! UITouch
+        let l: CGPoint = t.locationInView(field)
+        
+        let min: CGFloat = ratio
+        let max: CGFloat = 119 * ratio
+        let vmin: CGFloat = 10
+        let vmax: CGFloat = field.bounds.height - ratio
+        
+        var x = round(l.x / ratio) * ratio
+        var y = l.y
+        
+        if x < min { x = min }
+        if x > max { x = max }
+        if y < vmin { y = vmin }
+        if y > vmax { y = vmax }
+        
+        if let n = newPlay {
+            
+            n.endX = Yardline(x: x, pos_right: pos_right)
+            n.endY = Int(round((y / field.bounds.height) * 100))
+            if pos_right { n.endY = 100 - n.endY! }
+            
+            n.save(nil)
+            
+            s.plays.append(n)
+            
+            field.setNeedsDisplay()
+            drawButtons()
+            
+        }
+        
+        if let n = newPenalty {
+            
+            n.endX = Yardline(x: x, pos_right: pos_right)
+            
+            switch n.enforcement as Key {
+            case .Declined,.Offset,.OnKick:
+                
+                n.endY = Int(round((y / field.bounds.height) * 100))
+                if pos_right { n.endY = 100 - n.endY! }
+                
+            default:()
+            }
+            
+            n.save(nil)
+            
+            s.penalties.append(n)
+            
+            field.setNeedsDisplay()
+            drawButtons()
+            
+        }
+        
         return true
         
     }
@@ -461,6 +510,8 @@ extension Tracker {
         if newPlay == nil && newPenalty == nil { return false }
         
         let s = game.sequences[index]
+        
+        let pos_right = posRight(s)
         
         let t: UITouch = touches.first as! UITouch
         let l: CGPoint = t.locationInView(field)
@@ -483,13 +534,13 @@ extension Tracker {
         field.crossH.center.y = y
         field.crossV.center.x = x
         
-        if s.plays.count == 0 {
+        if s.plays.count == 1 {
             
-            if let p = newPlay {
+            if let play = newPlay {
                 
                 let pct: CGFloat = y / field.bounds.height
                 
-                switch p.key as Key {
+                switch play.key as Key {
                 case .Run:
                     
                     let r = settings.runSections
@@ -499,7 +550,7 @@ extension Tracker {
                     field.highlight.backgroundColor = Filters.colors(.Run, alpha: 1)
                     field.highlight.frame = _frame
                     field.highlight.hidden = false
-                
+                    
                 case .Pass,.Incomplete,.Interception:
                     
                     let r = settings.passSections
@@ -520,6 +571,51 @@ extension Tracker {
             
         }
         
+        if let p = newPlay {
+            
+            if let play = s.plays.last {
+                
+                play.endX = Yardline(x: x, pos_right: pos_right)
+                play.endY = Int(round((y / field.bounds.height) * 100))
+                if pos_right { play.endY = 100 - play.endY! }
+                
+                field.setNeedsDisplay()
+                drawButtons()
+                
+                let ip = NSIndexPath(forRow: index, inSection: 0)
+                sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
+                sequenceTBL.selectRowAtIndexPath(ip, animated: true, scrollPosition: .None)
+                
+            }
+            
+        }
+        
+        if let p = newPenalty {
+            
+            if let penalty = s.penalties.last {
+                
+                penalty.endX = Yardline(x: x, pos_right: pos_right)
+                
+                switch penalty.enforcement as Key {
+                case .Declined,.Offset,.OnKick:
+                    
+                    penalty.endY = Int(round((y / field.bounds.height) * 100))
+                    if pos_right { penalty.endY = 100 - penalty.endY! }
+                    
+                default:()
+                }
+                
+                field.setNeedsDisplay()
+                drawButtons()
+                
+                let ip = NSIndexPath(forRow: index, inSection: 0)
+                sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
+                sequenceTBL.selectRowAtIndexPath(ip, animated: true, scrollPosition: .None)
+                
+            }
+            
+        }
+        
         return true
         
     }
@@ -532,7 +628,33 @@ extension Tracker {
     // ========================================================
     func fieldTouchesEnded(touches: Set<NSObject>) -> Bool {
         
-        if newPlay != nil || newPenalty != nil { enterOn = true }
+        let s = game.sequences[index]
+        
+        if let play = newPlay {
+            
+            if let _play = s.plays.last {
+                
+                _play.save(nil)
+                s.scoreSave(nil)
+                updateScoreboard()
+                
+            }
+            
+        }
+        
+        if let penalty = newPenalty {
+            
+            if let _penalty = s.penalties.last {
+                
+                _penalty.save(nil)
+                s.scoreSave(nil)
+                updateScoreboard()
+                
+            }
+            
+        }
+        
+        cancelTPD(1)
         
         return true
         
@@ -555,7 +677,7 @@ extension Tracker {
             let sequence = Sequence(game: game)
             
             sequence.team = game.away
-            sequence.startX = Yardline(spot: 40)
+            sequence.startX = Yardline(spot: kickoff_yardline.int())
             sequence.key = .Kickoff
             sequence.qtr = 1
             
@@ -571,13 +693,63 @@ extension Tracker {
     // NEW SEQUENCE
     // ========================================================
     // ========================================================
-    func newSequence(sender: AnyObject) -> Bool {
+    func newSequence(sender: AnyObject){
         
-        if newPenalty != nil || newPlay != nil {
+        if game.sequences.count > 0 {
             
-            if field.crossH.hidden { return false } else { go() }
-        
+            let s = game.sequences[index]
+            
+            if s.score != .None && s.score_time == "" {
+                
+                var txt: UITextField!
+                
+                func addTextField(_txt: UITextField!){
+                    
+                    _txt.placeholder = "Time of Score"
+                    _txt.keyboardType = UIKeyboardType.NumberPad
+                    txt = _txt
+                    
+                }
+                
+                let conf = UIAlertController(title: "Time of Score", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+                
+                let save = UIAlertAction(title: "Save", style: .Default) { (action) -> Void in
+                    
+                    s.score_time = txt.text
+                    self.tosTXT.text = txt.text
+                    s.save(nil)
+                    
+                    self.ns()
+                    
+                }
+                
+                let skip = UIAlertAction(title: "Skip", style: UIAlertActionStyle.Destructive, handler: { (action) -> Void in
+                    
+                    self.ns()
+                    
+                })
+                
+                conf.addAction(save)
+                conf.addAction(skip)
+                
+                conf.addTextFieldWithConfigurationHandler(addTextField)
+                
+                presentViewController(conf, animated: true, completion: nil)
+                
+            } else {
+                
+                self.ns()
+                
+            }
+            
+        } else {
+            
+            ns()
+            
         }
+        
+    }
+    func ns(){
         
         add.enabled = false
         
@@ -595,8 +767,6 @@ extension Tracker {
         MPC.sendGame(game)
         
         var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "enablePLUS:", userInfo: nil, repeats: false)
-        
-        return true
         
     }
     func enablePLUS(timer: NSTimer){
@@ -632,6 +802,10 @@ extension Tracker {
         
         s.save(nil)
         
+        let ip = NSIndexPath(forRow: index, inSection: 0)
+        sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
+        sequenceTBL.selectRowAtIndexPath(ip, animated: true, scrollPosition: .None)
+        
     }
     // ========================================================
     // ========================================================
@@ -646,15 +820,16 @@ extension Tracker {
             
             penalty.delete(nil)
             s.penalties.removeAtIndex(i)
-            penaltyTBL.penalties.removeAtIndex(i)
-            
-            let ip = NSIndexPath(forRow: i, inSection: 0)
-            penaltyTBL.deleteRowsAtIndexPaths([ip], withRowAnimation: .Top)
             
             field.setNeedsDisplay()
             drawButtons()
-            updateScore()
-            updateLog()
+            
+            s.scoreSave(nil)
+            updateScoreboard()
+            
+            let ip = NSIndexPath(forRow: index, inSection: 0)
+            sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
+            sequenceTBL.selectRowAtIndexPath(ip, animated: true, scrollPosition: .None)
             
         } else {
             
@@ -667,8 +842,13 @@ extension Tracker {
                 
                 field.setNeedsDisplay()
                 drawButtons()
-                updateScore()
-                updateLog()
+                
+                s.scoreSave(nil)
+                updateScoreboard()
+                
+                let ip = NSIndexPath(forRow: index, inSection: 0)
+                sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
+                sequenceTBL.selectRowAtIndexPath(ip, animated: true, scrollPosition: .None)
                 
             }
             

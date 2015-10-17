@@ -10,7 +10,7 @@ extension Filters {
     
     static func score(s: Sequence) -> [Scores] {
         
-        if s.replay { return [.None,.None] }
+        for _penalty in s.penalties { if _penalty.replay { return [.None,.None] } }
         
         var score = 0
         
@@ -90,9 +90,17 @@ extension Filters {
             
             if let x = penalty.endX {
                 
-                lastSpot = x
+                var b = false
+                switch penalty.enforcement as Key {
+                case .Declined,.Offset,.OnKick: ()
+                default:
+                    
+                    lastSpot = x
+                    b = true
+                    
+                }
                 
-                break
+                if b { break }
                 
             }
             

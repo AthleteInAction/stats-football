@@ -12,6 +12,7 @@ import UIKit
 class LineMKR: UIView {
     
     var field: Field!
+    var team: Team?
     
     var lastLocation: CGPoint = CGPointMake(0,0)
     
@@ -19,11 +20,7 @@ class LineMKR: UIView {
     
     override func drawRect(rect: CGRect) {
         
-//        for i in 0 ... floor(bounds.height / 40) {
-//            
-//            let txt = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-//            
-//        }
+        for v in subviews { v.removeFromSuperview() }
         
     }
     

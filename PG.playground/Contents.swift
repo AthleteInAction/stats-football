@@ -5,3 +5,11 @@ import UIKit
 var test: [Int] = []
 
 test.map { i in return  }
+var i = 88
+
+switch i {
+case 88:
+    8
+default:
+    9
+}

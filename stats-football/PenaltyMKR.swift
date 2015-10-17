@@ -21,18 +21,29 @@ class PenaltyMKR: UIButton {
     var dir: Bool = true
     
     var img: UIImageView!
+    var img2: UIImageView!
+    
+    var vw: PenaltyVW?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = UIColor(red: 255/255, green: 255/255, blue: 0/255, alpha: 0.6)
+        backgroundColor = Filters.colors(.Penalty, alpha: 0.6)
         
         pan = UIPanGestureRecognizer(target: self, action: "dDrag:")
         addGestureRecognizer(pan)
         
         img = UIImageView()
+        img2 = UIImageView()
         
         addSubview(img)
+        addSubview(img2)
+        
+    }
+    
+    override func drawRect(rect: CGRect) {
+        
+        setDisplay()
         
     }
     
@@ -84,15 +95,10 @@ class PenaltyMKR: UIButton {
             
             p.save(nil)
             
-            tracker.penaltyTBL.penalties = s.penalties
-            
             s.save(nil)
             tracker.updateScoreboard()
             
         }
-        
-        let ip = NSIndexPath(forRow: index, inSection: 0)
-        tracker.penaltyTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
         
     }
     
@@ -140,6 +146,13 @@ class PenaltyMKR: UIButton {
         
         frame = _frame
         
+        if let v = vw {
+            
+            v.center.x = bounds.width / 2
+            v.center.y = bounds.height / 2
+            
+        }
+        
         setArrow(dir)
         
         return true
@@ -157,8 +170,15 @@ class PenaltyMKR: UIButton {
         img.alpha = 0.6
         
         img.center.x = x
-        img.center.y = y
+        img.center.y = y - 100
         img.contentMode = UIViewContentMode.ScaleAspectFit
+        
+        img2.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
+        img2.alpha = 0.6
+        
+        img2.center.x = x
+        img2.center.y = y + 100
+        img2.contentMode = UIViewContentMode.ScaleAspectFit
         
         if right {
             
@@ -169,6 +189,28 @@ class PenaltyMKR: UIButton {
             img.image = UIImage(named: "arrow_l.png")
             
         }
+        
+        img2.image = img.image
+        
+    }
+    
+    func setDisplay(){
+        
+        let s = tracker.game.sequences[tracker.index]
+        
+        let penalty = s.penalties[index]
+        
+        vw = PenaltyVW(penalty: penalty)
+        vw!.backgroundColor = UIColor.clearColor()
+        
+        if let v = vw {
+            
+            v.center.x = bounds.width / 2
+            v.center.y = bounds.height / 2
+            
+        }
+        
+        addSubview(vw!)
         
     }
     

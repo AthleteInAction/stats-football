@@ -13,6 +13,7 @@ class PenaltyCell: UITableViewCell {
     @IBOutlet weak var teamTXT: UILabel!
     @IBOutlet weak var topTXT: UILabel!
     @IBOutlet weak var btmTXT: UILabel!
+    @IBOutlet weak var lastTXT: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

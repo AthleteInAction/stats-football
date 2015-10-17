@@ -20,7 +20,7 @@ class Setting {
         
         key = _key
         
-        if let item = defaults.stringForKey(_key) {
+        if let item: AnyObject = defaults.valueForKey(_key) {
             
             value = item
             

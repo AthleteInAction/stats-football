@@ -71,6 +71,7 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
         cell.qtrTXT.text = s.qtr.string()
         cell.qtrTXT.textColor = s.team.secondary
         cell.scoreTXT.text = s.score.string.uppercaseString
+        cell.timeTXT.text = s.score_time
         
         if let play = s.plays.first {
             

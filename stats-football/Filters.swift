@@ -22,7 +22,7 @@ class Filters {
             
             return UIColor(red: 254/255, green: 45/255, blue: 124/255, alpha: alpha)
             
-        case .Pass,.Reception,.Throw,.FGM:
+        case .Pass,.Reception,.Throw,.FGM,.Recovery:
             
             return UIColor(red: 127/255, green: 255/255, blue: 155/255, alpha: alpha)
             
@@ -56,7 +56,7 @@ class Filters {
     static func textColors(key: Key,alpha: CGFloat) -> UIColor {
         
         switch key as Key {
-        case .Pass,.Reception,.Throw,.FGM:
+        case .Pass,.Reception,.Throw,.FGM,.Run,.Penalty,.Recovery:
             
             return UIColor(red: 64/255, green: 64/255, blue: 64/255, alpha: alpha)
             
@@ -86,6 +86,10 @@ class Filters {
             
             return [.Spot,.Declined,.Offset,.OnKick]
             
+        case "penalty_replay":
+            
+            return [.No,.Yes]
+            
         case "fumble":
             
             return [.Away,.Home,.NoRecovery]
@@ -109,7 +113,11 @@ class Filters {
             
             if let play = prev {
                 
-                return [.Return,.Lateral]
+                if play.key == Key.Kick {
+                    return [.Return,.Recovery,.Lateral]
+                } else {
+                    return [.Return,.Lateral]
+                }
                 
             } else {
                 

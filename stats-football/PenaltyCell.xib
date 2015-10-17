@@ -7,8 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="45" id="KGk-i7-Jjw" customClass="PenaltyCell" customModule="stats_football" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="366" height="45"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="60" id="KGk-i7-Jjw" customClass="PenaltyCell" customModule="stats_football" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="366" height="60"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
                 <rect key="frame" x="0.0" y="0.0" width="768" height="43"/>
@@ -32,22 +32,31 @@
                         <color key="textColor" red="0.24932631890000001" green="0.24932631890000001" blue="0.24932631890000001" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Down" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nOZ-5r-Og4">
+                        <rect key="frame" x="8" y="40" width="56" height="14"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" red="0.24932631890000001" green="0.24932631890000001" blue="0.24932631890000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="nOZ-5r-Og4" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="2M0-W5-b5t"/>
                     <constraint firstItem="8Kp-4d-EYF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="CEb-SZ-CbS"/>
                     <constraint firstItem="ehm-G4-ort" firstAttribute="leading" secondItem="IVQ-KE-1Ph" secondAttribute="trailing" constant="4" id="Kc1-4g-oLt"/>
                     <constraint firstItem="IVQ-KE-1Ph" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="LBL-aQ-FZj"/>
                     <constraint firstItem="ehm-G4-ort" firstAttribute="centerY" secondItem="IVQ-KE-1Ph" secondAttribute="centerY" id="kA3-bG-Cbs"/>
                     <constraint firstItem="8Kp-4d-EYF" firstAttribute="top" secondItem="ehm-G4-ort" secondAttribute="bottom" constant="2" id="uz5-kW-6kW"/>
+                    <constraint firstItem="nOZ-5r-Og4" firstAttribute="top" secondItem="8Kp-4d-EYF" secondAttribute="bottom" constant="2" id="yVO-37-AcP"/>
                     <constraint firstItem="IVQ-KE-1Ph" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="z7P-Ly-O61"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="btmTXT" destination="8Kp-4d-EYF" id="Kgk-EH-jtx"/>
+                <outlet property="lastTXT" destination="nOZ-5r-Og4" id="xUK-ZR-XMQ"/>
                 <outlet property="teamTXT" destination="IVQ-KE-1Ph" id="hLP-28-a7E"/>
                 <outlet property="topTXT" destination="ehm-G4-ort" id="QEZ-dN-NCu"/>
             </connections>
-            <point key="canvasLocation" x="220" y="370.5"/>
+            <point key="canvasLocation" x="220" y="378"/>
         </tableViewCell>
     </objects>
 </document>

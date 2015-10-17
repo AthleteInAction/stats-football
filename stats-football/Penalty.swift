@@ -17,7 +17,10 @@ class PenaltyObject: NSManagedObject {
     @NSManaged var id: String?
     @NSManaged var distance: String
     @NSManaged var endX: String?
+    @NSManaged var endY: String?
     @NSManaged var enforcement: String
+    @NSManaged var fd: Bool
+    @NSManaged var replay: Bool
     @NSManaged var player: String?
     @NSManaged var sequence: SequenceObject
     @NSManaged var team: TeamObject
@@ -35,7 +38,10 @@ class Penalty {
     var team: Team!
     var distance: Int!
     var endX: Yardline?
+    var endY: Int?
     var enforcement: Key!
+    var fd: Bool = false
+    var replay: Bool = false
     var player: Int?
     var created_at: NSDate!
     var object: PenaltyObject!
@@ -55,6 +61,7 @@ class Penalty {
         
         object = o
         sequence = s.object
+        endY = 50
         created_at = NSDate()
         
     }
@@ -68,6 +75,10 @@ class Penalty {
         created_at = penalty.created_at
         sequence = penalty.sequence
         object = penalty
+        
+        replay = penalty.replay
+        fd = penalty.fd
+        if let y = penalty.endY { endY = y.toInt()! } else { endY = 50 }
         
     }
     // iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
@@ -90,6 +101,10 @@ class Penalty {
         object.enforcement = enforcement.string
         if let p = player { object.player = p.string() } else { object.player = nil }
         object.team = team.object
+        
+        object.replay = replay
+        object.fd = fd
+        if let y = endY { object.endY = y.string() }
         
         object.managedObjectContext?.save(&error)
         

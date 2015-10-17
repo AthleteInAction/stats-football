@@ -6,27 +6,76 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="KeySelector" customModule="stats_football" customModuleProvider="target">
             <connections>
+                <outlet property="fdSW" destination="165-7k-doF" id="0ei-Bm-5UG"/>
+                <outlet property="penaltyOPT" destination="rRV-Ky-4yJ" id="h15-pq-Wqc"/>
+                <outlet property="replaySW" destination="S6d-sw-u5T" id="elj-Lr-ihR"/>
                 <outlet property="table" destination="ZED-Yg-pub" id="zm2-sR-5QN"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <rect key="frame" x="0.0" y="0.0" width="500" height="600"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="ZED-Yg-pub">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <rect key="frame" x="0.0" y="40" width="500" height="560"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rRV-Ky-4yJ">
+                    <rect key="frame" x="0.0" y="0.0" width="500" height="40"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Replay down:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zV9-bo-75I">
+                            <rect key="frame" x="8" y="12" width="82" height="16"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="S6d-sw-u5T">
+                            <rect key="frame" x="98" y="4" width="51" height="31"/>
+                            <connections>
+                                <action selector="replayCHG:" destination="-1" eventType="valueChanged" id="bMV-9w-ytZ"/>
+                            </connections>
+                        </switch>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="165-7k-doF">
+                            <rect key="frame" x="443" y="5" width="51" height="31"/>
+                            <connections>
+                                <action selector="fdCHG:" destination="-1" eventType="valueChanged" id="nu4-61-e7e"/>
+                            </connections>
+                        </switch>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Automatic First Down:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BRK-lE-FQr">
+                            <rect key="frame" x="301" y="13" width="134" height="16"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="centerY" secondItem="zV9-bo-75I" secondAttribute="centerY" id="5jF-l7-RrQ"/>
+                        <constraint firstItem="zV9-bo-75I" firstAttribute="centerY" secondItem="165-7k-doF" secondAttribute="centerY" constant="-0.5" id="8TL-43-M2r"/>
+                        <constraint firstItem="S6d-sw-u5T" firstAttribute="leading" secondItem="zV9-bo-75I" secondAttribute="trailing" constant="8" id="C4O-Xi-lh4"/>
+                        <constraint firstAttribute="height" constant="40" id="EZe-zn-zFB"/>
+                        <constraint firstItem="zV9-bo-75I" firstAttribute="leading" secondItem="rRV-Ky-4yJ" secondAttribute="leading" constant="8" id="dGz-uR-zun"/>
+                        <constraint firstItem="zV9-bo-75I" firstAttribute="centerY" secondItem="S6d-sw-u5T" secondAttribute="centerY" constant="0.5" id="fI9-TW-mbO"/>
+                        <constraint firstAttribute="trailing" secondItem="165-7k-doF" secondAttribute="trailing" constant="8" id="t0g-7q-aQB"/>
+                        <constraint firstItem="165-7k-doF" firstAttribute="leading" secondItem="BRK-lE-FQr" secondAttribute="trailing" constant="8" id="wib-hh-4Hd"/>
+                        <constraint firstItem="zV9-bo-75I" firstAttribute="centerY" secondItem="BRK-lE-FQr" secondAttribute="centerY" constant="-0.5" id="wji-Au-9BB"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="rRV-Ky-4yJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="7gU-M0-AJc"/>
                 <constraint firstAttribute="bottom" secondItem="ZED-Yg-pub" secondAttribute="bottom" id="9Zi-bA-C8A"/>
                 <constraint firstItem="ZED-Yg-pub" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="JVh-We-bgI"/>
+                <constraint firstItem="rRV-Ky-4yJ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="KiC-jF-naj"/>
+                <constraint firstAttribute="trailing" secondItem="rRV-Ky-4yJ" secondAttribute="trailing" id="NMZ-C5-93C"/>
                 <constraint firstAttribute="trailing" secondItem="ZED-Yg-pub" secondAttribute="trailing" id="cqa-BG-JTu"/>
-                <constraint firstItem="ZED-Yg-pub" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="yky-hU-TZG"/>
+                <constraint firstItem="ZED-Yg-pub" firstAttribute="top" secondItem="rRV-Ky-4yJ" secondAttribute="bottom" id="dxW-xi-p93"/>
             </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="522" y="450"/>
         </view>
     </objects>
 </document>

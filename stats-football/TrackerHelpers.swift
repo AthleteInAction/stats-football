@@ -65,17 +65,13 @@ extension Tracker {
     }
     func disableTables(){
         
-        penaltyTBL.alpha = 0.3
         sequenceTBL.alpha = 0.3
-        penaltyTBL.userInteractionEnabled = false
         sequenceTBL.userInteractionEnabled = false
         
     }
     func enableTables(){
         
-        penaltyTBL.alpha = 1
         sequenceTBL.alpha = 1
-        penaltyTBL.userInteractionEnabled = true
         sequenceTBL.userInteractionEnabled = true
         
     }

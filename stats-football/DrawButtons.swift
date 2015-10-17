@@ -16,6 +16,8 @@ extension Tracker {
         
         let s = game.sequences[index]
         
+        let pos_right = posRight(s)
+        
         for v in field.subviews {
             
             if v.tag >= 0 { v.removeFromSuperview() }
@@ -28,24 +30,46 @@ extension Tracker {
                 
                 let dir = posRight2(penalty.object.team)
                 
-                var v = PenaltyMKR(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-                v.tracker = self
-                v.index = i
-                v.dir = dir
-                v.setMKR(x)
-                
-                var tap2 = UITapGestureRecognizer()
-                tap2.numberOfTapsRequired = 2
-                tap2.addTarget(self, action: "penalty2Tapped:")
-                v.addGestureRecognizer(tap2)
-                
-                field.addSubview(v)
+                switch penalty.enforcement as Key {
+                case .Declined,.Offset,.OnKick:
+                    
+                    var v = PenaltyVW(penalty: penalty)
+                    v.backgroundColor = UIColor.clearColor()
+                    v.index = i
+                    
+                    var xx = x.toX(pos_right)
+                    var yy = penalty.endY!.toP() * field.bounds.height
+                    if pos_right { yy = (100 - penalty.endY!).toP() * field.bounds.height }
+                    
+                    v.center = CGPoint(x: xx, y: yy)
+                    
+                    var pan = UIPanGestureRecognizer()
+                    pan.addTarget(self, action: "blankPenaltyDragged:")
+                    
+                    v.addGestureRecognizer(pan)
+                    
+                    field.addSubview(v)
+                    
+                default:
+                    
+                    var v = PenaltyMKR(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+                    v.tracker = self
+                    v.index = i
+                    v.dir = dir
+                    v.setMKR(x)
+                    
+//                    var tap2 = UITapGestureRecognizer()
+//                    tap2.numberOfTapsRequired = 2
+//                    tap2.addTarget(self, action: "penalty2Tapped:")
+//                    v.addGestureRecognizer(tap2)
+                    
+                    field.addSubview(v)
+                    
+                }
                 
             }
             
         }
-        
-        let pos_right = posRight(s)
         
         var x = s.startX.toX(pos_right)
         var y = s.startY.toP() * field.bounds.height
@@ -57,6 +81,7 @@ extension Tracker {
             
             switch play.key as Key {
             case .Fumble,.FumbledSnap,.BadSnap: if let t = play.team { team = t }
+            case .Recovery: team = game.oppositeTeam(team: team)
             default: ()
             }
             
@@ -186,11 +211,9 @@ extension Tracker {
             }
             
             switch play.key as Key {
-            case .Interception: team = game.oppositeTeam(team: team)
+            case .Kick,.Punt,.Interception: team = game.oppositeTeam(team: team)
             default: ()
             }
-            
-            if play.key == Key.Kick || play.key == Key.Punt { team = game.oppositeTeam(team: team) }
             
         }
         

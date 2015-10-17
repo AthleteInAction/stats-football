@@ -46,11 +46,9 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
     @IBOutlet weak var downSEL: UISegmentedControl!
     @IBOutlet weak var cancelBTN: UIButton!
     @IBOutlet weak var sequenceTBL: SequenceTBL!
-    @IBOutlet weak var penaltyTBL: PenaltyTBL!
     @IBOutlet weak var fimg: UIImageView!
     @IBOutlet weak var rightPTY: PenaltyBTN!
     @IBOutlet weak var leftPTY: PenaltyBTN!
-    @IBOutlet weak var replaySWI: UISwitch!
     @IBOutlet weak var scoreboard: UIView!
     @IBOutlet weak var leftBALL: UIButton!
     @IBOutlet weak var rightBALL: UIButton!
@@ -77,15 +75,14 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        UIApplication.sharedApplication().idleTimerDisabled = true
+        
         title = "\(game.away.name) @ \(game.home.name)"
         
         var tblView =  UIView(frame: CGRectZero)
         sequenceTBL.tableFooterView = tblView
         sequenceTBL.tableFooterView?.hidden = true
         sequenceTBL.backgroundColor = UIColor.clearColor()
-        penaltyTBL.tableFooterView = tblView
-        penaltyTBL.tableFooterView?.hidden = true
-        penaltyTBL.backgroundColor = UIColor.clearColor()
         
         add = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "newSequence:")
         navigationItem.setRightBarButtonItem(add, animated: true)
@@ -103,6 +100,7 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
         
         flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil)
         exportBTN = UIBarButtonItem(title: "Export", style: .Plain, target: self, action: "exportTPD:")
+        exportBTN.enabled = false
         docs = UIBarButtonItem(title: "Summary", style: .Plain, target: self, action: "docsTPD:")
         sep = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
         eraseBTN = UIBarButtonItem(title: "Erase", style: .Plain, target: self, action: "eraseTPD:")
@@ -118,7 +116,6 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
         
         field.tracker = self
         sequenceTBL.tracker = self
-        penaltyTBL.tracker = self
         
         MPC.receiver = self
         MPC.stateMonitor = self
@@ -132,8 +129,6 @@ class Tracker: UIViewController,UIPopoverControllerDelegate {
         field.addGestureRecognizer(tap)
         
     }
-    
-    func backTPD(){ navigationController?.popViewControllerAnimated(true) }
 
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
     

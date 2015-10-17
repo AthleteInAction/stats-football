@@ -23,6 +23,10 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
     
     @IBOutlet weak var table: UITableView!
     
+    @IBOutlet weak var penaltyOPT: UIView!
+    @IBOutlet weak var replaySW: UISwitch!
+    @IBOutlet weak var fdSW: UISwitch!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,7 +45,10 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
         
         edgesForExtendedLayout = UIRectEdge()
         
-        if type == "play_key_select" {
+        penaltyOPT.hidden = type != "penalty_options"
+        
+        switch type {
+        case "play_key_select":
             
             if let play = newPlay {
                 
@@ -54,6 +61,10 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                 title = "#\(penalty.player)"
                 
             }
+            
+        default:
+            
+            ()
             
         }
         
@@ -190,6 +201,7 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             // ++++++++++++++++++++++++++++++++++++++++++++++++
                 
                 penalty.distance = key.int
+                
                 nsel.newPenalty = penalty
                 nsel.type = "penalty_player"
                 
@@ -199,36 +211,10 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             case "penalty_options":
             // ++++++++++++++++++++++++++++++++++++++++++++++++
                 
+                penalty.replay = replaySW.on
+                penalty.fd = fdSW.on
+                
                 switch key {
-                case .OnKick:
-                    
-                    penalty.enforcement = key
-                    
-                    penalty.save(nil)
-                    
-                    s.penalties.append(penalty)
-                    tracker.penaltyTBL.penalties.append(penalty)
-                    let ip = NSIndexPath(forRow: tracker.penaltyTBL.penalties.count-1, inSection: 0)
-                    tracker.penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
-                    
-                    s.scoreSave(nil)
-                    tracker.updateScoreboard()
-                    
-                    
-                case .Offset,.Declined:
-                    
-                    penalty.enforcement = key
-                    
-                    penalty.save(nil)
-                    
-                    s.penalties.append(penalty)
-                    tracker.penaltyTBL.penalties.append(penalty)
-                    let ip = NSIndexPath(forRow: tracker.penaltyTBL.penalties.count-1, inSection: 0)
-                    tracker.penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
-                    
-                    s.save(nil)
-                    tracker.updateScoreboard()
-                    
                 case .PreviousSpot:
                     
                     if s.team.object.isEqual(penalty.team.object) {
@@ -246,16 +232,9 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     penalty.save(nil)
                     
                     s.penalties.append(penalty)
-                    tracker.penaltyTBL.penalties.append(penalty)
-                    let ip = NSIndexPath(forRow: tracker.penaltyTBL.penalties.count-1, inSection: 0)
-                    tracker.penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
                     
-                    s.replay = true
-                    
-                    s.scoreSave(nil)
                     tracker.updateScoreboard()
                     
-                    tracker.replaySWI.setOn(true, animated: true)
                     tracker.field.setNeedsDisplay()
                     tracker.drawButtons()
                     
@@ -311,9 +290,6 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     penalty.save(nil)
                     
                     s.penalties.append(penalty)
-                    tracker.penaltyTBL.penalties.append(penalty)
-                    let ip = NSIndexPath(forRow: tracker.penaltyTBL.penalties.count-1, inSection: 0)
-                    tracker.penaltyTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
                     
                     tracker.field.setNeedsDisplay()
                     tracker.drawButtons()
@@ -321,17 +297,13 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     s.scoreSave(nil)
                     tracker.updateScoreboard()
                     
-                case .SpotOfFoul:
+                default:
                     
                     penalty.enforcement = key
                     
                     tracker.newPenalty = penalty
                     
                     tracker.spot()
-                    
-                default:
-                    
-                    ()
                     
                 }
                 
@@ -345,6 +317,18 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
             }
             
         }
+        
+    }
+    
+    @IBAction func replayCHG(sender: AnyObject) {
+        
+        if fdSW.on { fdSW.setOn(false, animated: true) }
+        
+    }
+    
+    @IBAction func fdCHG(sender: AnyObject) {
+        
+        if replaySW.on { replaySW.setOn(false, animated: true) }
         
     }
     
