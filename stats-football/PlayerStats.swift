@@ -319,6 +319,29 @@ extension Stats {
                                     
                                 }
                                 
+                                if p.key == .Fumble || p.key == .BadSnap || p.key == .FumbledSnap {
+                                    
+                                    var stat = Stat()
+                                    stat.attempt = true
+                                    stat.playtype = sequence.key.string
+                                    stat.key = "fumble_return"
+                                    stat.player = play.player_a
+                                    stat.value = (endX.opposite().spot - cx.opposite().spot)
+                                    
+                                    if pos {
+                                        stat.team = sequence.game.home
+                                    } else {
+                                        stat.team = sequence.game.away
+                                    }
+                                    
+                                    if let lp = lastPlayWithSpot {
+                                        if lp == i { stat.score = score[pos.toInt()] }
+                                    }
+                                    
+                                    stats.append(stat)
+                                    
+                                }
+                                
                                 if p.key == .Punt {
                                     
                                     var stat = Stat()

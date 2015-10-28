@@ -125,8 +125,6 @@ class Sequence {
     
     func scoreSave(completion: Completion?){
         
-        JP2("SCORE SAVE")
-        
         var c = completion
         
         let scores = Filters.score(self)
@@ -145,8 +143,6 @@ class Sequence {
     }
     
     func save(completion: Completion?){
-        
-        JP2("SAVE")
         
         var c = completion
         

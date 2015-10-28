@@ -26,8 +26,8 @@ extension Tracker {
             
             s.penalties.removeAtIndex(b.index)
             
-            self.field.setNeedsDisplay()
-            self.drawButtons()
+            self.draw.setNeedsDisplay()
+            self.drawButtons(false)
             
             s.save(nil)
             self.updateScoreboard()

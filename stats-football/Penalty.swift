@@ -115,7 +115,7 @@ class Penalty {
             
         } else {
             
-            JP(object)
+            JP2(object)
             JP("PENALTY SAVED!")
             
         }

@@ -153,8 +153,8 @@ class PenaltyTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
             
-            tracker.field.setNeedsDisplay()
-            tracker.drawButtons()
+            tracker.draw.setNeedsDisplay()
+            tracker.drawButtons(false)
             
         }
         

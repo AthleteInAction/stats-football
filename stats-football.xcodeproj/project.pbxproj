@@ -16,6 +16,23 @@
 		AD1F8DA61B94FD5B001A6C52 /* BallBTN.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */; };
 		AD1F8DAA1B96632E001A6C52 /* SubBTN.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DA91B96632E001A6C52 /* SubBTN.swift */; };
 		AD1F8DAF1B991D7D001A6C52 /* FirstDownMKR.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1F8DAE1B991D7D001A6C52 /* FirstDownMKR.swift */; };
+		AD6101A21BD2521F0009A612 /* DrawLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101A11BD2521F0009A612 /* DrawLayer.swift */; };
+		AD6101A71BD270020009A612 /* PlaytypePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101A61BD270020009A612 /* PlaytypePicker.swift */; };
+		AD6101AA1BD31DBB0009A612 /* PlaytypeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101A91BD31DBB0009A612 /* PlaytypeSelector.swift */; };
+		AD6101AD1BD32ACC0009A612 /* QuarterSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101AC1BD32ACC0009A612 /* QuarterSelector.swift */; };
+		AD6101B01BD3378D0009A612 /* DownSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101AF1BD3378D0009A612 /* DownSelector.swift */; };
+		AD6101B21BD47C300009A612 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101B11BD47C300009A612 /* TestView.swift */; };
+		AD6101B51BD47C500009A612 /* TestView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD6101B41BD47C500009A612 /* TestView.xib */; };
+		AD6101B81BD484EF0009A612 /* SequenceItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD6101B71BD484EF0009A612 /* SequenceItem.xib */; };
+		AD6101BA1BD484FB0009A612 /* SequenceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101B91BD484FB0009A612 /* SequenceItem.swift */; };
+		AD6101BD1BD489680009A612 /* SequenceScroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101BC1BD489680009A612 /* SequenceScroll.swift */; };
+		AD6101C21BD5CF510009A612 /* KeyPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101C11BD5CF510009A612 /* KeyPad.swift */; };
+		AD6101C81BD6625F0009A612 /* NumberOrganizer.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD6101C71BD6625F0009A612 /* NumberOrganizer.xib */; };
+		AD6101CA1BD664220009A612 /* NumberOrganizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101C91BD664220009A612 /* NumberOrganizer.swift */; };
+		AD6101CD1BD664BC0009A612 /* NumberScroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101CC1BD664BC0009A612 /* NumberScroll.swift */; };
+		AD6101CF1BD6695C0009A612 /* Panel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101CE1BD6695C0009A612 /* Panel.swift */; };
+		AD6101D61BD91C9E0009A612 /* NumberTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101D51BD91C9E0009A612 /* NumberTable.swift */; };
+		AD6101DA1BD930770009A612 /* KeyDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6101D91BD930770009A612 /* KeyDrop.swift */; };
 		AD63F54F1BB03CAD00BD6C9D /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD63F54E1BB03CAD00BD6C9D /* Stats.swift */; };
 		AD6842481BB3B82E007F4319 /* PlayerStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6842471BB3B82E007F4319 /* PlayerStats.swift */; };
 		AD68424B1BB3DB56007F4319 /* Score.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD68424A1BB3DB56007F4319 /* Score.swift */; };
@@ -144,6 +161,24 @@
 		AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BallBTN.swift; sourceTree = "<group>"; };
 		AD1F8DA91B96632E001A6C52 /* SubBTN.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubBTN.swift; sourceTree = "<group>"; };
 		AD1F8DAE1B991D7D001A6C52 /* FirstDownMKR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstDownMKR.swift; sourceTree = "<group>"; };
+		AD6101A11BD2521F0009A612 /* DrawLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawLayer.swift; sourceTree = "<group>"; };
+		AD6101A61BD270020009A612 /* PlaytypePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaytypePicker.swift; sourceTree = "<group>"; };
+		AD6101A91BD31DBB0009A612 /* PlaytypeSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaytypeSelector.swift; sourceTree = "<group>"; };
+		AD6101AC1BD32ACC0009A612 /* QuarterSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuarterSelector.swift; sourceTree = "<group>"; };
+		AD6101AF1BD3378D0009A612 /* DownSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownSelector.swift; sourceTree = "<group>"; };
+		AD6101B11BD47C300009A612 /* TestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
+		AD6101B41BD47C500009A612 /* TestView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestView.xib; sourceTree = "<group>"; };
+		AD6101B71BD484EF0009A612 /* SequenceItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SequenceItem.xib; sourceTree = "<group>"; };
+		AD6101B91BD484FB0009A612 /* SequenceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceItem.swift; sourceTree = "<group>"; };
+		AD6101BC1BD489680009A612 /* SequenceScroll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceScroll.swift; sourceTree = "<group>"; };
+		AD6101C11BD5CF510009A612 /* KeyPad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyPad.swift; sourceTree = "<group>"; };
+		AD6101C71BD6625F0009A612 /* NumberOrganizer.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NumberOrganizer.xib; sourceTree = "<group>"; };
+		AD6101C91BD664220009A612 /* NumberOrganizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberOrganizer.swift; sourceTree = "<group>"; };
+		AD6101CC1BD664BC0009A612 /* NumberScroll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberScroll.swift; sourceTree = "<group>"; };
+		AD6101CE1BD6695C0009A612 /* Panel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Panel.swift; sourceTree = "<group>"; };
+		AD6101D01BD6744D0009A612 /* stats_football_13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = stats_football_13.xcdatamodel; sourceTree = "<group>"; };
+		AD6101D51BD91C9E0009A612 /* NumberTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberTable.swift; sourceTree = "<group>"; };
+		AD6101D91BD930770009A612 /* KeyDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyDrop.swift; sourceTree = "<group>"; };
 		AD63F54E1BB03CAD00BD6C9D /* Stats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		AD6842471BB3B82E007F4319 /* PlayerStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerStats.swift; sourceTree = "<group>"; };
 		AD68424A1BB3DB56007F4319 /* Score.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Score.swift; sourceTree = "<group>"; };
@@ -299,6 +334,102 @@
 				AD68424A1BB3DB56007F4319 /* Score.swift */,
 			);
 			name = Filters;
+			sourceTree = "<group>";
+		};
+		AD6101A31BD26F830009A612 /* Overlay */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101A61BD270020009A612 /* PlaytypePicker.swift */,
+			);
+			name = Overlay;
+			sourceTree = "<group>";
+		};
+		AD6101A81BD31D980009A612 /* PlaytypeSelector */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101AE1BD337780009A612 /* DownSelector */,
+				AD6101A91BD31DBB0009A612 /* PlaytypeSelector.swift */,
+			);
+			name = PlaytypeSelector;
+			sourceTree = "<group>";
+		};
+		AD6101AB1BD32AB10009A612 /* QuarterSelector */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101AC1BD32ACC0009A612 /* QuarterSelector.swift */,
+			);
+			name = QuarterSelector;
+			sourceTree = "<group>";
+		};
+		AD6101AE1BD337780009A612 /* DownSelector */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101AF1BD3378D0009A612 /* DownSelector.swift */,
+			);
+			name = DownSelector;
+			sourceTree = "<group>";
+		};
+		AD6101B31BD47C3B0009A612 /* TestView */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101B11BD47C300009A612 /* TestView.swift */,
+				AD6101B41BD47C500009A612 /* TestView.xib */,
+			);
+			name = TestView;
+			sourceTree = "<group>";
+		};
+		AD6101B61BD484D50009A612 /* SequenceItem */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101B91BD484FB0009A612 /* SequenceItem.swift */,
+				AD6101B71BD484EF0009A612 /* SequenceItem.xib */,
+			);
+			name = SequenceItem;
+			sourceTree = "<group>";
+		};
+		AD6101BB1BD489490009A612 /* SequenceScroll */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101BC1BD489680009A612 /* SequenceScroll.swift */,
+				AD6101B61BD484D50009A612 /* SequenceItem */,
+			);
+			name = SequenceScroll;
+			sourceTree = "<group>";
+		};
+		AD6101C01BD5CF410009A612 /* KeyPad */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101C11BD5CF510009A612 /* KeyPad.swift */,
+			);
+			name = KeyPad;
+			sourceTree = "<group>";
+		};
+		AD6101C61BD6623D0009A612 /* NumberOrganizer */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101D81BD9305C0009A612 /* KeyDrop */,
+				AD6101CB1BD6649E0009A612 /* NumberScroll */,
+				AD6101C91BD664220009A612 /* NumberOrganizer.swift */,
+				AD6101C71BD6625F0009A612 /* NumberOrganizer.xib */,
+				AD6101D51BD91C9E0009A612 /* NumberTable.swift */,
+			);
+			name = NumberOrganizer;
+			sourceTree = "<group>";
+		};
+		AD6101CB1BD6649E0009A612 /* NumberScroll */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101CC1BD664BC0009A612 /* NumberScroll.swift */,
+			);
+			name = NumberScroll;
+			sourceTree = "<group>";
+		};
+		AD6101D81BD9305C0009A612 /* KeyDrop */ = {
+			isa = PBXGroup;
+			children = (
+				AD6101D91BD930770009A612 /* KeyDrop.swift */,
+			);
+			name = KeyDrop;
 			sourceTree = "<group>";
 		};
 		AD63F54D1BB03C9800BD6C9D /* Stats */ = {
@@ -460,6 +591,7 @@
 		AD879AED1B8D4AE7002C96CA /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				AD6101A31BD26F830009A612 /* Overlay */,
 				AD879ACF1B8C2979002C96CA /* Tracker.swift */,
 				AD68429C1BB80A16007F4319 /* TrackerIB.swift */,
 				AD6842A41BB82426007F4319 /* TrackerFunctions.swift */,
@@ -470,6 +602,7 @@
 				AD6842AC1BB86AE2007F4319 /* Button2Tapped.swift */,
 				AD6842AE1BB9B923007F4319 /* Penalty2Tapped.swift */,
 				ADFAB78B1BD1B077006F2565 /* BlankPenaltyDragged.swift */,
+				AD6101CE1BD6695C0009A612 /* Panel.swift */,
 				ADFDBA4D1BB24A3600F5572D /* Tracker.xib */,
 			);
 			name = Tracker;
@@ -489,6 +622,7 @@
 			children = (
 				AD06DE4A1BC474AC0080B608 /* PointBTN */,
 				AD879B031B8E9E04002C96CA /* Field.swift */,
+				AD6101A11BD2521F0009A612 /* DrawLayer.swift */,
 				AD879B051B8EBF32002C96CA /* LineMKR.swift */,
 				AD1F8DAE1B991D7D001A6C52 /* FirstDownMKR.swift */,
 				AD1F8DA51B94FD5B001A6C52 /* BallBTN.swift */,
@@ -642,6 +776,12 @@
 		ADB8F9451B9D996B0049BDF0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				AD6101C61BD6623D0009A612 /* NumberOrganizer */,
+				AD6101C01BD5CF410009A612 /* KeyPad */,
+				AD6101BB1BD489490009A612 /* SequenceScroll */,
+				AD6101B31BD47C3B0009A612 /* TestView */,
+				AD6101AB1BD32AB10009A612 /* QuarterSelector */,
+				AD6101A81BD31D980009A612 /* PlaytypeSelector */,
 				ADFAB76D1BC84A90006F2565 /* RemoteSave */,
 				AD895BAB1BAEE24500F6F638 /* PeerPicker */,
 				AD895BA61BAEE20C00F6F638 /* DataDisplay */,
@@ -855,6 +995,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD6101B51BD47C500009A612 /* TestView.xib in Resources */,
 				AD879AD31B8C2979002C96CA /* Main.storyboard in Resources */,
 				AD895BAA1BAEE22700F6F638 /* DataDisplay.xib in Resources */,
 				AD895B481BAC1F0500F6F638 /* TeamDetail.xib in Resources */,
@@ -866,6 +1007,8 @@
 				AD895B6F1BAC4E9300F6F638 /* ColorPicker.xib in Resources */,
 				ADB8F9301B9D6D500049BDF0 /* PlayPOP.xib in Resources */,
 				AD879AD81B8C2979002C96CA /* LaunchScreen.xib in Resources */,
+				AD6101C81BD6625F0009A612 /* NumberOrganizer.xib in Resources */,
+				AD6101B81BD484EF0009A612 /* SequenceItem.xib in Resources */,
 				AD6842551BB5A268007F4319 /* StatsDisplay.xib in Resources */,
 				AD6842CA1BBDE2A6007F4319 /* PuntReturnCell.xib in Resources */,
 				ADFAB7711BC84ABC006F2565 /* RemoteSave.xib in Resources */,
@@ -952,12 +1095,14 @@
 				ADB8F9621BA2935C0049BDF0 /* TeamEdit.swift in Sources */,
 				AD1F8DAF1B991D7D001A6C52 /* FirstDownMKR.swift in Sources */,
 				AD895B721BAE3CF800F6F638 /* MPCManager.swift in Sources */,
+				AD6101BD1BD489680009A612 /* SequenceScroll.swift in Sources */,
 				AD6842481BB3B82E007F4319 /* PlayerStats.swift in Sources */,
 				ADB8F9211B9D440D0049BDF0 /* PenaltyMKR.swift in Sources */,
 				AD6842A91BB863B1007F4319 /* DrawButtons.swift in Sources */,
 				AD6842A51BB82426007F4319 /* TrackerFunctions.swift in Sources */,
 				AD6842A11BB81301007F4319 /* Enums.swift in Sources */,
 				AD68429F1BB80C8E007F4319 /* TrackerHelpers.swift in Sources */,
+				AD6101CF1BD6695C0009A612 /* Panel.swift in Sources */,
 				AD6842C31BBCA754007F4319 /* ReceivingTBL.swift in Sources */,
 				AD6842C61BBDE277007F4319 /* PuntReturnTBL.swift in Sources */,
 				ADFAB77A1BCDE541006F2565 /* StatsSummary.swift in Sources */,
@@ -982,21 +1127,28 @@
 				ADB8F9361B9D72B90049BDF0 /* Player.swift in Sources */,
 				AD6842BC1BBC7D20007F4319 /* RushingTBL.swift in Sources */,
 				ADFAB7701BC84ABC006F2565 /* RemoteSave.swift in Sources */,
+				AD6101AD1BD32ACC0009A612 /* QuarterSelector.swift in Sources */,
+				AD6101BA1BD484FB0009A612 /* SequenceItem.swift in Sources */,
 				AD1F8DAA1B96632E001A6C52 /* SubBTN.swift in Sources */,
 				AD1F8DA21B8F6B31001A6C52 /* SequenceTBL.swift in Sources */,
 				ADB8F95A1BA281110049BDF0 /* GamesTBL.swift in Sources */,
 				ADB8F94F1BA15C2A0049BDF0 /* Filters.swift in Sources */,
 				AD895BA91BAEE22700F6F638 /* DataDisplay.swift in Sources */,
 				ADBE774F1BA7EE0F0057FD0D /* Game.swift in Sources */,
+				AD6101A71BD270020009A612 /* PlaytypePicker.swift in Sources */,
+				AD6101A21BD2521F0009A612 /* DrawLayer.swift in Sources */,
+				AD6101C21BD5CF510009A612 /* KeyPad.swift in Sources */,
 				ADBE774A1BA693F70057FD0D /* PenaltyTBL.swift in Sources */,
 				ADFAB77D1BCF2851006F2565 /* Setting.swift in Sources */,
 				AD879AD01B8C2979002C96CA /* Tracker.swift in Sources */,
 				AD895B3D1BAC0DFB00F6F638 /* PenaltyCell.swift in Sources */,
+				AD6101D61BD91C9E0009A612 /* NumberTable.swift in Sources */,
 				AD6842B51BBC4464007F4319 /* TeamHelpers.swift in Sources */,
 				AD6842C01BBCA734007F4319 /* ReceivingCell.swift in Sources */,
 				AD68425B1BB5A46A007F4319 /* PassingCell.swift in Sources */,
 				AD6842A71BB829BB007F4319 /* Helpers.swift in Sources */,
 				ADB8F9321B9D6EB10049BDF0 /* PlayNumberSelector.swift in Sources */,
+				AD6101DA1BD930770009A612 /* KeyDrop.swift in Sources */,
 				AD68429D1BB80A16007F4319 /* TrackerIB.swift in Sources */,
 				AD68424B1BB3DB56007F4319 /* Score.swift in Sources */,
 				ADB8F92F1B9D6D500049BDF0 /* PlayPOP.swift in Sources */,
@@ -1005,13 +1157,16 @@
 				AD895B6E1BAC4E9300F6F638 /* ColorPicker.swift in Sources */,
 				AD879B0E1B8F1930002C96CA /* PlaykeyTBL.swift in Sources */,
 				ADBE77511BA7F0720057FD0D /* Play.swift in Sources */,
+				AD6101AA1BD31DBB0009A612 /* PlaytypeSelector.swift in Sources */,
 				AD6842B11BB9CD33007F4319 /* NextFilter.swift in Sources */,
 				ADFAB7891BD10C6A006F2565 /* PenaltyVW.swift in Sources */,
+				AD6101B01BD3378D0009A612 /* DownSelector.swift in Sources */,
 				ADB8F95C1BA2815D0049BDF0 /* DB.swift in Sources */,
 				ADB8F9581BA280870049BDF0 /* TeamsTBL.swift in Sources */,
 				ADB8F95E1BA28D820049BDF0 /* Loading.swift in Sources */,
 				AD895B471BAC1F0500F6F638 /* TeamDetail.swift in Sources */,
 				AD895B2C1BAA466200F6F638 /* Penalty.swift in Sources */,
+				AD6101CA1BD664220009A612 /* NumberOrganizer.swift in Sources */,
 				ADB8F9671BA2D7080049BDF0 /* GameEdit.swift in Sources */,
 				AD879B041B8E9E04002C96CA /* Field.swift in Sources */,
 				ADB8F9431B9D95750049BDF0 /* NumberSelector.swift in Sources */,
@@ -1026,7 +1181,9 @@
 				AD879ACB1B8C2979002C96CA /* AppDelegate.swift in Sources */,
 				AD895BAE1BAEE26100F6F638 /* PeerPicker.swift in Sources */,
 				AD6842D01BBEDDEA007F4319 /* Settings.swift in Sources */,
+				AD6101B21BD47C300009A612 /* TestView.swift in Sources */,
 				ADFAB78C1BD1B077006F2565 /* BlankPenaltyDragged.swift in Sources */,
+				AD6101CD1BD664BC0009A612 /* NumberScroll.swift in Sources */,
 				ADB8F9561BA27ECD0049BDF0 /* MainCTRL.swift in Sources */,
 				ADFDBA4B1BB152B000F5572D /* SequenceCell.swift in Sources */,
 			);
@@ -1249,6 +1406,7 @@
 		AD879ACC1B8C2979002C96CA /* stats_football.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				AD6101D01BD6744D0009A612 /* stats_football_13.xcdatamodel */,
 				ADFAB78A1BD1A8E3006F2565 /* stats_football_12.xcdatamodel */,
 				ADFAB7801BD08137006F2565 /* stats_football_11.xcdatamodel */,
 				ADFAB77B1BCF27B4006F2565 /* stats_football_10.xcdatamodel */,
@@ -1263,7 +1421,7 @@
 				AD06DE491BC19E000080B608 /* stats_football_2.xcdatamodel */,
 				AD879ACD1B8C2979002C96CA /* stats_football.xcdatamodel */,
 			);
-			currentVersion = ADFAB78A1BD1A8E3006F2565 /* stats_football_12.xcdatamodel */;
+			currentVersion = AD6101D01BD6744D0009A612 /* stats_football_13.xcdatamodel */;
 			path = stats_football.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

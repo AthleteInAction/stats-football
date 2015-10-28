@@ -17,6 +17,10 @@ class PlayerObject: NSManagedObject {
     @NSManaged var first_name: String?
     @NSManaged var last_name: String?
     @NSManaged var used: String
+    @NSManaged var is_qb: Bool
+    @NSManaged var is_rb: Bool
+    @NSManaged var is_rec: Bool
+    @NSManaged var is_k: Bool
     @NSManaged var team: TeamObject?
     @NSManaged var game: GameObject
     @NSManaged var created_at: NSDate?
@@ -31,6 +35,10 @@ class Player {
     var first_name: String?
     var last_name: String?
     var used: Int = 0
+    var is_qb: Bool = false
+    var is_rb: Bool = false
+    var is_rec: Bool = false
+    var is_k: Bool = false
     var team: Team!
     var game: Game!
     var object: PlayerObject!
@@ -58,6 +66,10 @@ class Player {
         used = _object.used.toInt()!
         object = _object
         if let date = _object.created_at { created_at = date } else { created_at = NSDate() }
+        is_qb = object.is_qb
+        is_rb = object.is_rb
+        is_rec = object.is_rec
+        is_k = object.is_k
         
     }
     
@@ -74,6 +86,10 @@ class Player {
         object.used = used.string()
         object.game = game.object
         object.created_at = created_at
+        object.is_qb = is_qb
+        object.is_rb = is_rb
+        object.is_rec = is_rec
+        object.is_k = is_k
         
         object.managedObjectContext?.save(&error)
         

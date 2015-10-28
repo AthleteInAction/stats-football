@@ -20,18 +20,22 @@ extension Tracker {
         
         Rhino.run({
             
+            self.field.setData()
+            
             self.game.getSequences()
+            self.game.getPlayers()
             
             for _sequence in self.game.sequences {
                 
                 _sequence.getPlays()
                 _sequence.getPenalties()
-                
                 _sequence.scoreSave(nil)
                 
             }
             
         },completion: { () -> Void in
+            
+            self.sequenceSC.reload()
             
             if self.game.sequences.count == 0 { self.newSequence(1) }
             
@@ -61,27 +65,16 @@ extension Tracker {
         
         // Set Quarter
         // ++++++++++++++++++++++++++++++++++++++
-        switch s.qtr {
-        case 1: qtrTXT.text = "\(s.qtr)st QTR"
-        case 2: qtrTXT.text = "\(s.qtr)nd QTR"
-        case 3: qtrTXT.text = "\(s.qtr)rd QTR"
-        case 4: qtrTXT.text = "\(s.qtr)th QTR"
-        case 5...1000: qtrTXT.text = "OT \(s.qtr - 4)"
-        default: "E"
-        }
-        
-        qtrSEL.value = Double(s.qtr)
+        qtrSEL.setQuater(s.qtr)
         // ++++++++++++++++++++++++++++++++++++++
         
         // Set Playtype
         // ++++++++++++++++++++++++++++++++++++++
-        playTypeSEL.selectedSegmentIndex = s.key.int
+        playTypeSEL.setPage(s.key.int)
         // ++++++++++++++++++++++++++++++++++++++
         
         // Set Down
         // ++++++++++++++++++++++++++++++++++++++
-        downSEL.hidden = s.key != Playtype.Down
-        downTXT.hidden = s.key != Playtype.Down
         field.line.center.x = s.startX.toX(pos_right)
         if let x = s.fd {
             
@@ -95,6 +88,9 @@ extension Tracker {
         // Set Side
         // ++++++++++++++++++++++++++++++++++++++
         if game.right_home {
+            
+            statsLEFT.tag = 0
+            statsRIGHT.tag = 1
             
             rightTEAM.setTitle(game.home.short, forState: .Normal)
             rightTEAM.backgroundColor = game.home.primary
@@ -110,12 +106,10 @@ extension Tracker {
             leftPTY.team = game.away
             leftPTY.setTitle(game.away.short+" Penalty", forState: .Normal)
             
-            leftStats = UIBarButtonItem(title: game.away.short+" Stats", style: .Plain, target: self, action: "statsTPD:")
-            leftStats.tag = 0
-            rightStats = UIBarButtonItem(title: game.home.short+" Stats", style: .Plain, target: self, action: "statsTPD:")
-            rightStats.tag = 1
-            
         } else {
+            
+            statsLEFT.tag = 1
+            statsRIGHT.tag = 0
             
             rightTEAM.setTitle(game.away.short, forState: .Normal)
             rightTEAM.backgroundColor = game.away.primary
@@ -131,23 +125,30 @@ extension Tracker {
             leftPTY.team = game.home
             leftPTY.setTitle(game.home.short+" Penalty", forState: .Normal)
             
-            leftStats = UIBarButtonItem(title: game.home.short+" Stats", style: .Plain, target: self, action: "statsTPD:")
-            leftStats.tag = 1
-            rightStats = UIBarButtonItem(title: game.away.short+" Stats", style: .Plain, target: self, action: "statsTPD:")
-            rightStats.tag = 0
-            
         }
         // ++++++++++++++++++++++++++++++++++++++
         
+        if s.penalties.count == 0 && s.plays.count == 0 {
+            disableErase()
+        } else {
+            enableErase()
+        }
+        
         field.line.backgroundColor = s.team.primary
         
-        toolbar.items = [leftStats,sep,rightStats,flexSpace,eraseBTN,flexSpace,exportBTN,sep,docs]
-        
-        tosTXT.hidden = s.score == .None
         tosTXT.text = s.score_time
         
-        rightBALL.hidden = !pos_right
-        leftBALL.hidden = pos_right
+        if pos_right {
+            
+            rightBALL.backgroundColor = UIColor(red: 255/255, green: 211/255, blue: 69/255, alpha: 1)
+            leftBALL.backgroundColor = UIColor.clearColor()
+            
+        } else {
+            
+            leftBALL.backgroundColor = UIColor(red: 255/255, green: 211/255, blue: 69/255, alpha: 1)
+            rightBALL.backgroundColor = UIColor.clearColor()
+            
+        }
         
         updateDown()
         updateScore()
@@ -162,7 +163,7 @@ extension Tracker {
         
         let s = game.sequences[index]
         
-        eraseBTN.enabled = s.plays.count > 0 || s.penalties.count > 0
+//        eraseBTN.enabled = s.plays.count > 0 || s.penalties.count > 0
         
     }
     
@@ -229,28 +230,6 @@ extension Tracker {
         
         let s = game.sequences[index]
         
-        let pos_right = posRight(s)
-        
-        var down = ""
-        if let d = s.down {
-            
-            switch d {
-            case 2:
-                down += "2nd and "
-            case 3:
-                down += "3rd and "
-            case 4:
-                down += "4th and "
-            default:
-                down += "1st and "
-            }
-            
-            downSEL.selectedSegmentIndex = d-1
-            
-            lastDOWN = d
-            
-        }
-        
         if let first = s.fd {
             
             let a = s.startX.spot
@@ -260,21 +239,21 @@ extension Tracker {
             
             if first.spot >= 100 { togo = "G" }
             
-            down += togo
+            playTypeSEL.downSEL.togo = togo
             
             lastFD = first
             
         }
         
-        if s.key == .Down {
+        if let d = s.down {
             
-            downTXT.text = down
+            playTypeSEL.downSEL.setD(d)
+            
+            lastDOWN = d
             
         }
         
-        let ip = NSIndexPath(forRow: index, inSection: 0)
-        sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
-        sequenceTBL.selectRowAtIndexPath(ip, animated: false, scrollPosition: .None)
+        sequenceSC.reloadCell(column: index)
         
     }
     // ========================================================
@@ -298,19 +277,16 @@ extension Tracker {
             
         default:
             
-            JP("INDEX OUT OF RANGE: \(i)")
             index = 0
-            
-            return false
             
         }
         
-        sequenceTBL.reload()
+        sequenceSC.setSelected(index)
         
         updateScoreboard()
         
-        field.setNeedsDisplay()
-        drawButtons()
+        draw.setNeedsDisplay()
+        drawButtons(false)
         
         return true
         
@@ -324,8 +300,6 @@ extension Tracker {
     // ========================================================
     func field2TPD(sender: UITapGestureRecognizer){
         
-        let location = sender.locationInView(field)
-        
         if enterOn {
             
             go()
@@ -334,7 +308,7 @@ extension Tracker {
             
             if newPlay == nil && newPenalty == nil {
                 
-                startPlay(location)
+                startPlay()
                 
             }
             
@@ -348,9 +322,7 @@ extension Tracker {
     // START PLAY
     // ========================================================
     // ========================================================
-    func startPlay(location: CGPoint) -> Bool {
-        
-        let f = CGRect(x: location.x - (field.bounds.width / 2), y: location.y, width: field.bounds.width, height: field.bounds.height)
+    func startPlay() -> Bool {
         
         var nsel = NumberSelector(nibName: "NumberSelector",bundle: nil)
         nsel.title = "Player"
@@ -396,8 +368,8 @@ extension Tracker {
             
             s.plays.append(n)
             
-            field.setNeedsDisplay()
-            drawButtons()
+            draw.setNeedsDisplay()
+            drawButtons(false)
             
             cancelTPD(1)
             
@@ -414,8 +386,8 @@ extension Tracker {
             
             s.penalties.append(penalty)
             
-            field.setNeedsDisplay()
-            drawButtons()
+            draw.setNeedsDisplay()
+            drawButtons(false)
             
             cancelTPD(1)
             
@@ -468,8 +440,8 @@ extension Tracker {
             
             s.plays.append(n)
             
-            field.setNeedsDisplay()
-            drawButtons()
+            draw.setNeedsDisplay()
+            drawButtons(true)
             
         }
         
@@ -490,8 +462,8 @@ extension Tracker {
             
             s.penalties.append(n)
             
-            field.setNeedsDisplay()
-            drawButtons()
+            draw.setNeedsDisplay()
+            drawButtons(true)
             
         }
         
@@ -579,12 +551,10 @@ extension Tracker {
                 play.endY = Int(round((y / field.bounds.height) * 100))
                 if pos_right { play.endY = 100 - play.endY! }
                 
-                field.setNeedsDisplay()
-                drawButtons()
+                draw.setNeedsDisplay()
+                drawButtons(true)
                 
-                let ip = NSIndexPath(forRow: index, inSection: 0)
-                sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
-                sequenceTBL.selectRowAtIndexPath(ip, animated: true, scrollPosition: .None)
+                sequenceSC.reloadCell(column: index)
                 
             }
             
@@ -605,12 +575,9 @@ extension Tracker {
                 default:()
                 }
                 
-                field.setNeedsDisplay()
-                drawButtons()
-                
-                let ip = NSIndexPath(forRow: index, inSection: 0)
-                sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
-                sequenceTBL.selectRowAtIndexPath(ip, animated: true, scrollPosition: .None)
+                draw.setNeedsDisplay()
+                drawButtons(true)
+                sequenceSC.reloadCell(column: index)
                 
             }
             
@@ -636,6 +603,7 @@ extension Tracker {
                 
                 _play.save(nil)
                 s.scoreSave(nil)
+                drawButtons(false)
                 updateScoreboard()
                 
             }
@@ -648,6 +616,7 @@ extension Tracker {
                 
                 _penalty.save(nil)
                 s.scoreSave(nil)
+                drawButtons(false)
                 updateScoreboard()
                 
             }
@@ -719,6 +688,8 @@ extension Tracker {
                     self.tosTXT.text = txt.text
                     s.save(nil)
                     
+                    self.sequenceSC.reloadCell(column: self.index)
+                    
                     self.ns()
                     
                 }
@@ -752,15 +723,14 @@ extension Tracker {
     func ns(){
         
         add.enabled = false
+        field.userInteractionEnabled = false
         
         let S = createSequence()
         S.save(nil)
         
         game.sequences.insert(S, atIndex: 0)
-        sequenceTBL.sequences = game.sequences
         
-        let ip = NSIndexPath(forRow: 0, inSection: 0)
-        sequenceTBL.insertRowsAtIndexPaths([ip], withRowAnimation: .Top)
+        sequenceSC.unshiftSequence(sequence: S)
         
         selectSequence(0)
         
@@ -772,6 +742,7 @@ extension Tracker {
     func enablePLUS(timer: NSTimer){
         
         add.enabled = true
+        field.userInteractionEnabled = true
         
     }
     // ========================================================
@@ -802,58 +773,10 @@ extension Tracker {
         
         s.save(nil)
         
-        let ip = NSIndexPath(forRow: index, inSection: 0)
-        sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
-        sequenceTBL.selectRowAtIndexPath(ip, animated: true, scrollPosition: .None)
+        sequenceSC.reloadCell(column: index)
         
     }
     // ========================================================
     // ========================================================
-    
-    func eraseTPD(sender: UIBarButtonItem){
-        
-        let s = game.sequences[index]
-        
-        if let penalty = s.penalties.last {
-            
-            let i = s.penalties.count - 1
-            
-            penalty.delete(nil)
-            s.penalties.removeAtIndex(i)
-            
-            field.setNeedsDisplay()
-            drawButtons()
-            
-            s.scoreSave(nil)
-            updateScoreboard()
-            
-            let ip = NSIndexPath(forRow: index, inSection: 0)
-            sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
-            sequenceTBL.selectRowAtIndexPath(ip, animated: true, scrollPosition: .None)
-            
-        } else {
-            
-            if let play = s.plays.last {
-                
-                let i = s.plays.count - 1
-                
-                play.delete(nil)
-                s.plays.removeAtIndex(i)
-                
-                field.setNeedsDisplay()
-                drawButtons()
-                
-                s.scoreSave(nil)
-                updateScoreboard()
-                
-                let ip = NSIndexPath(forRow: index, inSection: 0)
-                sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
-                sequenceTBL.selectRowAtIndexPath(ip, animated: true, scrollPosition: .None)
-                
-            }
-            
-        }
-        
-    }
     
 }

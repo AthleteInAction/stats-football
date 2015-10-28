@@ -26,97 +26,7 @@ class Field: UIView {
     
     override func drawRect(rect: CGRect) {
         
-        ratio = CGFloat(bounds.width) / 120
-        vratio = CGFloat(bounds.height) / 53.33
         
-        if !ready {
-            
-            setData()
-            tracker.setData()
-            
-        } else {
-            
-            if tracker.game.sequences.count > 0 {
-                
-                let s = tracker.game.sequences[tracker.index]
-                
-                let c = UIGraphicsGetCurrentContext()
-                
-                let pos_right: Bool = tracker.posRight(s)
-                
-                var x = s.startX.toX(pos_right)
-                var y = s.startY.toP() * bounds.height
-                if pos_right { y = (100 - s.startY).toP() * bounds.height }
-                
-                var prev: Play?
-                for (i,play) in enumerate(s.plays) {
-                    
-                    if let endX = play.endX {
-                        
-                        if i == 0 {
-                            
-                            switch play.key as Key {
-                            case .Run:
-                                
-                                x = s.startX.increment(-3).toX(pos_right)
-                                
-                            case .Pass,.Incomplete,.Interception:
-                                
-                                x = s.startX.increment(-4).toX(pos_right)
-                                
-                            case .Punt:
-                                
-                                x = s.startX.increment(-12).toX(pos_right)
-                                
-                            default:
-                                
-                                x = s.startX.toX(pos_right)
-                                
-                            }
-                            
-                        }
-                        
-                        CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
-                        
-                        x = endX.toX(pos_right)
-                        y = play.endY!.toP() * bounds.height
-                        if tracker.posRight(s) { y = (100 - play.endY!).toP() * bounds.height }
-                        
-                        CGContextSetLineWidth(c, 10.0)
-                        
-                        var color = Filters.colors(play.key, alpha: 1).CGColor
-                        
-                        switch play.key as Key {
-                        case .Pass,.Incomplete,.Interception,.Punt,.Kick:
-                            CGContextSetLineDash(c, 10, [6,3], 2)
-                        default:
-                            CGContextSetLineDash(c, 0, [0,0], 0)
-                        }
-                        
-                        CGContextSetStrokeColorWithColor(c,color)
-                        
-                        switch play.key as Key {
-                        case .FGM,.FGA,.Sack: ()
-                        default:
-                            
-                            CGContextAddLineToPoint(c,CGFloat(x),CGFloat(y))
-                            CGContextStrokePath(c)
-                            
-                        }
-                        
-                        CGContextMoveToPoint(c,CGFloat(x),CGFloat(y))
-                        
-                        prev = play
-                        
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        
-        ready = true
         
     }
 
@@ -171,18 +81,6 @@ class Field: UIView {
         
     }
     
-    func lineDragged(touches: Set<NSObject>) -> Bool {
-        
-        let s = tracker.game.sequences[tracker.index]
-        let cell = tracker.sequenceTBL.cellForRowAtIndexPath(NSIndexPath(forRow: tracker.index, inSection: 0)) as! SequenceCell
-        
-        let t: UITouch = touches.first as! UITouch
-        let l: CGPoint = t.locationInView(self)
-        
-        return true
-        
-    }
-    
     func showCrosses(){
         
         crossV.hidden = false
@@ -212,6 +110,16 @@ class Field: UIView {
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         
         tracker.fieldTouchesEnded(touches)
+        
+    }
+    
+}
+
+extension Field: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+        
+        return touch.view == self
         
     }
     

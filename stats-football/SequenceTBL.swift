@@ -186,18 +186,6 @@ class SequenceTBL: UITableView,UITableViewDataSource,UITableViewDelegate {
             
         }
         
-        //        if tracker.game.sequences.count == 1 {
-        //
-        //            cell.selected = true
-        //            cell.selectionStyle = UITableViewCellSelectionStyle.Default
-        //            cell.userInteractionEnabled = false
-        //
-        //        } else {
-        //
-        //            cell.userInteractionEnabled = true
-        //            
-        //        }
-        
         return cell
         
     }

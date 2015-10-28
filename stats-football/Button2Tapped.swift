@@ -146,8 +146,8 @@ extension Tracker {
                 play.delete(nil)
                 s.plays.removeAtIndex(sender.view!.tag)
                 
-                self.field.setNeedsDisplay()
-                self.drawButtons()
+                self.draw.setNeedsDisplay()
+                self.drawButtons(false)
                 
                 MPC.sendGame(self.game)
                 

@@ -26,7 +26,7 @@ class Filters {
             
             return UIColor(red: 127/255, green: 255/255, blue: 155/255, alpha: alpha)
             
-        case .Incomplete,.FGA,.Fumble,.FumbledSnap,.BadSnap,.Sack:
+        case .Incomplete,.FGA,.Fumble,.FumbledSnap,.BadSnap,.Sacked:
             
             return UIColor(red: 250/255, green: 82/255, blue: 89/255, alpha: alpha)
             
@@ -136,7 +136,7 @@ class Filters {
                 
             } else {
                 
-                return [.Run,.Pass,.Incomplete,.Interception,.Punt,.Sack,.FumbledSnap,.BadSnap,.Recovery,.FGA,.FGM]
+                return [.Run,.Pass,.Incomplete,.Interception,.Punt,.Sacked,.FumbledSnap,.BadSnap,.Recovery,.FGA,.FGM]
                 
             }
             

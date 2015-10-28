@@ -114,8 +114,7 @@ class FirstDownMKR: UIView {
                 
             }
             
-            let ip = NSIndexPath(forRow: field.tracker.index, inSection: 0)
-            field.tracker.sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
+            field.tracker.sequenceSC.reloadCell(column: field.tracker.index)
             
             field.tracker.updateDown()
             

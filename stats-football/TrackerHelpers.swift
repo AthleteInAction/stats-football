@@ -5,6 +5,7 @@
 //  Created by grobinson on 9/27/15.
 //  Copyright (c) 2015 Wambl. All rights reserved.
 //
+import UIKit
 
 extension Tracker {
     
@@ -37,18 +38,6 @@ extension Tracker {
     // SWITCHES
     // ===============================================================
     // ===============================================================
-    func disablePlayLog(){
-        
-        sequenceTBL.alpha = 0.3
-        sequenceTBL.userInteractionEnabled = false
-        
-    }
-    func enablePlayLog(){
-        
-        sequenceTBL.alpha = 1
-        sequenceTBL.userInteractionEnabled = true
-        
-    }
     func disableField(){
         
         field.alpha = 0.3
@@ -61,18 +50,6 @@ extension Tracker {
         field.alpha = 1
         fimg.alpha = 1
         field.userInteractionEnabled = true
-        
-    }
-    func disableTables(){
-        
-        sequenceTBL.alpha = 0.3
-        sequenceTBL.userInteractionEnabled = false
-        
-    }
-    func enableTables(){
-        
-        sequenceTBL.alpha = 1
-        sequenceTBL.userInteractionEnabled = true
         
     }
     func disablePenaltyButton(){
@@ -94,18 +71,29 @@ extension Tracker {
     func spot(){
         
         enableField()
-        disableTables()
         hideScoreboard()
         
     }
     func hideScoreboard(){
         
-        scoreboard.hidden = true
+        panel.hidden = true
         
     }
     func enableScoreboard(){
         
-        scoreboard.hidden = false
+        panel.hidden = false
+        
+    }
+    func disableErase(){
+        
+        eraseBTN.alpha = 0.3
+        eraseBTN.userInteractionEnabled = false
+        
+    }
+    func enableErase(){
+        
+        eraseBTN.alpha = 1
+        eraseBTN.userInteractionEnabled = true
         
     }
     // ===============================================================

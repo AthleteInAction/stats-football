@@ -40,13 +40,13 @@ extension Tracker {
         
     }
     
-    @IBAction func playTypeChanged(sender: AnyObject) {
+    func playTypeChanged(sender: PlaytypeSelector) {
         
         let s = game.sequences[index]
         
         let pos_right = posRight(s)
         
-        s.key = playTypeSEL.selectedSegmentIndex.toPlaytype()
+        s.key = sender.selectedIndex.toPlaytype()
         
         if s.key == Playtype.Down {
             
@@ -88,7 +88,6 @@ extension Tracker {
         }
         
         field.fd.hidden = s.fd == nil
-        downTXT.hidden = s.down == nil
         
         s.save(nil)
         
@@ -96,11 +95,11 @@ extension Tracker {
         
     }
     
-    @IBAction func qtrChanged(sender: AnyObject) {
+    func qtrChanged(sender: QuarterSelector) {
         
         let s = game.sequences[index]
         
-        s.qtr = Int(qtrSEL.value)
+        s.qtr = sender.qtr
         
         s.save(nil)
         
@@ -108,11 +107,11 @@ extension Tracker {
         
     }
     
-    @IBAction func downChanged(sender: AnyObject) {
+    func downChanged(sender: DownSelector) {
         
         let s = game.sequences[index]
         
-        s.down = downSEL.selectedSegmentIndex+1
+        s.down = sender.down
         
         s.save(nil)
         
@@ -120,13 +119,15 @@ extension Tracker {
         
     }
     
-    @IBAction func posChanged(sender: UIButton) {
+    func posChanged(sender: UITapGestureRecognizer) {
+        
+        let v = sender.view!
         
         let s = game.sequences[index]
         
         if game.right_home {
             
-            if sender.tag == 1 {
+            if v.tag == 1 {
                 
                 s.team = game.home
                 
@@ -138,7 +139,7 @@ extension Tracker {
             
         } else {
             
-            if sender.tag == 1 {
+            if v.tag == 1 {
                 
                 s.team = game.away
                 
@@ -152,19 +153,16 @@ extension Tracker {
         
         s.save(nil)
         
-        sequenceTBL.sequences[index] = s
-        
-        let ip = NSIndexPath(forRow: index, inSection: 0)
-        sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
+        sequenceSC.reloadCell(column: index)
         
         updateScoreboard()
         
-        field.setNeedsDisplay()
-        drawButtons()
+        draw.setNeedsDisplay()
+        drawButtons(false)
         
     }
     
-    @IBAction func switchTPD(sender: AnyObject) {
+    func switchTPD(sender: UITapGestureRecognizer) {
         
         let s = game.sequences[index]
         
@@ -179,8 +177,8 @@ extension Tracker {
             s.save(nil)
             
             self.updateScoreboard()
-            self.field.setNeedsDisplay()
-            self.drawButtons()
+            self.draw.setNeedsDisplay()
+            self.drawButtons(false)
             
         }
         
@@ -190,8 +188,8 @@ extension Tracker {
             self.game.save(nil)
             
             self.updateScoreboard()
-            self.field.setNeedsDisplay()
-            self.drawButtons()
+            self.draw.setNeedsDisplay()
+            self.drawButtons(false)
             
         }
         
@@ -214,7 +212,6 @@ extension Tracker {
         enterOn = false
         
         enableField()
-        enableTables()
         enableScoreboard()
         field.hideCrosses()
         field.highlight.hidden = true
@@ -245,11 +242,11 @@ extension Tracker {
         popover = UIPopoverController(contentViewController: nav)
         popover.delegate = self
         popover.popoverContentSize = CGSize(width: 500, height: view.bounds.height * 0.85)
-        popover.presentPopoverFromRect(sender.frame, inView: scoreboard, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
+        popover.presentPopoverFromRect(sender.frame, inView: panel, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: false)
         
     }
     
-    func statsTPD(sender: AnyObject) {
+    @IBAction func statsTPD(sender: AnyObject) {
         
         let vc = StatsDisplay(nibName: "StatsDisplay",bundle: nil)
         vc.game = game
@@ -289,7 +286,7 @@ extension Tracker {
         
     }
     
-    func docsTPD(sender: AnyObject){
+    @IBAction func docsTPD(sender: AnyObject){
         
         let conf = UIAlertController(title: "Finished!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         let ok = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil)
@@ -352,17 +349,50 @@ extension Tracker {
         
     }
     
-}
-
-extension Int {
-    
-    func toPlaytype() -> Playtype {
+    @IBAction func scrollFirst(sender: UIButton){
         
-        switch self {
-        case 0: return .Kickoff
-        case 1: return .Freekick
-        case 3: return .PAT
-        default: return .Down
+        sequenceSC.scrollTo(0)
+        
+    }
+    
+    @IBAction func eraseTPD(sender: UIButton){
+        
+        let s = game.sequences[index]
+        
+        if let penalty = s.penalties.last {
+            
+            let i = s.penalties.count - 1
+            
+            penalty.delete(nil)
+            s.penalties.removeAtIndex(i)
+            
+            draw.setNeedsDisplay()
+            drawButtons(false)
+            
+            s.scoreSave(nil)
+            updateScoreboard()
+            
+            sequenceSC.reloadCell(column: index)
+            
+        } else {
+            
+            if let play = s.plays.last {
+                
+                let i = s.plays.count - 1
+                
+                play.delete(nil)
+                s.plays.removeAtIndex(i)
+                
+                draw.setNeedsDisplay()
+                drawButtons(false)
+                
+                s.scoreSave(nil)
+                updateScoreboard()
+                
+                sequenceSC.reloadCell(column: index)
+                
+            }
+            
         }
         
     }

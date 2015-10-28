@@ -73,10 +73,9 @@ class LineMKR: UIView {
                 
             }
             
-            let ip = NSIndexPath(forRow: field.tracker.index, inSection: 0)
-            field.tracker.sequenceTBL.reloadRowsAtIndexPaths([ip], withRowAnimation: .None)
+            field.tracker.sequenceSC.reloadCell(column: field.tracker.index)
             
-            field.setNeedsDisplay()
+            field.tracker.draw.setNeedsDisplay()
             
             field.tracker.updateArrows()
             

@@ -42,6 +42,19 @@ enum Scores {
         
     }
     
+    var short: String {
+        
+        switch self {
+        case .Touchdown: return "Touchdown"
+        case .Safety: return "Safety"
+        case .FieldGoal: return "Field Goal"
+        case .ExtraPoint: return "Extra Point"
+        case .Conversion: return "Conversion"
+        default: return ""
+        }
+        
+    }
+    
     var value: Int {
         
         switch self {
@@ -69,10 +82,8 @@ enum Playtype {
         
         switch self {
         case .Kickoff: return 0
-        case .Freekick: return 1
-        case .Down: return 2
-        case .PAT: return 3
-        default: return 0
+        case .PAT: return 2
+        default: return 1
         }
         
     }
@@ -89,6 +100,31 @@ enum Playtype {
         
     }
     
+    var display: String {
+        
+        switch self {
+        case .Kickoff: return "Kickoff"
+        case .Freekick: return "Freekick"
+        case .Down: return "Down"
+        case .PAT: return "PAT"
+        default: return "e"
+        }
+        
+    }
+    
+}
+extension Int {
+    
+    func toPlaytype() -> Playtype {
+        
+        switch self {
+        case 0: return .Kickoff
+        case 2: return .PAT
+        default: return .Down
+        }
+        
+    }
+    
 }
 
 
@@ -101,7 +137,7 @@ enum Key {
     case Reception
     case Incomplete
     case Interception
-    case Sack
+    case Sacked
     case Fumble
     case FumbledSnap
     case BadSnap
@@ -144,7 +180,7 @@ enum Key {
         case .Reception: return "reception"
         case .Incomplete: return "incomplete"
         case .Interception: return "interception"
-        case .Sack: return "sack"
+        case .Sacked: return "sack"
         case .FumbledSnap: return "fumbled_snap"
         case .BadSnap: return "bad_snap"
         case .Fumble: return "fumble"
@@ -186,7 +222,7 @@ enum Key {
         case .Reception: return "Reception"
         case .Incomplete: return "Incomplete"
         case .Interception: return "Interception"
-        case .Sack: return "Sack"
+        case .Sacked: return "Sacked"
         case .FumbledSnap: return "Fumbled Snap"
         case .BadSnap: return "Bad Snap"
         case .Fumble: return "Fumble"
@@ -229,7 +265,7 @@ enum Key {
         case .Reception: return "Catch"
         case .Incomplete: return "Incomp"
         case .Interception: return "Int"
-        case .Sack: return "Sack"
+        case .Sacked: return "Sacked"
         case .FumbledSnap: return "Snap"
         case .BadSnap: return "Snap"
         case .Fumble: return "Fumble"
@@ -248,6 +284,49 @@ enum Key {
         case .Offset: return "Offset"
         case .OnKick: return "Enforced on Kick"
         case .ReplayDown: return "Replay Down"
+        case .AutoFirst: return "Automatic First Down"
+        case .Penalty: return "Penalty"
+        case .Spot: return "Spot"
+        case .Five: return "5 Yards"
+        case .Ten: return "10 Yards"
+        case .Fifteen: return "15 Yards"
+        case .NoRecovery: return "No Recovery"
+        case .Yes: return "Yes"
+        case .No: return "No"
+        default: return "E"
+        }
+        
+    }
+    
+    var passed: String {
+        
+        switch self {
+        case .Run: return "Run"
+        case .Kneel: return "Kneel Down"
+        case .Pass: return "Complete to"
+        case .Throw: return "Pass"
+        case .Reception: return "Reception"
+        case .Incomplete: return "Incomplete for"
+        case .Interception: return "Intercepted by"
+        case .Sacked: return "Sacked"
+        case .FumbledSnap: return "Fumbled Snap"
+        case .BadSnap: return "Bad Snap"
+        case .Fumble: return "Fumble"
+        case .Return: return "Return"
+        case .Kick: return "Kick"
+        case .Punt: return "Punt"
+        case .Lateral: return "Lateral"
+        case .FGA: return "Field Goal Missed"
+        case .FGM: return "Field Goal Made"
+        case .Block: return "Block"
+        case .Recovery: return "Recovery"
+        case .PreviousSpot: return "Previous Spot"
+        case .SpotOfFoul: return "Spot of Foul"
+        case .DeadBallSpot: return "After the Play"
+        case .Declined: return "Declined"
+        case .Offset: return "Offset"
+        case .OnKick: return "Enforced on Kick"
+        case .ReplayDown: return "Replay the Down"
         case .AutoFirst: return "Automatic First Down"
         case .Penalty: return "Penalty"
         case .Spot: return "Spot"
@@ -290,7 +369,7 @@ extension String {
         case "reception": return .Reception
         case "incomplete": return .Incomplete
         case "interception": return .Interception
-        case "sack": return .Sack
+        case "sack": return .Sacked
         case "fumbled_snap": return .FumbledSnap
         case "bad_snap": return .BadSnap
         case "fumble": return .Fumble

@@ -95,7 +95,7 @@ extension Tracker {
                 
             }
             
-            field.setNeedsDisplay()
+            draw.setNeedsDisplay()
             
         }
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -235,8 +235,8 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     
                     tracker.updateScoreboard()
                     
-                    tracker.field.setNeedsDisplay()
-                    tracker.drawButtons()
+                    tracker.draw.setNeedsDisplay()
+                    tracker.drawButtons(false)
                     
                 case .DeadBallSpot:
                     
@@ -291,8 +291,8 @@ class KeySelector: UIViewController,UITableViewDelegate,UITableViewDataSource,UI
                     
                     s.penalties.append(penalty)
                     
-                    tracker.field.setNeedsDisplay()
-                    tracker.drawButtons()
+                    tracker.draw.setNeedsDisplay()
+                    tracker.drawButtons(false)
                     
                     s.scoreSave(nil)
                     tracker.updateScoreboard()
